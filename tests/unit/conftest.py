@@ -1,0 +1,92 @@
+# Copyright (C) 2021 Adam Kirchberger
+#
+# This file is part of Nectl.
+#
+# Nectl is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Nectl is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
+
+import pytest
+import pathlib
+
+from nectl.config import Config
+
+
+@pytest.fixture(scope="function")
+def mock_datatree(tmp_path) -> pathlib.PosixPath:
+    """
+    Creates a datatree mock data and returns the path.
+
+    Returns:
+        pathlib.PosixPath: path to tmp datatree.
+    """
+    root = tmp_path / "data"
+    root.mkdir()
+    (root / "__init__.py").write_text("")
+
+    (root / "glob" / "common").mkdir(parents=True)
+    (root / "glob" / "roles").mkdir(parents=True)
+
+    # Make fake customers
+    for customer in ["acme", "hooli"]:
+        c = root / "customers" / customer
+        c.mkdir(parents=True)
+
+        (c / "common").mkdir()
+        (c / "roles").mkdir()
+        (c / "sites").mkdir()
+
+        # Make fake sites
+        for site in ["london", "newyork"]:
+            site = c / "sites" / site
+            site.mkdir(parents=True)
+
+            (site / "common").mkdir(parents=True)
+            (site / "roles").mkdir(parents=True)
+
+            hosts = site / "hosts"
+            hosts.mkdir(parents=True)
+
+            # Make fake hosts
+            (hosts / "core0").mkdir()
+            (hosts / "core1").mkdir()
+
+    return root
+
+
+@pytest.fixture(scope="function")
+def mock_config(mock_datatree) -> Config:
+    """
+    Creates mock config with a datatree.
+
+    Returns:
+        Config: config settings.
+    """
+    datatree_path = mock_datatree
+
+    return Config(
+        kit_path=str(datatree_path.parent),
+        config_path=str(datatree_path.parent) + "/config.yaml",
+        datatree_lookup_paths=(
+            "data.glob.common",
+            "data.glob.roles.{role}",
+            "data.customers.{customer}.common",
+            "data.customers.{customer}.roles.{role}",
+            "data.customers.{customer}.sites.{site}.common",
+            "data.customers.{customer}.sites.{site}.roles.{role}",
+            "data.customers.{customer}.sites.{site}.hosts.{hostname}",
+        ),
+        hosts_glob_pattern="customers/*/sites/*/hosts/*",
+        hosts_hostname_regex=".*/sites/.*/hosts/(.*)$",
+        hosts_site_regex=".*/sites/(.*)/hosts/.*",
+        hosts_customer_regex=".*/customers/(.*)/sites/.*",
+    )
