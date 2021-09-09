@@ -29,7 +29,7 @@ def logging_opts(func: Callable[..., T]) -> Callable[..., T]:
 
         # Debug show loaded config
         try:
-            logger.debug(args[0].obj.get("config"))
+            logger.debug(f'config: {args[0].obj.get("config")}')
         except IndexError:
             pass
         except AttributeError:
