@@ -1,11 +1,11 @@
 class Actions:
     """
-    Actions are used as type hints to tell datatree how facts should be loaded
+    Actions are used as type hints to tell nectl how facts should be loaded
 
     Examples:
-        from datatree import actions
+        from nectl import actions
 
-        # standard overwritten if defined at more specific level
+        # overwritten if defined at more specific level
         my_var: actions.replace_with = "new value"
 
         # merge action for lists and dictionaries
