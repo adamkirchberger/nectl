@@ -72,4 +72,10 @@ def mock_config(mock_datatree) -> Config:
         hosts_hostname_regex=".*/sites/.*/hosts/(.*)$",
         hosts_site_regex=".*/sites/(.*)/hosts/.*",
         hosts_customer_regex=".*/customers/(.*)/sites/.*",
+        blueprints_map={
+            "fakeos:FakeOs": {
+                "os_regex": "fakeos",
+                "os_version_regex": "5.*",
+            }
+        },
     )
