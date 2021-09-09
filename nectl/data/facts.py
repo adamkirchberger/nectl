@@ -79,16 +79,16 @@ def _load_host_facts(
     Returns:
         Dict: host facts.
     """
-    frozen_vars = []  # Used for immutable/protected vars.
-    facts = {**host.dict()}  # Add host inventory facts.
-
-    ts_start = time.perf_counter()
-    logger.debug(f"start loading facts for: {host.id}")
-
     # ensure kit path is in pythonpath
     if sys.path[0] != config.kit_path:
         logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")
         sys.path.insert(0, config.kit_path)
+
+    frozen_vars = []  # Used for immutable/protected vars.
+    facts = {**host.dict()}  # Add host inventory facts.
+
+    ts_start = time.perf_counter()
+    logger.debug(f"{host.id}: start loading facts")
 
     def _load_vars(mod: ModuleType):
         """
@@ -161,7 +161,7 @@ def _load_host_facts(
             _load_vars(mod)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
-    logger.info(f"finished loading facts for '{host.id}' ({dur}s)")
+    logger.info(f"{host.id}: finished loading facts ({dur}s)")
 
     return facts
 
