@@ -1,9 +1,9 @@
 import os
 import json
-from typing import List
+from typing import List, Dict, Pattern
 import pkg_resources
 import yaml
-from pydantic import BaseSettings
+from pydantic import BaseSettings, validator
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import ConfigFileError
@@ -45,11 +45,30 @@ class Config(BaseSettings):
     # Path to kit with datatree, models and blueprints
     kit_path: str
 
+    # Blueprint map matches hosts to blueprints using os and os_version regex
+    class BlueprintMatchItem(BaseSettings):
+        os_regex: Pattern
+        os_version_regex: Pattern
+
+    blueprints_map: Dict[str, BlueprintMatchItem] = {}
+
     # Datatree default directory name
     datatree_dirname: str = "data"
 
+    # Blueprints default directory name
+    blueprints_dirname: str = "blueprints"
+
     # Default data action
     default_action: str = "merge_with"
+
+    @validator("blueprints_map")
+    def blueprints_map_keys_must_have_module_and_class_name(cls, v):
+        # pylint: disable=E0213,C0116,R0201
+        for k in v.keys():
+            if len(k.split(":")) != 2:
+                raise ValueError("blueprints must be in format 'filename:ClassName'")
+
+        return v
 
     @property
     def datatree_path(self):
@@ -91,8 +110,7 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
             kit_path=os.path.dirname(filepath), config_path=filepath, **config_args
         )
     except ValidationError as e:
-        for item in e.errors():
-            raise ConfigFileError(f"config file {item['msg']}: {item['loc'][0]}") from e
+        raise ConfigFileError(e) from e
 
         # raise ConfigFileError(
         #     "config file is missing variables or has invalid variable types"

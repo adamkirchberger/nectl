@@ -2,6 +2,12 @@ from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
 
+class BaseBlueprint:
+    """
+    Defines base class for a blueprint. This is only for type annotations.
+    """
+
+
 @dataclass
 class Host:
     """
