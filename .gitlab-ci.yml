@@ -1,0 +1,69 @@
+---
+image: ubuntu:20.04
+
+stages:
+  - test
+  - build
+  - release
+  - deploy
+
+.mr_trigger:
+  only:
+    refs:
+      - merge_requests
+
+.mr_and_release_trigger:
+  only:
+    refs:
+      - master
+      - merge_requests
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^chore\(release\).*/
+
+.release_trigger:
+  only:
+    refs:
+      - master
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^chore\(release\).*/
+
+.deploy_trigger:
+  only:
+    refs:
+      - tags
+
+test:
+  extends: .mr_and_release_trigger
+  stage: test
+  image: python:3.9.5-slim
+  variables:
+    APP_VERSION: test
+  script:
+    - pip install poetry
+    - poetry install
+    - poetry run pytest -v
+
+release:
+  extends: .release_trigger
+  stage: release
+  image: node:12
+  before_script:
+    - |
+      npm install semantic-release \
+      conventional-changelog-conventionalcommits \
+      @semantic-release/gitlab \
+      @semantic-release/git \
+      @semantic-release/release-notes-generator \
+      @semantic-release/exec \
+      @semantic-release/changelog -D
+  script:
+    - npx semantic-release
+
+.deploy_base_job:
+  extends: .deploy_trigger
+  image: ubuntu:20.04
+  when: manual
+  script:
+    - echo "deploy tasks go here"
