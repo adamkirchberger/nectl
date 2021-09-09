@@ -24,6 +24,8 @@ types-setuptools = "^57.0.2"
 types-PyYAML = "^5.4.10"
 types-tabulate = "^0.8.2"
 pytest-forked = "^1.3.0"
+lxml-stubs = "^0.2.0"
+pytest-cov = "^2.12.1"
 
 [tool.poetry.scripts]
 nectl = "nectl.cli:main"
