@@ -4,7 +4,7 @@ import time
 import importlib
 import pkgutil
 from types import ModuleType
-from typing import List, Dict, Any
+from typing import List, Dict
 from enum import Enum
 from ipaddress import IPv4Interface
 from pydantic import BaseModel
@@ -21,7 +21,7 @@ VALID_DATA_TYPES = (list, dict, str, int, float)
 def get_facts_for_hosts(
     config: Config,
     hosts: List[Host],
-) -> Dict[str, Any]:
+) -> Dict[str, Dict]:
     """
     Returns a dict of facts loaded from datatree for each provided host.
 
@@ -30,7 +30,7 @@ def get_facts_for_hosts(
         hosts (List[Host]): list of hosts.
 
     Returns:
-        Dict[str,Any]: one item per unique host with loaded facts.
+        Dict[str,Dict]: one item per unique host with loaded facts.
     """
     facts = {}
 
@@ -51,7 +51,7 @@ def get_facts_for_hosts(
 def _load_host_facts(
     config: Config,
     host: Host,
-) -> Dict[str, Any]:
+) -> Dict:
     """
     Loads datatree and returns facts for a single host.
 
@@ -60,7 +60,7 @@ def _load_host_facts(
         host (Host): host instance.
 
     Returns:
-        Dict[str, Any]: host facts.
+        Dict: host facts.
     """
     frozen_vars = []  # Used for immutable/protected vars.
     facts = {**host.dict()}  # Add host inventory facts.
