@@ -13,13 +13,13 @@ class Host:
     hostname: str
     site: str
     customer: str
-    role: Optional[str] = ""
-    manufacturer: Optional[str] = "default"
-    model: Optional[str] = "default"
-    os: Optional[str] = ""
-    os_version: Optional[str] = ""
-    serial_number: Optional[str] = ""
-    asset_tag: Optional[str] = ""
+    role: Optional[str] = None
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
+    os: Optional[str] = None
+    os_version: Optional[str] = None
+    serial_number: Optional[str] = None
+    asset_tag: Optional[str] = None
     id: str = ""
 
     @property  # type: ignore
