@@ -31,15 +31,15 @@ class Blueprint:
     """
 
 
-def get_blueprint(config: Config, host_os: str, host_os_version: str) -> Blueprint:
+def get_blueprint(config: Config, os_name: str, os_version: str) -> Blueprint:
     """
     Returns the blueprint based on the blueprint map which uses host os and
     os_version to determine the blueprint.
 
     Args:
         config (Config): config settings.
-        host_os (str): host operating system.
-        host_os_version (str): host operating system version.
+        os_name (str): host operating system.
+        os_version (str): host operating system version.
 
     Returns:
         blueprint class.
@@ -49,8 +49,8 @@ def get_blueprint(config: Config, host_os: str, host_os_version: str) -> Bluepri
         BlueprintImportError: if blueprint cannot be found or opened.
     """
     for bp_name, bp_match in config.blueprints_map.items():
-        if re.match(bp_match.os_regex, host_os) and re.match(
-            bp_match.os_version_regex, host_os_version
+        if re.match(bp_match.os_regex, os_name) and re.match(
+            bp_match.os_version_regex, os_version
         ):
             return _import_blueprint(
                 bp_name,
@@ -58,7 +58,7 @@ def get_blueprint(config: Config, host_os: str, host_os_version: str) -> Bluepri
             )
 
     raise BlueprintMissingError(
-        f"no blueprint has matched host os='{host_os}' os_version='{host_os_version}'"
+        f"no blueprint has matched host os_name='{os_name}' os_version='{os_version}'"
     )
 
 

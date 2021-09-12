@@ -32,7 +32,7 @@ from .blueprints import Blueprint, get_blueprint
 def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
     """
     Returns templates for host which have been rendered using blueprints which
-    are matched on host 'os' and 'os_version' using the 'blueprints_map' var.
+    are matched on 'os_name' and 'os_version' using the 'blueprints_map' var.
 
     Args:
         config (Config): config settings.
@@ -55,13 +55,15 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
     logger.debug("start rendering templates")
 
     for host in hosts:
-        if host.os is None or host.os_version is None:
-            logger.info(f"skipping host render with no 'os' or 'os_version': {host.id}")
+        if host.os_name is None or host.os_version is None:
+            logger.info(
+                f"skipping host render with no 'os_name' or 'os_version': {host.id}"
+            )
             continue
 
         try:
             # Get matching blueprint
-            blueprint = get_blueprint(config, host.os, host.os_version)
+            blueprint = get_blueprint(config, host.os_name, host.os_version)
         except (BlueprintMissingError, BlueprintImportError) as e:
             raise RenderError(str(e)) from e
         except Exception as e:
