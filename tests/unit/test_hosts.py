@@ -1,7 +1,6 @@
 # pylint: disable=C0116
 
-from nectl.models import Host
-from nectl.data.hosts import get_all_hosts, get_filtered_hosts
+from nectl.data.hosts import Host, get_all_hosts, get_filtered_hosts
 
 
 def test_should_return_8_hosts_when_getting_all_hosts(mock_config):

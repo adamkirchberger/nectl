@@ -117,3 +117,6 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
         # ) from e
 
     return config
+
+
+config = load_config()

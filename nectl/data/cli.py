@@ -4,7 +4,7 @@ from tabulate import tabulate
 
 from ..logging import logging_opts
 from .hosts import get_filtered_hosts
-from .facts import facts_to_json_string, get_facts_for_hosts
+from .facts_utils import facts_to_json_string
 
 
 @click.group(help="Inventory and datatree commands")
@@ -63,6 +63,6 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     config = ctx.obj.get("config")
     hosts = get_filtered_hosts(config, hostname, customer, site, role)
 
-    facts = get_facts_for_hosts(config, hosts)
+    host_facts = {host.id: host.facts for host in hosts}
 
-    print(facts_to_json_string(facts))
+    print(facts_to_json_string(host_facts))
