@@ -16,7 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from typing import List, Dict, Any
+from typing import Sequence, Dict, Any
 
 from ..logging import logger
 from ..config import Config
@@ -26,12 +26,10 @@ from ..exceptions import (
     RenderError,
 )
 from ..data.hosts import Host
-from ..data.facts import get_facts_for_hosts
-from ..models import BaseBlueprint
-from .utils import get_blueprint
+from .blueprints import Blueprint, get_blueprint
 
 
-def render_hosts(config: Config, hosts: List[Host]) -> Dict[str, Any]:
+def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
     """
     Returns templates for host which have been rendered using blueprints which
     are matched on host 'os' and 'os_version' using the 'blueprints_map' var.
@@ -56,28 +54,21 @@ def render_hosts(config: Config, hosts: List[Host]) -> Dict[str, Any]:
     ts_start = time.perf_counter()
     logger.debug("start rendering templates")
 
-    # Get facts
-    facts = get_facts_for_hosts(config, hosts)
-
     for host in hosts:
-        host_facts = facts.get(host.id, {})
-
-        if host_facts.get("os") is None or host_facts.get("os_version") is None:
+        if host.os is None or host.os_version is None:
             logger.info(f"skipping host render with no 'os' or 'os_version': {host.id}")
             continue
 
         try:
             # Get matching blueprint
-            blueprint = get_blueprint(
-                config, host_facts["os"], host_facts["os_version"]
-            )
+            blueprint = get_blueprint(config, host.os, host.os_version)
         except (BlueprintMissingError, BlueprintImportError) as e:
             raise RenderError(str(e)) from e
         except Exception as e:
             logger.exception(e)
             raise RenderError(f"unknown error: {e}") from e
 
-        results[host.id] = render_blueprint(blueprint, host_facts)
+        results[host.id] = render_blueprint(blueprint, host.facts)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished rendering templates ({dur}s)")
@@ -85,7 +76,7 @@ def render_hosts(config: Config, hosts: List[Host]) -> Dict[str, Any]:
     return results
 
 
-def render_blueprint(blueprint: BaseBlueprint, facts: Dict[str, Any]) -> str:
+def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
     """
     Returns rendered configuration for host facts using supplied blueprint.
 

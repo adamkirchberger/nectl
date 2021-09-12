@@ -18,14 +18,97 @@
 import re
 import sys
 import time
-from typing import List
+from typing import Optional, Union, Any, List, Dict
 from glob import glob
+from dataclasses import dataclass
 
 from ..logging import logger
-from ..models import Host
-from ..config import Config
+from ..config import Config, config
+from .facts_utils import load_host_facts
 
 HOSTS_IGNORE_REGEX = (r".*\/__pycache__.*",)
+
+
+@dataclass
+class Host:
+    """
+    Defines a host instance which has facts and templates.
+    """
+
+    hostname: str
+    site: str
+    customer: str
+    role: Optional[str] = None
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
+    os: Optional[str] = None
+    os_version: Optional[str] = None
+    serial_number: Optional[str] = None
+    asset_tag: Optional[str] = None
+    _facts: Union[Dict, None] = None
+
+    @property
+    def id(self) -> str:
+        """
+        Returns unique name for host.
+        """
+        return f"{self.hostname}.{self.site}.{self.customer}"
+
+    @property
+    def facts(self) -> Dict:
+        """
+        Returns read only facts.
+        """
+        if self._facts is None:
+            self._facts = load_host_facts(config, host=self)
+        return self._facts
+
+    def __getattr__(self, name):
+        """
+        Handles access to attributes that are not explicitly defined. If an
+        attribute exists in host facts then the value will be returned.
+        """
+        if not name.startswith("_") and name in self.facts:
+            logger.debug(f"{self.id}: fetching undefined fact '{name}'")
+            return self.facts[name]
+
+        return object.__getattribute__(self, name)
+
+    def __getattribute__(self, name):
+        """
+        Intercept calls to attributes and return the value from host facts.
+        """
+        ignored_attrs = ("role", "_facts")
+        if object.__getattribute__(self, name) is None and name not in ignored_attrs:
+            logger.debug(f"{self.id}: fetching fact '{name}'")
+            return object.__getattribute__(self, "facts").get(name)
+
+        return object.__getattribute__(self, name)
+
+    def dict(self, include_facts=True) -> Dict[str, Any]:
+        """
+        Returns a dict with reordered fields.
+        """
+        return {
+            "id": self.id,
+            "hostname": self.hostname,
+            "site": self.site,
+            "customer": self.customer,
+            "role": self.role,
+            "manufacturer": self.manufacturer if include_facts else None,
+            "model": self.model if include_facts else None,
+            "os": self.os if include_facts else None,
+            "os_version": self.os_version if include_facts else None,
+            "serial_number": self.serial_number if include_facts else None,
+            "asset_tag": self.asset_tag if include_facts else None,
+        }
+
+    def __repr__(self) -> str:
+        return (
+            "Host("
+            + ", ".join([f"{k}={repr(v)}" for k, v in self.dict().items()])
+            + ")"
+        )
 
 
 def get_filtered_hosts(
@@ -126,7 +209,7 @@ def get_all_hosts(config: Config) -> List[Host]:
             continue
 
         new_host = Host(hostname=hostname, site=site, customer=customer)
-        logger.debug(f"found {new_host} in directory: {host_dir}")
+        logger.debug(f"found host '{new_host.id}' in directory: {host_dir}")
         hosts.append(new_host)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"

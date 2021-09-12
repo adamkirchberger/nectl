@@ -23,10 +23,15 @@ from pydoc import locate, ErrorDuringImport
 from ..logging import logger
 from ..config import Config
 from ..exceptions import BlueprintImportError, BlueprintMissingError
-from ..models import BaseBlueprint
 
 
-def get_blueprint(config: Config, host_os: str, host_os_version: str) -> BaseBlueprint:
+class Blueprint:
+    """
+    Defines class for a blueprint which is an object that contains templates.
+    """
+
+
+def get_blueprint(config: Config, host_os: str, host_os_version: str) -> Blueprint:
     """
     Returns the blueprint based on the blueprint map which uses host os and
     os_version to determine the blueprint.
@@ -57,7 +62,7 @@ def get_blueprint(config: Config, host_os: str, host_os_version: str) -> BaseBlu
     )
 
 
-def _import_blueprint(name: str, blueprints_path: str) -> BaseBlueprint:
+def _import_blueprint(name: str, blueprints_path: str) -> Blueprint:
     """
     Imports a blueprint class from a python file and returns it.
 

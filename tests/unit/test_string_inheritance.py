@@ -19,8 +19,8 @@
 
 import pathlib
 
-from nectl.models import Host
-from nectl.data.facts import _load_host_facts
+from nectl.data.hosts import Host
+from nectl.data.facts_utils import load_host_facts
 
 
 def test_should_return_global_ntp_value_when_loading_facts(mock_config):
@@ -37,7 +37,7 @@ def test_should_return_global_ntp_value_when_loading_facts(mock_config):
     (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -66,7 +66,7 @@ def test_should_return_global_roles_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -100,7 +100,7 @@ def test_should_return_customer_common_ntp_value_when_loading_facts(mock_config)
     )
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -140,7 +140,7 @@ def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -185,7 +185,7 @@ def test_should_return_site_common_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -236,7 +236,7 @@ def test_should_return_site_roles_ntp_value_when_loading_facts(mock_config):
     ).write_text('ntp_server = "switch.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -292,7 +292,7 @@ def test_should_return_host_local_ntp_value_when_loading_facts(mock_config):
     ).write_text('ntp_server = "core0.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -329,7 +329,7 @@ def test_should_return_global_ntp_value_when_loading_facts_and_var_action_is_fro
     ).write_text('ntp_server = "core0.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = _load_host_facts(config, host=host)
+    facts = load_host_facts(config, host=host)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts

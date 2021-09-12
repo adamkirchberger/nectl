@@ -19,7 +19,7 @@ import pathlib
 import pytest
 
 from nectl.exceptions import BlueprintImportError
-from nectl.templates.utils import get_blueprint, _import_blueprint
+from nectl.templates.blueprints import get_blueprint, _import_blueprint
 
 
 def test_should_return_correct_blueprint_when_getting_blueprint(mock_config):
