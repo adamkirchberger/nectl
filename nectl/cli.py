@@ -3,7 +3,7 @@ import click
 
 from .logging import logging_opts
 from .exceptions import ConfigFileError
-from .config import APP_VERSION, APP_DESCRIPTION, load_config
+from .config import APP_VERSION, APP_DESCRIPTION, get_config
 from .data.cli import data
 from .configs.cli import configs
 from .templates.cli import templates
@@ -27,7 +27,7 @@ def cli_root(ctx):
     """
     # Load config file
     try:
-        config = load_config()
+        config = get_config()
     except ConfigFileError as e:
         print(f"Error: {e}")
         sys.exit(1)

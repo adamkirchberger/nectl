@@ -4,7 +4,7 @@ import re
 from pydoc import locate, ErrorDuringImport
 
 from ..logging import logger
-from ..config import Config
+from ..config import Config, get_config
 from ..exceptions import BlueprintImportError, BlueprintMissingError
 
 
@@ -14,15 +14,17 @@ class Blueprint:
     """
 
 
-def get_blueprint(config: Config, os_name: str, os_version: str) -> Blueprint:
+def get_blueprint(
+    os_name: str, os_version: str, config: Config = get_config()
+) -> Blueprint:
     """
     Returns the blueprint based on the blueprint map which uses host os and
     os_version to determine the blueprint.
 
     Args:
-        config (Config): config settings.
         os_name (str): host operating system.
         os_version (str): host operating system version.
+        config (Config): config settings.
 
     Returns:
         blueprint class.

@@ -10,7 +10,7 @@ from ipaddress import IPv4Interface
 from pydantic import BaseModel
 
 from ..logging import logger
-from ..config import Config
+from ..config import Config, get_config
 from .actions import Actions, DEFAULT_ACTION
 
 if TYPE_CHECKING:
@@ -20,15 +20,15 @@ VALID_DATA_TYPES = (list, dict, str, int, float)
 
 
 def get_facts_for_hosts(
-    config: Config,
     hosts: List["Host"],
+    config: Config = get_config(),
 ) -> Dict[str, Dict]:
     """
     Returns a dict of facts loaded from datatree for each provided host.
 
     Args:
-        config (Config): config settings.
         hosts (List[BaseHost]): list of hosts.
+        config (Config): config settings.
 
     Returns:
         Dict[str,Dict]: one item per unique host with loaded facts.
@@ -50,15 +50,15 @@ def get_facts_for_hosts(
 
 
 def load_host_facts(
-    config: Config,
     host: "Host",
+    config: Config = get_config(),
 ) -> Dict:
     """
     Loads datatree and returns facts for a single host.
 
     Args:
-        config (Config): config settings.
         host (BaseHost): host instance.
+        config (Config): config settings.
 
     Returns:
         Dict: host facts.

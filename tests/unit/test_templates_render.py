@@ -24,7 +24,7 @@ def test_should_raise_error_when_rendering_with_no_blueprints_map_defined(mock_c
 
     # WHEN rendering template
     with pytest.raises(RenderError) as error:
-        render_hosts(config, [host])
+        render_hosts(hosts=[host], config=config)
 
     # THEN expect error message
     assert (
@@ -62,7 +62,7 @@ def test_should_raise_render_error_when_rendering_with_invalid_blueprint(mock_co
 
     # WHEN rendering template
     with pytest.raises(RenderError) as error:
-        render_hosts(config, [host])
+        render_hosts(hosts=[host], config=config)
 
     # THEN expect error message
     assert "SyntaxError:" in str(error.value)

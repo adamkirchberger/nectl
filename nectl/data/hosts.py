@@ -6,7 +6,7 @@ from glob import glob
 from dataclasses import dataclass
 
 from ..logging import logger
-from ..config import Config, config
+from ..config import Config, get_config
 from .facts_utils import load_host_facts
 
 HOSTS_IGNORE_REGEX = (r".*\/__pycache__.*",)
@@ -43,7 +43,7 @@ class Host:
         Returns read only facts.
         """
         if self._facts is None:
-            self._facts = load_host_facts(config, host=self)
+            self._facts = load_host_facts(host=self)
         return self._facts
 
     def __getattr__(self, name):
@@ -95,21 +95,21 @@ class Host:
 
 
 def get_filtered_hosts(
-    config: Config,
     hostname: str = None,
     customer: str = None,
     site: str = None,
     role: str = None,
+    config: Config = get_config(),
 ) -> List[Host]:
     """
     Returns a list of filtered hosts
 
     Args:
-        config (Config): config settings.
         hostname (str): filter by hostname.
         site (str): filter by site.
         customer (str): filter by customer.
         role (str): filter by role.
+        config (Config): config settings.
 
     Returns:
         List[Host]: list of discovered hosts.

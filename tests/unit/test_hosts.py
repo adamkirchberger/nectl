@@ -31,7 +31,7 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_customer(
     site = "london"
 
     # WHEN fetching hosts and using filters
-    hosts = get_filtered_hosts(config, site=site, customer=customer)
+    hosts = get_filtered_hosts(config=config, site=site, customer=customer)
 
     # THEN expect each result to be of Host type
     for host in hosts:
@@ -57,7 +57,9 @@ def test_should_return_host_properties_when_getting_filtered_hosts_by_site_and_c
     hostname = "core0"
 
     # WHEN fetching hosts and using filters
-    hosts = get_filtered_hosts(config, site=site, customer=customer, hostname=hostname)
+    hosts = get_filtered_hosts(
+        config=config, site=site, customer=customer, hostname=hostname
+    )
 
     # THEN expect one host
     assert len(hosts) == 1

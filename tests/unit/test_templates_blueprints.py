@@ -30,7 +30,7 @@ def test_should_return_correct_blueprint_when_getting_blueprint(mock_config):
     os_version = "5.1"
 
     # WHEN getting blueprint using os and os_version
-    blueprint = get_blueprint(config, os_name=os_name, os_version=os_version)
+    blueprint = get_blueprint(os_name=os_name, os_version=os_version, config=config)
 
     # THEN expect blueprint name
     assert blueprint.__name__ == "FakeOs"
