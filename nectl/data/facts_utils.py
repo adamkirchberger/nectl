@@ -9,7 +9,7 @@ from enum import Enum
 from ipaddress import IPv4Interface
 from pydantic import BaseModel
 
-from ..logging import logger
+from ..logging import get_logger
 from ..config import Config, get_config
 from .actions import Actions, DEFAULT_ACTION
 
@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from .hosts import Host
 
 VALID_DATA_TYPES = (list, dict, str, int, float)
+logger = get_logger()
 
 
 def get_facts_for_hosts(

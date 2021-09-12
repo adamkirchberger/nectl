@@ -5,11 +5,12 @@ from typing import Optional, Union, Any, List, Dict
 from glob import glob
 from dataclasses import dataclass
 
-from ..logging import logger
+from ..logging import get_logger
 from ..config import Config, get_config
 from .facts_utils import load_host_facts
 
 HOSTS_IGNORE_REGEX = (r".*\/__pycache__.*",)
+logger = get_logger()
 
 
 @dataclass

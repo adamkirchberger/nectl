@@ -1,8 +1,7 @@
-from os import getcwd
 import time
 from typing import Sequence, Dict, Any
 
-from ..logging import logger
+from ..logging import get_logger
 from ..config import Config, get_config
 from ..exceptions import (
     BlueprintImportError,
@@ -11,6 +10,9 @@ from ..exceptions import (
 )
 from ..data.hosts import Host
 from .blueprints import Blueprint, get_blueprint
+
+
+logger = get_logger()
 
 
 def render_hosts(
