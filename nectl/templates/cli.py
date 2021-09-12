@@ -54,12 +54,10 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str, director
     """
     Use this command to render templates.
     """
-    config = ctx.obj.get("config")
-
-    hosts = get_filtered_hosts(ctx.obj.get("config"), hostname, customer, site, role)
+    hosts = get_filtered_hosts(hostname, customer, site, role)
 
     try:
-        _templates = render_hosts(config, hosts)
+        _templates = render_hosts(hosts)
     except RenderError as e:
         print(f"Error: {e}")
         sys.exit(1)

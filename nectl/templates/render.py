@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+from os import getcwd
 import time
 from typing import Sequence, Dict, Any
 
 from ..logging import logger
-from ..config import Config
+from ..config import Config, get_config
 from ..exceptions import (
     BlueprintImportError,
     BlueprintMissingError,
@@ -29,14 +30,16 @@ from ..data.hosts import Host
 from .blueprints import Blueprint, get_blueprint
 
 
-def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
+def render_hosts(
+    hosts: Sequence[Host], config: Config = get_config()
+) -> Dict[str, Any]:
     """
     Returns templates for host which have been rendered using blueprints which
     are matched on 'os_name' and 'os_version' using the 'blueprints_map' var.
 
     Args:
-        config (Config): config settings.
         hosts (List[Host]): hosts to render templates for.
+        config (Config): config settings.
 
     Returns:
         Dict[str,Any]: dict with item per host with rendered template.
@@ -55,6 +58,8 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
     logger.debug("start rendering templates")
 
     for host in hosts:
+        print(host)
+        print(host.os_name)
         if host.os_name is None or host.os_version is None:
             logger.info(
                 f"skipping host render with no 'os_name' or 'os_version': {host.id}"
@@ -63,7 +68,7 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
 
         try:
             # Get matching blueprint
-            blueprint = get_blueprint(config, host.os_name, host.os_version)
+            blueprint = get_blueprint(host.os_name, host.os_version, config=config)
         except (BlueprintMissingError, BlueprintImportError) as e:
             raise RenderError(str(e)) from e
         except Exception as e:

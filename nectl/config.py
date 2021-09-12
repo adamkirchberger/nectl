@@ -34,10 +34,12 @@ except pkg_resources.DistributionNotFound:
 
 APP_DESCRIPTION = "Network Control Tool"
 
+__config = None
+
 
 class Config(BaseSettings):
     """
-    Defines configuration settings
+    Defines user configuration settings
     """
 
     class Config:
@@ -95,6 +97,20 @@ class Config(BaseSettings):
         return os.path.join(self.kit_path, self.datatree_dirname)
 
 
+def get_config() -> Config:
+    """
+    Return configuration.
+
+    Returns:
+        Config: config.
+    """
+    global __config
+    if not __config:
+        config = load_config()
+
+    return config
+
+
 def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
     """
     Load external JSON or YAML config file.
@@ -134,6 +150,3 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
         # ) from e
 
     return config
-
-
-config = load_config()

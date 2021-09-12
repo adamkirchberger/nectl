@@ -52,7 +52,7 @@ def list_hosts_cmd(
     """
     Use this command to list hosts discovered in the datatree.
     """
-    hosts = get_filtered_hosts(ctx.obj.get("config"), hostname, customer, site, role)
+    hosts = get_filtered_hosts(hostname, customer, site, role)
 
     if output == "json":
         print(json.dumps({"hosts": [h.dict() for h in hosts]}, indent=4, default=str))
@@ -77,8 +77,7 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     Use this command to get facts for hosts defined in the datatree.
     """
-    config = ctx.obj.get("config")
-    hosts = get_filtered_hosts(config, hostname, customer, site, role)
+    hosts = get_filtered_hosts(hostname, customer, site, role)
 
     host_facts = {host.id: host.facts for host in hosts}
 
