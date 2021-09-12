@@ -20,9 +20,12 @@ import sys
 import re
 from pydoc import locate, ErrorDuringImport
 
-from ..logging import logger
+from ..logging import get_logger
 from ..config import Config, get_config
 from ..exceptions import BlueprintImportError, BlueprintMissingError
+
+
+logger = get_logger()
 
 
 class Blueprint:

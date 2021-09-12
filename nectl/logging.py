@@ -23,16 +23,24 @@ import coloredlogs  # type: ignore
 import click
 
 
-logger = logging.getLogger("nectl")
-
-
 T = TypeVar("T")
+
+
+def get_logger() -> logging.Logger:
+    """
+    Returns app logger.
+
+    Returns:
+        logging.Logger: logger.
+    """
+    return logging.getLogger("nectl")
 
 
 def logging_opts(func: Callable[..., T]) -> Callable[..., T]:
     """
     Click command logging options decorator.
     """
+    logger = get_logger()
 
     @click.option("-v", help="Increase logging (-vv, -vvv for more).", count=True)
     @functools.wraps(func)
@@ -71,6 +79,6 @@ def setup_logging(v: int = 0):
         3: logging.DEBUG,
     }
     _level = logging_levels[min(v, len(logging_levels) - 1)]
-    coloredlogs.install(_level, logger=logger)
+    coloredlogs.install(_level, logger=get_logger())
     if v > 0:
         print(f"logging level: {logging.getLevelName(_level)}", file=sys.stderr)
