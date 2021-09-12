@@ -97,7 +97,7 @@ class Host:
             "role": self.role,
             "manufacturer": self.manufacturer if include_facts else None,
             "model": self.model if include_facts else None,
-            "os_name": self.os if include_facts else None,
+            "os_name": self.os_name if include_facts else None,
             "os_version": self.os_version if include_facts else None,
             "serial_number": self.serial_number if include_facts else None,
             "asset_tag": self.asset_tag if include_facts else None,
