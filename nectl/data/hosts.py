@@ -24,7 +24,7 @@ class Host:
     role: Optional[str] = None
     manufacturer: Optional[str] = None
     model: Optional[str] = None
-    os: Optional[str] = None
+    os_name: Optional[str] = None
     os_version: Optional[str] = None
     serial_number: Optional[str] = None
     asset_tag: Optional[str] = None
@@ -80,7 +80,7 @@ class Host:
             "role": self.role,
             "manufacturer": self.manufacturer if include_facts else None,
             "model": self.model if include_facts else None,
-            "os": self.os if include_facts else None,
+            "os_name": self.os if include_facts else None,
             "os_version": self.os_version if include_facts else None,
             "serial_number": self.serial_number if include_facts else None,
             "asset_tag": self.asset_tag if include_facts else None,

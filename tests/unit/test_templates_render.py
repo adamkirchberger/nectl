@@ -15,7 +15,11 @@ def test_should_raise_error_when_rendering_with_no_blueprints_map_defined(mock_c
 
     # GIVEN mock host
     host = Host(
-        hostname="core0", site="london", customer="acme", os="fakeos", os_version="5.1"
+        hostname="core0",
+        site="london",
+        customer="acme",
+        os_name="fakeos",
+        os_version="5.1",
     )
 
     # WHEN rendering template
@@ -35,7 +39,11 @@ def test_should_raise_render_error_when_rendering_with_invalid_blueprint(mock_co
 
     # GIVEN mock host
     host = Host(
-        hostname="core0", site="london", customer="acme", os="fakeos", os_version="5.1"
+        hostname="core0",
+        site="london",
+        customer="acme",
+        os_name="fakeos",
+        os_version="5.1",
     )
 
     # GIVEN blueprints directory
