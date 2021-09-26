@@ -126,7 +126,7 @@ def test_should_fail_when_loading_config_and_lookup_paths_not_defined(tmp_path):
     assert "datatree_lookup_paths\n" in str(error.value)
 
 
-def test_should_return_config_when_loading_config_with_blueprints_map(
+def test_should_return_config_when_loading_config_with_templates_map(
     tmp_path,
 ):
     # GIVEN kit directory
@@ -144,7 +144,7 @@ def test_should_return_config_when_loading_config_with_blueprints_map(
         "hosts_hostname_regex: .*/sites/.*/hosts/(.*)$\n"
         "hosts_site_regex: .*/sites/(.*)/hosts/.*\n"
         "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
-        "blueprints_map:\n"
+        "templates_map:\n"
         "  fakeos:FakeOs:\n"
         "    os_name_regex: 'fakeos'\n"
         "    os_version_regex: '5.*'\n"
@@ -153,9 +153,9 @@ def test_should_return_config_when_loading_config_with_blueprints_map(
     # WHEN loading config from file
     config = load_config(str(conf_file))
 
-    # THEN expect blueprint to exist in map
-    assert "fakeos:FakeOs" in config.blueprints_map
+    # THEN expect template to exist in map
+    assert "fakeos:FakeOs" in config.templates_map
 
     # THEN expect values to be regex patterns
-    assert config.blueprints_map["fakeos:FakeOs"].os_name_regex == re.compile("fakeos")
-    assert config.blueprints_map["fakeos:FakeOs"].os_version_regex == re.compile("5.*")
+    assert config.templates_map["fakeos:FakeOs"].os_name_regex == re.compile("fakeos")
+    assert config.templates_map["fakeos:FakeOs"].os_version_regex == re.compile("5.*")

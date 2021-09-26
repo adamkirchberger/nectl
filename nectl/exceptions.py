@@ -10,13 +10,13 @@ class RenderError(Exception):
     """
 
 
-class BlueprintMissingError(Exception):
+class TemplateMissingError(Exception):
     """
-    Indicates that no suitable blueprint has been found for host.
+    Indicates that no suitable template has been found for host.
     """
 
 
-class BlueprintImportError(Exception):
+class TemplateImportError(Exception):
     """
-    Indicates that blueprint file does not exist or has errors.
+    Indicates that template file does not exist or has errors.
     """
