@@ -73,10 +73,9 @@ def setup_logging(v: int = 0):
         v (int): verbosity level.
     """
     logging_levels = {
-        0: logging.CRITICAL,
-        1: logging.ERROR,
-        2: logging.INFO,
-        3: logging.DEBUG,
+        0: logging.ERROR,
+        1: logging.INFO,
+        2: logging.DEBUG,
     }
     _level = logging_levels[min(v, len(logging_levels) - 1)]
     coloredlogs.install(_level, logger=get_logger())
