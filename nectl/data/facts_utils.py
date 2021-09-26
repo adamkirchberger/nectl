@@ -160,7 +160,15 @@ def load_host_facts(
                 f"{host.id}: loading facts file='{mod_item.name}' path='{path}'"
             )
 
+            # Import fact file
+            try:
             mod = importlib.import_module(path + "." + mod_item.name)
+            except (Exception, RecursionError) as e:
+                logger.error(
+                    f"{host.id}: error loading facts file='{mod_item.name}' path='{path}'"
+                )
+                logger.exception(e)
+                sys.exit(1)
 
             _load_vars(mod)
 
