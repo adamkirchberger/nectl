@@ -2,7 +2,7 @@ import pathlib
 import pytest
 
 from nectl.exceptions import TemplateImportError
-from nectl.templates.templates import get_template, _import_template
+from nectl.configs.templates import get_template, _import_template
 
 
 def test_should_return_correct_template_when_getting_template(mock_config):

@@ -13,7 +13,7 @@ logger = get_logger()
 
 class Template:
     """
-    Defines class for a template which is an object that contains templates.
+    Defines class for a template which is used to render host configurations.
     """
 
 

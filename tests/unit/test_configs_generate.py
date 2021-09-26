@@ -1,7 +1,7 @@
 import pathlib
 import pytest
 
-from nectl.templates.render import render_hosts
+from nectl.configs.render import render_hosts
 from nectl.data.hosts import Host
 from nectl.exceptions import RenderError
 
