@@ -163,7 +163,7 @@ def test_should_return_config_when_loading_config_with_blueprints_map(
         "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
         "blueprints_map:\n"
         "  fakeos:FakeOs:\n"
-        "    os_regex: 'fakeos'\n"
+        "    os_name_regex: 'fakeos'\n"
         "    os_version_regex: '5.*'\n"
     )
 
@@ -174,5 +174,5 @@ def test_should_return_config_when_loading_config_with_blueprints_map(
     assert "fakeos:FakeOs" in config.blueprints_map
 
     # THEN expect values to be regex patterns
-    assert config.blueprints_map["fakeos:FakeOs"].os_regex == re.compile("fakeos")
+    assert config.blueprints_map["fakeos:FakeOs"].os_name_regex == re.compile("fakeos")
     assert config.blueprints_map["fakeos:FakeOs"].os_version_regex == re.compile("5.*")
