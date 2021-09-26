@@ -17,9 +17,7 @@ class Template:
     """
 
 
-def get_template(
-    os_name: str, os_version: str, config: Config = get_config()
-) -> Template:
+def get_template(os_name: str, os_version: str, config: Config = None) -> Template:
     """
     Returns the template based on the template map which uses host os and
     os_version to determine the template.
@@ -36,6 +34,8 @@ def get_template(
         TemplateMissingError: if host template cannot be determined.
         TemplateImportError: if template cannot be found or opened.
     """
+    config = get_config() if config is None else config
+
     for bp_name, bp_match in config.templates_map.items():
         if re.match(bp_match.os_name_regex, os_name) and re.match(
             bp_match.os_version_regex, os_version

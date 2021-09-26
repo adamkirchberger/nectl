@@ -100,7 +100,7 @@ def get_filtered_hosts(
     customer: str = None,
     site: str = None,
     role: str = None,
-    config: Config = get_config(),
+    config: Config = None,
 ) -> List[Host]:
     """
     Returns a list of filtered hosts
@@ -115,6 +115,7 @@ def get_filtered_hosts(
     Returns:
         List[Host]: list of discovered hosts.
     """
+    config = get_config() if config is None else config
     hosts = get_all_hosts(config)
 
     # Filter by customer

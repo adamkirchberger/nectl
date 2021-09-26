@@ -22,7 +22,7 @@ logger = get_logger()
 
 def get_facts_for_hosts(
     hosts: List["Host"],
-    config: Config = get_config(),
+    config: Config = None,
 ) -> Dict[str, Dict]:
     """
     Returns a dict of facts loaded from datatree for each provided host.
@@ -34,6 +34,7 @@ def get_facts_for_hosts(
     Returns:
         Dict[str,Dict]: one item per unique host with loaded facts.
     """
+    config = get_config() if config is None else config
     facts = {}
 
     ts_start = time.perf_counter()
@@ -52,7 +53,7 @@ def get_facts_for_hosts(
 
 def load_host_facts(
     host: "Host",
-    config: Config = get_config(),
+    config: Config = None,
 ) -> Dict:
     """
     Loads datatree and returns facts for a single host.
@@ -64,6 +65,8 @@ def load_host_facts(
     Returns:
         Dict: host facts.
     """
+    config = get_config() if config is None else config
+
     # ensure kit path is in pythonpath
     if sys.path[0] != config.kit_path:
         logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")
