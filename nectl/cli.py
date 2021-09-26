@@ -23,7 +23,6 @@ from .exceptions import ConfigFileError
 from .config import APP_VERSION, APP_DESCRIPTION, get_config
 from .data.cli import data
 from .configs.cli import configs
-from .templates.cli import templates
 from .tests.cli import tests
 
 
@@ -56,5 +55,4 @@ def cli_root(ctx):
 # Add child groups
 cli_root.add_command(data)
 cli_root.add_command(configs)
-cli_root.add_command(templates)
 cli_root.add_command(tests)
