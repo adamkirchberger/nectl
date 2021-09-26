@@ -48,7 +48,7 @@ test:
 release:
   extends: .release_trigger
   stage: release
-  image: node:12
+  image: node:16
   before_script:
     - |
       npm install semantic-release \
