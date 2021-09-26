@@ -42,7 +42,7 @@ def list_cmd(ctx):
     raise NotImplementedError
 
 
-@templates.command(name="render", help="Generate templates for hosts using blueprints.")
+@templates.command(name="render", help="Generate configs for hosts using templates.")
 @click.option("-h", "--hostname", help="Filter by hostname.")
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")

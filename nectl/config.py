@@ -61,31 +61,31 @@ class Config(BaseSettings):
     hosts_site_regex: str
     hosts_customer_regex: str
 
-    # Path to kit with datatree, models and blueprints
+    # Path to kit with datatree, models and templates
     kit_path: str
 
-    # Blueprint map matches hosts to blueprints using os and os_version regex
-    class BlueprintMatchItem(BaseSettings):
+    # Template map matches hosts to templates using os and os_version regex
+    class TemplateMatchItem(BaseSettings):
         os_name_regex: Pattern
         os_version_regex: Pattern
 
-    blueprints_map: Dict[str, BlueprintMatchItem] = {}
+    templates_map: Dict[str, TemplateMatchItem] = {}
 
     # Datatree default directory name
     datatree_dirname: str = "data"
 
-    # Blueprints default directory name
-    blueprints_dirname: str = "blueprints"
+    # Templates default directory name
+    templates_dirname: str = "templates"
 
     # Default data action
     default_action: str = "merge_with"
 
-    @validator("blueprints_map")
-    def blueprints_map_keys_must_have_module_and_class_name(cls, v):
+    @validator("templates_map")
+    def templates_map_keys_must_have_module_and_class_name(cls, v):
         # pylint: disable=E0213,C0116,R0201
         for k in v.keys():
             if len(k.split(":")) != 2:
-                raise ValueError("blueprints must be in format 'filename:ClassName'")
+                raise ValueError("templates must be in format 'filename:ClassName'")
 
         return v
 

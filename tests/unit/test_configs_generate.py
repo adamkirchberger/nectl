@@ -23,12 +23,12 @@ from nectl.data.hosts import Host
 from nectl.exceptions import RenderError
 
 
-def test_should_raise_error_when_rendering_with_no_blueprints_map_defined(mock_config):
+def test_should_raise_error_when_rendering_with_no_templates_map_defined(mock_config):
     # GIVEN mock config
     config = mock_config
 
-    # GIVEN blueprints_map is blank
-    config.blueprints_map = {}
+    # GIVEN templates_map is blank
+    config.templates_map = {}
 
     # GIVEN mock host
     host = Host(
@@ -46,11 +46,11 @@ def test_should_raise_error_when_rendering_with_no_blueprints_map_defined(mock_c
     # THEN expect error message
     assert (
         str(error.value)
-        == "templates cannot be rendered when 'blueprints_map' is not defined."
+        == "templates cannot be rendered when 'templates_map' is not defined."
     )
 
 
-def test_should_raise_render_error_when_rendering_with_invalid_blueprint(mock_config):
+def test_should_raise_render_error_when_rendering_with_invalid_template(mock_config):
     # GIVEN mock config
     config = mock_config
 
@@ -63,12 +63,12 @@ def test_should_raise_render_error_when_rendering_with_invalid_blueprint(mock_co
         os_version="5.1",
     )
 
-    # GIVEN blueprints directory
-    blueprints = pathlib.Path(config.kit_path) / config.blueprints_dirname
-    blueprints.mkdir(parents=True)
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir(parents=True)
 
-    # GIVEN fakeos blueprint exists but is invalid
-    (blueprints / "fakeos.py").write_text(
+    # GIVEN fakeos template exists but is invalid
+    (templates / "fakeos.py").write_text(
         "INVALIDCLASS FakeOs:\n"
         "    def __init__(self):\n"
         "        pass\n"

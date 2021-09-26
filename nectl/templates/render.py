@@ -23,12 +23,12 @@ import inspect
 from ..logging import get_logger
 from ..config import Config, get_config
 from ..exceptions import (
-    BlueprintImportError,
-    BlueprintMissingError,
+    TemplateImportError,
+    TemplateMissingError,
     RenderError,
 )
 from ..data.hosts import Host
-from .blueprints import Blueprint, get_blueprint
+from .templates import Template, get_template
 
 
 logger = get_logger()
@@ -38,8 +38,8 @@ def render_hosts(
     hosts: Sequence[Host], config: Config = get_config()
 ) -> Dict[str, Any]:
     """
-    Returns templates for host which have been rendered using blueprints which
-    are matched on 'os_name' and 'os_version' using the 'blueprints_map' var.
+    Returns rendered configs for hosts using templates which are matched on
+    'os_name' and 'os_version' using the 'templates_map' var.
 
     Args:
         hosts (List[Host]): hosts to render templates for.
@@ -49,11 +49,11 @@ def render_hosts(
         Dict[str,Any]: dict with item per host with rendered template.
 
     Raises:
-        RenderError: if there are issues with blueprints or templates.
+        RenderError: if there are issues with templates.
     """
-    if not config.blueprints_map:
+    if not config.templates_map:
         raise RenderError(
-            "templates cannot be rendered when 'blueprints_map' is not defined."
+            "templates cannot be rendered when 'templates_map' is not defined."
         )
 
     results = {}
@@ -69,15 +69,15 @@ def render_hosts(
             continue
 
         try:
-            # Get matching blueprint
-            blueprint = get_blueprint(host.os_name, host.os_version, config=config)
-        except (BlueprintMissingError, BlueprintImportError) as e:
+            # Get matching template
+            template = get_template(host.os_name, host.os_version, config=config)
+        except (TemplateMissingError, TemplateImportError) as e:
             raise RenderError(str(e)) from e
         except Exception as e:
             logger.exception(e)
             raise RenderError(f"unknown error: {e}") from e
 
-        results[host.id] = render_blueprint(blueprint, host.facts)
+        results[host.id] = render_template(template, host.facts)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished rendering templates ({dur}s)")
@@ -85,12 +85,12 @@ def render_hosts(
     return results
 
 
-def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
+def render_template(template: Template, facts: Dict[str, Any]) -> str:
     """
-    Returns rendered configuration for host facts using supplied blueprint.
+    Returns rendered configuration for host facts using supplied template.
 
     Args:
-        blueprint: Template blueprint class.
+        template: Template class.
         facts (Dict[str,Any]): host facts.
 
     Returns:
@@ -100,45 +100,45 @@ def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
     host_id = facts.get("id")
     logger.debug(f"{host_id}: starting render")
 
-    blueprint_name = getattr(blueprint, "__name__")
-    logger.info(f"{host_id}: using blueprint '{blueprint_name}'")
+    template_name = getattr(template, "__name__")
+    logger.info(f"{host_id}: using template '{template_name}'")
 
-    logger.debug(f"{host_id}: collecting blueprint templates")
-    templates = {
-        t: getattr(blueprint, t)
-        for t in dir(blueprint)
-        if callable(getattr(blueprint, t)) and not t.startswith("_")
+    logger.debug(f"{host_id}: collecting template sections")
+    sections = {
+        t: getattr(template, t)
+        for t in dir(template)
+        if callable(getattr(template, t)) and not t.startswith("_")
     }
     logger.debug(
-        f"{host_id}: found {len(templates)} templates: {list(templates.keys())}"
+        f"{host_id}: found {len(sections)} template sections: {list(sections.keys())}"
     )
 
     out = []
 
-    for tname, t in templates.items():
-        logger.info(f"{host_id}: rendering template: {blueprint_name}:{tname}")
+    for sname, section in sections.items():
+        logger.info(f"{host_id}: rendering template: {template_name}:{sname}")
         try:
             # Get args that template needs
-            t_args = {}
-            for arg_name, arg in inspect.signature(t).parameters.items():
+            args = {}
+            for arg_name, arg in inspect.signature(section).parameters.items():
                 # Optional args which have default values
                 if arg.default is not arg.empty:
-                    t_args[arg_name] = facts.get(arg_name, arg.default)
+                    args[arg_name] = facts.get(arg_name, arg.default)
                 # Required args which will raise error when not in facts
                 else:
-                    t_args[arg_name] = facts[arg_name]
+                    args[arg_name] = facts[arg_name]
 
-            # Render template
-            render = t(**t_args)
+            # Render template section
+            render = section(**args)
         except KeyError as e:
             logger.critical(
-                f"{host_id}: template '{blueprint_name}:{tname}' "
+                f"{host_id}: template '{template_name}:{sname}' "
                 f"needs fact: {str(e)}"
             )
             continue  # move to next template
         except Exception as e:
             logger.critical(
-                f"{host_id}: template '{blueprint_name}:{tname}' unknown error: {e}"
+                f"{host_id}: template '{template_name}:{sname}' unknown error: {e}"
             )
             logger.exception(e)
             continue  # move to next template
