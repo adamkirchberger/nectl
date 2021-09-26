@@ -3,7 +3,7 @@ import click
 from ..logging import logging_opts
 
 
-@click.group(help="verification commands")
+@click.group(help="Verification commands.")
 @logging_opts
 def tests():
     """

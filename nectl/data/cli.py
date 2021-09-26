@@ -7,7 +7,7 @@ from .hosts import get_filtered_hosts
 from .facts_utils import facts_to_json_string
 
 
-@click.group(help="Inventory and datatree commands")
+@click.group(help="Inventory and datatree commands.")
 @logging_opts
 def data():
     """
