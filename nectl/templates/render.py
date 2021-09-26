@@ -100,7 +100,7 @@ def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
     host_id = facts.get("id")
     logger.debug(f"{host_id}: starting render")
 
-    blueprint_name = blueprint.__name__
+    blueprint_name = getattr(blueprint, "__name__")
     logger.info(f"{host_id}: using blueprint '{blueprint_name}'")
 
     logger.debug(f"{host_id}: collecting blueprint templates")
