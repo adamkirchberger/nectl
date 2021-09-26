@@ -1,5 +1,6 @@
 import time
 from typing import Sequence, Dict, Any
+import inspect
 
 from ..logging import get_logger
 from ..config import Config, get_config
@@ -43,8 +44,6 @@ def render_hosts(
     logger.debug("start rendering templates")
 
     for host in hosts:
-        print(host)
-        print(host.os_name)
         if host.os_name is None or host.os_version is None:
             logger.info(
                 f"skipping host render with no 'os_name' or 'os_version': {host.id}"
@@ -83,7 +82,7 @@ def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
     host_id = facts.get("id")
     logger.debug(f"{host_id}: starting render")
 
-    blueprint_name = type(blueprint).__name__
+    blueprint_name = blueprint.__name__
     logger.info(f"{host_id}: using blueprint '{blueprint_name}'")
 
     logger.debug(f"{host_id}: collecting blueprint templates")
@@ -101,19 +100,30 @@ def render_blueprint(blueprint: Blueprint, facts: Dict[str, Any]) -> str:
     for tname, t in templates.items():
         logger.info(f"{host_id}: rendering template: {blueprint_name}:{tname}")
         try:
-            render = t(**facts)
-        except TypeError as e:
-            if "missing" in str(e):
-                logger.critical(
-                    f"{host_id}: template '{blueprint_name}:{tname}' "
-                    f"needs fact: {str(e).split(': ')[1]}"
-                )
-            else:
-                logger.critical(
-                    f"{host_id}: template '{blueprint_name}:{tname}' " f": {e}"
-                )
+            # Get args that template needs
+            t_args = {}
+            for arg_name, arg in inspect.signature(t).parameters.items():
+                # Optional args which have default values
+                if arg.default is not arg.empty:
+                    t_args[arg_name] = facts.get(arg_name, arg.default)
+                # Required args which will raise error when not in facts
+                else:
+                    t_args[arg_name] = facts[arg_name]
+
+            # Render template
+            render = t(**t_args)
+        except KeyError as e:
+            logger.critical(
+                f"{host_id}: template '{blueprint_name}:{tname}' "
+                f"needs fact: {str(e)}"
+            )
+            continue  # move to next template
+        except Exception as e:
+            logger.critical(
+                f"{host_id}: template '{blueprint_name}:{tname}' unknown error: {e}"
+            )
             logger.exception(e)
-            continue
+            continue  # move to next template
         out.append(render)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
