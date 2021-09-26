@@ -37,7 +37,7 @@ def get_blueprint(
         BlueprintImportError: if blueprint cannot be found or opened.
     """
     for bp_name, bp_match in config.blueprints_map.items():
-        if re.match(bp_match.os_regex, os_name) and re.match(
+        if re.match(bp_match.os_name_regex, os_name) and re.match(
             bp_match.os_version_regex, os_version
         ):
             return _import_blueprint(

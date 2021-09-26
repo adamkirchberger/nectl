@@ -49,7 +49,7 @@ class Config(BaseSettings):
 
     # Blueprint map matches hosts to blueprints using os and os_version regex
     class BlueprintMatchItem(BaseSettings):
-        os_regex: Pattern
+        os_name_regex: Pattern
         os_version_regex: Pattern
 
     blueprints_map: Dict[str, BlueprintMatchItem] = {}
