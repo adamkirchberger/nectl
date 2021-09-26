@@ -34,9 +34,7 @@ from .templates import Template, get_template
 logger = get_logger()
 
 
-def render_hosts(
-    hosts: Sequence[Host], config: Config = get_config()
-) -> Dict[str, Any]:
+def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]:
     """
     Returns rendered configs for hosts using templates which are matched on
     'os_name' and 'os_version' using the 'templates_map' var.
@@ -51,6 +49,8 @@ def render_hosts(
     Raises:
         RenderError: if there are issues with templates.
     """
+    config = get_config() if config is None else config
+
     if not config.templates_map:
         raise RenderError(
             "templates cannot be rendered when 'templates_map' is not defined."
