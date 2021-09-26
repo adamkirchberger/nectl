@@ -59,7 +59,7 @@ def get_facts_for_hosts(
     # Load facts for each host
     for host in hosts:
         host_id = f"{host.hostname}.{host.site}.{host.customer}"
-        facts[host_id] = load_host_facts(config, host)
+        facts[host_id] = load_host_facts(host, config=config)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished getting facts for {len(hosts)} hosts ({dur}s)")
@@ -162,7 +162,7 @@ def load_host_facts(
 
             # Import fact file
             try:
-            mod = importlib.import_module(path + "." + mod_item.name)
+                mod = importlib.import_module(path + "." + mod_item.name)
             except (Exception, RecursionError) as e:
                 logger.error(
                     f"{host.id}: error loading facts file='{mod_item.name}' path='{path}'"
