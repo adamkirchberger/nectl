@@ -17,7 +17,7 @@
 
 import os
 import json
-from typing import List, Dict, Pattern
+from typing import List, Dict, Pattern, Optional
 import pkg_resources
 import yaml
 from pydantic import BaseSettings, validator
@@ -59,7 +59,7 @@ class Config(BaseSettings):
     # Regex to determine host properties
     hosts_hostname_regex: str
     hosts_site_regex: str
-    hosts_customer_regex: str
+    hosts_customer_regex: Optional[str] = None
 
     # Path to kit with datatree, models and templates
     kit_path: str

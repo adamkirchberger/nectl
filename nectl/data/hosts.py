@@ -53,6 +53,11 @@ class Host:
         """
         Returns unique name for host.
         """
+        # Single tenant datatree with no customer value
+        if not self.customer:
+            return f"{self.hostname}.{self.site}"
+
+        # Multi tenant datatree with customer value
         return f"{self.hostname}.{self.site}.{self.customer}"
 
     @property
@@ -202,13 +207,17 @@ def get_all_hosts(config: Config) -> List[Host]:
             logger.fatal(f"failed to extract site for host: {host_dir}")
             continue
 
-        # Extract customer
-        m = re.match(config.hosts_customer_regex, host_dir)
-        if m:
-            customer = m.group(1)
+        # Extract customer for multi-tenant data trees
+        if config.hosts_customer_regex:
+            m = re.match(config.hosts_customer_regex, host_dir)
+            if m:
+                customer = m.group(1)
+            else:
+                logger.fatal(f"failed to extract customer for host: {host_dir}")
+                continue
+        # No customer single tenant tree
         else:
-            logger.fatal(f"failed to extract customer for host: {host_dir}")
-            continue
+            customer = ""
 
         new_host = Host(hostname=hostname, site=site, customer=customer)
         logger.debug(f"found host '{new_host.id}' in directory: {host_dir}")
