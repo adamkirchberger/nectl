@@ -104,7 +104,7 @@ def load_host_facts(
             attr: type(getattr(mod, attr))
             for attr in dir(mod)
             if isinstance(getattr(mod, attr), VALID_DATA_TYPES)
-            and not attr.startswith("__")
+            and not attr.startswith("_")
         }
 
         for var, var_type in variables.items():
