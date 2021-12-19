@@ -175,7 +175,7 @@ def get_all_hosts(config: Config) -> List[Host]:
     ]
     for host_dir in host_dirs:
         # Extract hostname
-        m = re.match(config.hosts_hostname_regex, host_dir)
+        m = re.match(re.compile(config.hosts_hostname_regex), host_dir)
         if m:
             hostname = re.sub(".py$", "", m.group(1))
         else:
@@ -183,7 +183,7 @@ def get_all_hosts(config: Config) -> List[Host]:
             continue
 
         # Extract site
-        m = re.match(config.hosts_site_regex, host_dir)
+        m = re.match(re.compile(config.hosts_site_regex), host_dir)
         if m:
             site = m.group(1)
         else:
@@ -192,7 +192,7 @@ def get_all_hosts(config: Config) -> List[Host]:
 
         # Extract customer for multi-tenant data trees
         if config.hosts_customer_regex:
-            m = re.match(config.hosts_customer_regex, host_dir)
+            m = re.match(re.compile(config.hosts_customer_regex), host_dir)
             if m:
                 customer = m.group(1)
             else:
