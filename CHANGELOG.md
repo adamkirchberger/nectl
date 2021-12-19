@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.4.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.3.0...0.4.0) (2021-12-19)
+
+
+### Bug Fixes
+
+* add git ignore for coverage files ([ee4d3fa](https://gitlab.com/adamkirchberger/nectl-dev/commit/ee4d3fa8d2c5715a46508e122f058a7e93289926))
+* compile regex from string to avoid errors ([ab2e99c](https://gitlab.com/adamkirchberger/nectl-dev/commit/ab2e99c08dd275eeb2d16958d5a89ca2da8e4053))
+* ignore protected variables ([99323f3](https://gitlab.com/adamkirchberger/nectl-dev/commit/99323f356701bf1b6cd0f94f2be3723b370e6b68))
+
+
+### Features
+
+* add support for single tenant data tree ([19e0e4a](https://gitlab.com/adamkirchberger/nectl-dev/commit/19e0e4a05868e4d430cbf2b863c94f0798f3baf2))
+
 # [0.3.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.2.0...0.3.0) (2021-09-26)
 
 
