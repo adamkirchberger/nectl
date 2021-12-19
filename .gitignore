@@ -2,6 +2,7 @@
 output
 testing
 examples
+.coverage
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
