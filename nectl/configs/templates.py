@@ -1,7 +1,7 @@
 import os
 import sys
 import re
-from pydoc import locate, ErrorDuringImport
+from importlib import import_module
 
 from ..logging import get_logger
 from ..config import Config, get_config
@@ -71,11 +71,15 @@ def _import_template(name: str, templates_path: str) -> Template:
 
     try:
         # Get template module
-        mod = locate(mod_name)
-    except ErrorDuringImport as e:
-        raise TemplateImportError(f"template error: {e}") from e
+        mod = import_module(mod_name)
 
-    if not mod:
-        raise TemplateImportError(f"template file not found: {mod_name}")
+        # Force reimport when reused for another host
+        del sys.modules[mod_name]
+
+    except SyntaxError as e:
+        raise TemplateImportError(f"template '{mod_name}' error: {e}") from e
+
+    except ModuleNotFoundError as e:
+        raise TemplateImportError(f"template file not found: {mod_name}") from e
 
     return mod

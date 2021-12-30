@@ -172,4 +172,4 @@ def test_should_raise_error_when_getting_template_that_is_invalid(
         _import_template("fakeos", f"{config.kit_path}/{config.templates_dirname}")
 
     # THEN expect error message
-    assert "SyntaxError:" in str(error.value)
+    assert "invalid syntax" in str(error.value)
