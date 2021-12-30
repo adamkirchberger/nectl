@@ -82,7 +82,7 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
         render_hosts(hosts=[host], config=config)
 
     # THEN expect error message
-    assert "SyntaxError:" in str(error.value)
+    assert "invalid syntax" in str(error.value)
 
 
 def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(

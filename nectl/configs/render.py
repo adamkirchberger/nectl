@@ -20,6 +20,7 @@ import time
 from typing import Sequence, Dict, Any
 import inspect
 from contextlib import redirect_stdout
+from contextvars import ContextVar
 import io
 
 from ..logging import get_logger
@@ -34,6 +35,17 @@ from .templates import Template, get_template
 
 
 logger = get_logger()
+_render_context = ContextVar("render_context", default={})
+
+
+def get_host_facts() -> dict:
+    """
+    Returns the current host facts, this should only be used within templates.
+
+    Returns:
+        dict: current host facts.
+    """
+    return _render_context.get().get("facts", {})
 
 
 def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]:
@@ -71,8 +83,15 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
             continue
 
         try:
+            logger.debug(f"{host.id}: setting render context")
+            _render_context.set({"facts": host.facts})  # set host facts
+
             # Get matching template
             template = get_template(host.os_name, host.os_version, config=config)
+
+            logger.debug(f"{host.id}: clearing render context")
+            _render_context.set({})  # set context to empty dict
+
         except (TemplateMissingError, TemplateImportError) as e:
             raise RenderError(str(e)) from e
         except Exception as e:
