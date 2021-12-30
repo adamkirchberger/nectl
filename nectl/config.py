@@ -63,15 +63,6 @@ class Config(BaseSettings):
     # Default data action
     default_action: str = "merge_with"
 
-    @validator("templates_map")
-    def templates_map_keys_must_have_module_and_class_name(cls, v):
-        # pylint: disable=E0213,C0116,R0201
-        for k in v.keys():
-            if len(k.split(":")) != 2:
-                raise ValueError("templates must be in format 'filename:ClassName'")
-
-        return v
-
     @property
     def datatree_path(self):
         """
