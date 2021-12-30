@@ -35,7 +35,7 @@ from .templates import Template, get_template
 
 
 logger = get_logger()
-_render_context = ContextVar("render_context", default={})
+_render_context: ContextVar[Dict] = ContextVar("render_context", default={})
 
 
 def get_host_facts() -> dict:
