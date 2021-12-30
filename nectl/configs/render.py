@@ -19,6 +19,8 @@ from os import getcwd
 import time
 from typing import Sequence, Dict, Any
 import inspect
+from contextlib import redirect_stdout
+import io
 
 from ..logging import get_logger
 from ..config import Config, get_config
@@ -129,7 +131,13 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
                     args[arg_name] = facts[arg_name]
 
             # Render template section
-            render = section(**args)
+            with redirect_stdout(io.StringIO()) as f:
+                # Capture section print statements
+                section(**args)
+
+            render = f.getvalue()  # a ssign output
+            render = render.strip("\n")  # strip empty newline at end
+
         except KeyError as e:
             logger.critical(
                 f"{host_id}: template '{template_name}:{sname}' "

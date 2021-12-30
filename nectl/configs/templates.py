@@ -28,9 +28,9 @@ from ..exceptions import TemplateImportError, TemplateMissingError
 logger = get_logger()
 
 
-class Template:
+class Template(object):
     """
-    Defines class for a template which is used to render host configurations.
+    Defines a template which is used to render host configurations.
     """
 
 
@@ -45,7 +45,7 @@ def get_template(os_name: str, os_version: str, config: Config = None) -> Templa
         config (Config): config settings.
 
     Returns:
-        template class.
+        template module.
 
     Raises:
         TemplateMissingError: if host template cannot be determined.
@@ -69,37 +69,30 @@ def get_template(os_name: str, os_version: str, config: Config = None) -> Templa
 
 def _import_template(name: str, templates_path: str) -> Template:
     """
-    Imports a template class from a python file and returns it.
+    Imports a template module from a python file and returns it.
 
     Args:
-        name (str): template name with class name. Example: 'foofile:FooClass'
+        name (str): template file name. Example: 'foofile'
         templates_path (str): path to templates directory.
 
     Returns:
-        template class.
+        template module.
     """
     # Append path to pythonpath
     if templates_path not in sys.path:
         logger.debug(f"appending templates to PYTHONPATH: {templates_path}")
         sys.path.insert(0, templates_path)
 
-    mod_name, class_name = name.split(":")
-    mod_name = mod_name.replace("/", ".")
-    logger.debug(f"importing template module='{mod_name}' class='{class_name}'")
+    mod_name = name.replace("/", ".")
+    logger.debug(f"importing template module='{mod_name}'")
 
     try:
         # Get template module
         mod = locate(mod_name)
     except ErrorDuringImport as e:
-        raise TemplateImportError(f"template '{mod_name}' has errors: {e}") from e
+        raise TemplateImportError(f"template error: {e}") from e
 
     if not mod:
         raise TemplateImportError(f"template file not found: {mod_name}")
 
-    try:
-        # Get template class
-        return getattr(mod, class_name)
-    except AttributeError as e:
-        raise TemplateImportError(
-            f"template '{mod_name}' class not found named: {class_name}"
-        ) from e
+    return mod
