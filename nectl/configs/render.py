@@ -90,7 +90,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
     logger.debug(f"{host_id}: collecting template sections")
     sections = {
         t: getattr(template, t)
-        for t in dir(template)
+        for t in template.__dict__.keys()
         if callable(getattr(template, t)) and not t.startswith("_")
     }
     logger.debug(
