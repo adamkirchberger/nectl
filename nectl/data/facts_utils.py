@@ -84,10 +84,10 @@ def load_host_facts(
         """
         # Pull out dict of all variables and their types
         variables = {
-            attr: type(getattr(mod, attr))
-            for attr in dir(mod)
-            if isinstance(getattr(mod, attr), VALID_DATA_TYPES)
-            and not attr.startswith("_")
+            attr_name: type(attr_value)
+            for attr_name, attr_value in mod.__dict__.items()
+            if isinstance(attr_value, VALID_DATA_TYPES)
+            and not attr_name.startswith("_")
         }
 
         for var, var_type in variables.items():
