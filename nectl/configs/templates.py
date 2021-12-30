@@ -2,6 +2,7 @@ import os
 import sys
 import re
 from importlib import import_module
+from types import ModuleType
 
 from ..logging import get_logger
 from ..config import Config, get_config
@@ -11,10 +12,7 @@ from ..exceptions import TemplateImportError, TemplateMissingError
 logger = get_logger()
 
 
-class Template(object):
-    """
-    Defines a template which is used to render host configurations.
-    """
+Template = ModuleType  # Defines a template which is used to render host configurations.
 
 
 def get_template(os_name: str, os_version: str, config: Config = None) -> Template:
