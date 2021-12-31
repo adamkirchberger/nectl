@@ -32,8 +32,8 @@ def get_host_facts() -> dict:
 
 def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]:
     """
-    Returns rendered configs for hosts using templates which are matched on
-    'os_name' and 'os_version' using the 'templates_map' var.
+    Returns rendered configs for hosts using templates which are matched based
+    on the 'os_name' value.
 
     Args:
         hosts (List[Host]): hosts to render templates for.
@@ -46,11 +46,6 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
         RenderError: if there are issues with templates.
     """
     config = get_config() if config is None else config
-
-    if not config.templates_map:
-        raise RenderError(
-            "templates cannot be rendered when 'templates_map' is not defined."
-        )
 
     results = {}
 
@@ -69,7 +64,7 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
             _render_context.set({"facts": host.facts})  # set host facts
 
             # Get matching template
-            template = get_template(host.os_name, host.os_version, config=config)
+            template = get_template(os_name=host.os_name, config=config)
 
             logger.debug(f"{host.id}: clearing render context")
             _render_context.set({})  # set context to empty dict

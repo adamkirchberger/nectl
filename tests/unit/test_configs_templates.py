@@ -1,7 +1,7 @@
 import pathlib
 import pytest
 
-from nectl.exceptions import TemplateImportError
+from nectl.exceptions import TemplateImportError, TemplateMissingError
 from nectl.configs.templates import get_template, _import_template
 
 
@@ -25,11 +25,8 @@ def test_should_return_correct_template_when_getting_template(mock_config):
     # GIVEN host os name
     os_name = "fakeos"
 
-    # GIVEN host os_version
-    os_version = "5.1"
-
-    # WHEN getting template using os and os_version
-    template = get_template(os_name=os_name, os_version=os_version, config=config)
+    # WHEN getting template using os
+    template = get_template(os_name=os_name, config=config)
 
     # THEN expect template name
     assert template.__name__ == "fakeos"
@@ -141,11 +138,11 @@ def test_should_raise_error_when_getting_template_file_that_does_not_exist(
     # GIVEN no template file is present
 
     # WHEN import template
-    with pytest.raises(TemplateImportError) as error:
+    with pytest.raises(TemplateMissingError) as error:
         _import_template("fakeos", f"{config.kit_path}/{config.templates_dirname}")
 
     # THEN expect error message
-    assert str(error.value) == "template file not found: fakeos"
+    assert str(error.value) == "template file not found matching os_name: fakeos"
 
 
 def test_should_raise_error_when_getting_template_that_is_invalid(
