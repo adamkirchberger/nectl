@@ -64,13 +64,6 @@ class Config(BaseSettings):
     # Path to kit with datatree, models and templates
     kit_path: str
 
-    # Template map matches hosts to templates using os and os_version regex
-    class TemplateMatchItem(BaseSettings):
-        os_name_regex: Pattern
-        os_version_regex: Pattern
-
-    templates_map: Dict[str, TemplateMatchItem] = {}
-
     # Datatree default directory name
     datatree_dirname: str = "data"
 

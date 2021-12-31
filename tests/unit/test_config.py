@@ -141,38 +141,3 @@ def test_should_fail_when_loading_config_and_lookup_paths_not_defined(tmp_path):
 
     # THEN expect missing variable name in error
     assert "datatree_lookup_paths\n" in str(error.value)
-
-
-def test_should_return_config_when_loading_config_with_templates_map(
-    tmp_path,
-):
-    # GIVEN kit directory
-    kit_dir = tmp_path / "kit"
-    kit_dir.mkdir()
-
-    # GIVEN config file
-    conf_file = kit_dir / "config.yaml"
-
-    # GIVEN config file content is YAML
-    conf_file.write_text(
-        "---\n"
-        "datatree_lookup_paths: [data.a, data.b, data.c]\n"
-        "hosts_glob_pattern: customers/*/sites/*/hosts/*\n"
-        "hosts_hostname_regex: .*/sites/.*/hosts/(.*)$\n"
-        "hosts_site_regex: .*/sites/(.*)/hosts/.*\n"
-        "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
-        "templates_map:\n"
-        "  fakeos:FakeOs:\n"
-        "    os_name_regex: 'fakeos'\n"
-        "    os_version_regex: '5.*'\n"
-    )
-
-    # WHEN loading config from file
-    config = load_config(str(conf_file))
-
-    # THEN expect template to exist in map
-    assert "fakeos:FakeOs" in config.templates_map
-
-    # THEN expect values to be regex patterns
-    assert config.templates_map["fakeos:FakeOs"].os_name_regex == re.compile("fakeos")
-    assert config.templates_map["fakeos:FakeOs"].os_version_regex == re.compile("5.*")

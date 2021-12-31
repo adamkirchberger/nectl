@@ -17,7 +17,6 @@
 
 import os
 import sys
-import re
 from importlib import import_module
 from types import ModuleType
 
@@ -32,36 +31,26 @@ logger = get_logger()
 Template = ModuleType  # Defines a template which is used to render host configurations.
 
 
-def get_template(os_name: str, os_version: str, config: Config = None) -> Template:
+def get_template(os_name: str, config: Config = None) -> Template:
     """
-    Returns the template based on the template map which uses host os and
-    os_version to determine the template.
+    Returns the template based on the host os_name value/
 
     Args:
         os_name (str): host operating system.
-        os_version (str): host operating system version.
         config (Config): config settings.
 
     Returns:
         template module.
 
     Raises:
-        TemplateMissingError: if host template cannot be determined.
-        TemplateImportError: if template cannot be found or opened.
+        TemplateMissingError: if host template cannot be found.
+        TemplateImportError: if template exists but cannot opened.
     """
     config = get_config() if config is None else config
 
-    for bp_name, bp_match in config.templates_map.items():
-        if re.match(bp_match.os_name_regex, os_name) and re.match(
-            bp_match.os_version_regex, os_version
-        ):
-            return _import_template(
-                bp_name,
-                os.path.join(config.kit_path, config.templates_dirname),
-            )
-
-    raise TemplateMissingError(
-        f"no template has matched host os_name='{os_name}' os_version='{os_version}'"
+    return _import_template(
+        name=os_name,
+        templates_path=os.path.join(config.kit_path, config.templates_dirname),
     )
 
 
@@ -75,6 +64,10 @@ def _import_template(name: str, templates_path: str) -> Template:
 
     Returns:
         template module.
+
+    Raises:
+        TemplateMissingError: if host template cannot be found.
+        TemplateImportError: if template exists but cannot opened.
     """
     # Append path to pythonpath
     if templates_path not in sys.path:
@@ -92,9 +85,13 @@ def _import_template(name: str, templates_path: str) -> Template:
         del sys.modules[mod_name]
 
     except SyntaxError as e:
-        raise TemplateImportError(f"template '{mod_name}' error: {e}") from e
+        raise TemplateImportError(
+            f"template for os_name '{mod_name}' has error: {e}"
+        ) from e
 
     except ModuleNotFoundError as e:
-        raise TemplateImportError(f"template file not found: {mod_name}") from e
+        raise TemplateMissingError(
+            f"template file not found matching os_name: {mod_name}"
+        ) from e
 
     return mod
