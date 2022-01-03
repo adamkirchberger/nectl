@@ -59,23 +59,21 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
             )
             continue
 
-        try:
             logger.debug(f"{host.id}: setting render context")
             _render_context.set({"facts": host.facts})  # set host facts
 
+        try:
             # Get matching template
             template = get_template(os_name=host.os_name, config=config)
 
-            logger.debug(f"{host.id}: clearing render context")
-            _render_context.set({})  # set context to empty dict
+            # Render template and add to results
+            results[host.id] = render_template(template, host.facts)
 
         except (TemplateMissingError, TemplateImportError) as e:
             raise RenderError(str(e)) from e
-        except Exception as e:
-            logger.exception(e)
-            raise RenderError(f"unknown error: {e}") from e
-
-        results[host.id] = render_template(template, host.facts)
+        finally:
+            logger.debug(f"{host.id}: clearing render context")
+            _render_context.set({})  # set context to empty dict
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished rendering templates ({dur}s)")
