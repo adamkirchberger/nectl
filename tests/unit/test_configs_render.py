@@ -18,15 +18,66 @@
 import pathlib
 import pytest
 
-from nectl.configs.render import render_hosts, render_template
+import nectl.config
+from nectl.configs.render import (
+    render_hosts,
+    render_template,
+    get_host_facts,
+    _render_context,
+)
 from nectl.configs.templates import _import_template
 from nectl.data.hosts import Host
 from nectl.exceptions import RenderError
 
 
+def test_should_return_config_dict_when_rendering_with_valid_template(mock_config):
+    # GIVEN mock config
+    config = mock_config
+
+    # GIVEN get_config() is patched to return mock_config
+    nectl.config.__config = config
+
+    # GIVEN mock host
+    host = Host(
+        hostname="core0",
+        site="london",
+        customer="acme",
+        os_name="fakeos",
+        os_version="5.1",
+    )
+
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir(parents=True)
+
+    # GIVEN fakeos template exists
+    (templates / "fakeos.py").write_text(
+        "def section_one(hostname):\n"
+        "    print(f'hostname is: {hostname}')\n"
+        "\n"
+        "def section_two(site):\n"
+        "    print(f'site is: {site}')\n"
+    )
+
+    # WHEN rendering hosts
+    configs = render_hosts(hosts=[host], config=config)
+
+    # THEN expect to be dict
+    assert isinstance(configs, dict)
+
+    # THEN expect host to be in configs
+    assert host.id in configs.keys()
+
+    # THEN expect host config
+    assert configs.get(host.id) == "hostname is: core0\nsite is: london"
+
+
 def test_should_raise_render_error_when_rendering_with_invalid_template(mock_config):
     # GIVEN mock config
     config = mock_config
+
+    # GIVEN get_config() is patched to return mock_config
+    nectl.config.__config = config
 
     # GIVEN mock host
     host = Host(
@@ -50,7 +101,7 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
         "    print('bar')\n"
     )
 
-    # WHEN rendering template
+    # WHEN rendering hosts
     with pytest.raises(RenderError) as error:
         render_hosts(hosts=[host], config=config)
 
@@ -63,6 +114,9 @@ def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(
 ):
     # GIVEN mock config
     config = mock_config
+
+    # GIVEN get_config() is patched to return mock_config
+    nectl.config.__config = config
 
     # GIVEN mock host with no os details provided
     host = Host(
@@ -117,7 +171,158 @@ def test_should_return_config_when_rendering_template(mock_config):
     # WHEN config is rendered
     render = render_template(template=template, facts=facts)
 
-    # THEN
+    # THEN expect config section order based on how they are defined in code
     assert render == "\n".join(
         ["top", "hostname is: fakenode", "middle", "os is fakeos", "end"]
     )
+
+
+def test_should_return_config_with_default_arg_value_when_rendering_template(
+    mock_config,
+):
+    # GIVEN config
+    config = mock_config
+
+    # GIVEN facts
+    facts = {
+        "hostname": "fakenode",
+        "os_name": "fakeos",
+    }
+
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir()
+
+    # GIVEN template with one section which has optional variable 'location'
+    (templates / "fakeos.py").write_text(
+        "def section_one(hostname, location='default_location'):\n"
+        "    print(f'hostname is: {hostname}')\n"
+        "    print(f'location is: {location}')\n"
+    )
+
+    # GIVEN template module
+    template = _import_template(
+        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+    )
+
+    # WHEN config is rendered
+    render = render_template(template=template, facts=facts)
+
+    # THEN expect render to use default location value
+    assert render == "\n".join(
+        ["hostname is: fakenode", "location is: default_location"]
+    )
+
+
+def test_should_raise_error_when_rendering_template_with_required_variable_that_is_not_in_facts(
+    mock_config, caplog
+):
+    # GIVEN config
+    config = mock_config
+
+    # GIVEN facts
+    facts = {
+        "id": "fakenode.fakesite",
+        "hostname": "fakenode",
+        "os_name": "fakeos",
+    }
+
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir()
+
+    # GIVEN template file with section that requires fact 'location'
+    (templates / "fakeos.py").write_text(
+        "def section_one(hostname, location):\n"
+        "    print(f'hostname is: {hostname}')\n"
+        "    print(f'location is: {location}')\n"
+    )
+
+    # GIVEN template module
+    template = _import_template(
+        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+    )
+
+    # WHEN config is rendered
+    with pytest.raises(RenderError) as error:
+        render_template(template=template, facts=facts)
+
+    # THEN expect error to have been raised with message
+    assert (
+        str(error.value)
+        == "render aborted due to 1 render errors with host: fakenode.fakesite"
+    )
+
+    # THEN expect to have log with detailed error
+    assert "template 'fakeos:section_one' needs fact: 'location'" in caplog.text
+
+
+def test_should_raise_error_when_rendering_template_which_encounters_unexpected_error(
+    mock_config, caplog
+):
+    # GIVEN config
+    config = mock_config
+
+    # GIVEN facts
+    facts = {
+        "id": "fakenode.fakesite",
+        "hostname": "fakenode",
+        "os_name": "fakeos",
+    }
+
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir()
+
+    # GIVEN template file with section that performs invalid addition on string
+    (templates / "fakeos.py").write_text(
+        "def section_one(hostname):\n" "    print(f'hostname is: {hostname+100}')\n"
+    )
+
+    # GIVEN template module
+    template = _import_template(
+        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+    )
+
+    # WHEN config is rendered
+    with pytest.raises(RenderError) as error:
+        render_template(template=template, facts=facts)
+
+    # THEN expect error to have been raised with message
+    assert (
+        str(error.value)
+        == "render aborted due to 1 render errors with host: fakenode.fakesite"
+    )
+
+    # THEN expect to have log with detailed error
+    assert (
+        "template 'fakeos:section_one' unknown error: can only concatenate str"
+        in caplog.text
+    )
+
+
+def test_should_return_empty_dict_when_returning_host_facts_with_default_context():
+    # GIVEN that we are not running in a template and render context is blank
+
+    # WHEN getting facts
+    facts = get_host_facts()
+
+    # THEN expect result to be empty dict
+    assert facts == {}
+
+
+def test_should_return_empty_dict_when_returning_host_facts_with_context_set():
+    # GIVEN mock facts
+    mock_facts = {
+        "hostname": "fakenode",
+        "os_name": "fakeos",
+    }
+
+    # GIVEN that context has been set with facts
+    _render_context.set({"facts": mock_facts})
+
+    # WHEN getting facts
+    facts = get_host_facts()
+
+    # THEN expect result to match mock facts
+    assert facts == mock_facts
