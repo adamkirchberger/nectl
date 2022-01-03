@@ -38,7 +38,7 @@ class Host:
 
     hostname: str
     site: str
-    customer: str
+    customer: Optional[str] = None
     role: Optional[str] = None
     manufacturer: Optional[str] = None
     model: Optional[str] = None
@@ -84,7 +84,7 @@ class Host:
         """
         Intercept calls to attributes and return the value from host facts.
         """
-        ignored_attrs = ("role", "_facts")
+        ignored_attrs = ("customer", "role", "_facts")  # don't try find value in facts
         if object.__getattribute__(self, name) is None and name not in ignored_attrs:
             logger.debug(f"{self.id}: fetching fact '{name}'")
             return object.__getattribute__(self, "facts").get(name)
@@ -217,7 +217,7 @@ def get_all_hosts(config: Config) -> List[Host]:
                 continue
         # No customer single tenant tree
         else:
-            customer = ""
+            customer = None
 
         new_host = Host(hostname=hostname, site=site, customer=customer)
         logger.debug(f"found host '{new_host.id}' in directory: {host_dir}")
