@@ -59,10 +59,14 @@ class Host:
         attribute exists in host facts then the value will be returned.
         """
         if not name.startswith("_") and name in self.facts:
-            logger.debug(f"{self.id}: fetching undefined fact '{name}'")
+            logger.debug(f"{self.id}: fetching fact '{name}'")
             return self.facts[name]
 
-        return object.__getattribute__(self, name)
+        if not name.startswith("_") and name not in self.facts:
+            logger.warning(f"{self.id}: fact not found '{name}'")
+            return None
+
+        raise AttributeError(f"'Host' object has no attribute '{name}'")
 
     def __getattribute__(self, name):
         """
