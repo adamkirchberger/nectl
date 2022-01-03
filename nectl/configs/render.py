@@ -59,8 +59,8 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
             )
             continue
 
-            logger.debug(f"{host.id}: setting render context")
-            _render_context.set({"facts": host.facts})  # set host facts
+        logger.debug(f"{host.id}: setting render context")
+        _render_context.set({"facts": host.facts})  # set host facts
 
         try:
             # Get matching template
@@ -91,6 +91,9 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
 
     Returns:
         rendered host configuration.
+
+    Raises:
+        RenderError: if there are issues during render.
     """
     ts_start = time.perf_counter()
     host_id = facts.get("id")
@@ -110,7 +113,9 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
     )
 
     out = []
+    errors = 0  # error counter used to only alert at the end
 
+    # Loop through each template section
     for sname, section in sections.items():
         logger.info(f"{host_id}: rendering template: {template_name}:{sname}")
         try:
@@ -129,23 +134,33 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
                 # Capture section print statements
                 section(**args)
 
-            render = f.getvalue()  # a ssign output
+            render = f.getvalue()  # assign output
             render = render.strip("\n")  # strip empty newline at end
 
         except KeyError as e:
+            # Catch missing facts errors
             logger.critical(
                 f"{host_id}: template '{template_name}:{sname}' "
                 f"needs fact: {str(e)}"
             )
-            continue  # move to next template
+            errors += 1  # increase errors counter
+            continue  # move to next template section
         except Exception as e:
+            # Catch all other errors
             logger.critical(
                 f"{host_id}: template '{template_name}:{sname}' unknown error: {e}"
             )
             logger.exception(e)
-            continue  # move to next template
+            errors += 1  # increase errors counter
+            continue  # move to next template section
         out.append(render)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"{host_id}: finished render ({dur}s)")
+
+    if errors:
+        msg = f"render aborted due to {errors} render errors with host: {host_id}"
+        logger.critical(msg)
+        raise RenderError(msg)
+
     return "\n".join(out)
