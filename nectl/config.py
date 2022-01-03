@@ -73,9 +73,9 @@ def get_config() -> Config:
     """
     global __config
     if not __config:
-        config = load_config()
+        __config = load_config()
 
-    return config
+    return __config
 
 
 def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
