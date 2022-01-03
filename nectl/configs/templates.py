@@ -68,13 +68,15 @@ def _import_template(name: str, templates_path: str) -> Template:
         del sys.modules[mod_name]
 
     except SyntaxError as e:
-        raise TemplateImportError(
-            f"template for os_name '{mod_name}' has error: {e}"
-        ) from e
+        msg = f"template for os_name '{mod_name}' has error: {e}"
+        logger.critical(msg)
+        logger.exception(e)
+        raise TemplateImportError(msg) from e
 
     except ModuleNotFoundError as e:
-        raise TemplateMissingError(
-            f"template file not found matching os_name: {mod_name}"
-        ) from e
+        msg = f"template file not found matching os_name: {mod_name}"
+        logger.critical(msg)
+        logger.exception(e)
+        raise TemplateMissingError(msg) from e
 
     return mod
