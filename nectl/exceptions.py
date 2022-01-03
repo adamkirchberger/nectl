@@ -15,6 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+
+class DiscoveryError(Exception):
+    """
+    Indicates that an error has been encountered during data tree discovery.
+    """
+
+
 class ConfigFileError(Exception):
     """
     Indicates that errors have been encountered related to config file.

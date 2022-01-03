@@ -19,7 +19,7 @@ import sys
 import click
 
 from ..logging import logging_opts
-from ..exceptions import RenderError
+from ..exceptions import DiscoveryError, RenderError
 from ..data.hosts import get_filtered_hosts
 from .render import render_hosts
 
@@ -54,11 +54,10 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str, director
     """
     Use this command to render configurations for hosts.
     """
-    hosts = get_filtered_hosts(hostname, customer, site, role)
-
     try:
+    hosts = get_filtered_hosts(hostname, customer, site, role)
         _templates = render_hosts(hosts)
-    except RenderError as e:
+    except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 

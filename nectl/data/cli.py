@@ -15,11 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import json
 import click
 from tabulate import tabulate
 
 from ..logging import logging_opts
+from ..exceptions import DiscoveryError
 from .hosts import get_filtered_hosts
 from .facts_utils import facts_to_json_string
 
@@ -52,7 +54,11 @@ def list_hosts_cmd(
     """
     Use this command to list hosts discovered in the datatree.
     """
-    hosts = get_filtered_hosts(hostname, customer, site, role)
+    try:
+        hosts = get_filtered_hosts(hostname, customer, site, role)
+    except DiscoveryError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     if output == "json":
         print(json.dumps({"hosts": [h.dict() for h in hosts]}, indent=4, default=str))
@@ -77,7 +83,11 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     Use this command to get facts for hosts defined in the datatree.
     """
-    hosts = get_filtered_hosts(hostname, customer, site, role)
+    try:
+        hosts = get_filtered_hosts(hostname, customer, site, role)
+    except DiscoveryError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     host_facts = {host.id: host.facts for host in hosts}
 
