@@ -17,10 +17,10 @@
 
 import os
 import json
-from typing import List, Dict, Pattern, Optional
+from typing import List, Optional
 import pkg_resources
 import yaml
-from pydantic import BaseSettings, validator
+from pydantic import BaseSettings
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import ConfigFileError
@@ -128,9 +128,5 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
         )
     except ValidationError as e:
         raise ConfigFileError(e) from e
-
-        # raise ConfigFileError(
-        #     "config file is missing variables or has invalid variable types"
-        # ) from e
 
     return config
