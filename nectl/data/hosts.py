@@ -6,6 +6,7 @@ from glob import glob
 from dataclasses import dataclass
 
 from ..logging import get_logger
+from ..exceptions import DiscoveryError
 from ..config import Config, get_config
 from .facts_utils import load_host_facts
 
@@ -119,6 +120,9 @@ def get_filtered_hosts(
 
     Returns:
         List[Host]: list of discovered hosts.
+
+    Raises:
+        DiscoveryError: if hosts cannot be successfully discovered.
     """
     config = get_config() if config is None else config
     hosts = get_all_hosts(config)
@@ -162,6 +166,9 @@ def get_all_hosts(config: Config) -> List[Host]:
 
     Returns:
         List[Host]: list of discovered hosts.
+
+    Raises:
+        DiscoveryError: if hosts cannot be successfully discovered.
     """
     hosts = []
 
@@ -179,16 +186,24 @@ def get_all_hosts(config: Config) -> List[Host]:
         if m:
             hostname = re.sub(".py$", "", m.group(1))
         else:
-            logger.fatal(f"failed to extract hostname for host: {host_dir}")
-            continue
+            msg = (
+                f"failed to extract hostname from path string '{host_dir}' "
+                f"using regex: '{config.hosts_hostname_regex}'"
+            )
+            logger.critical(msg)
+            raise DiscoveryError(msg)
 
         # Extract site
         m = re.match(re.compile(config.hosts_site_regex), host_dir)
         if m:
             site = m.group(1)
         else:
-            logger.fatal(f"failed to extract site for host: {host_dir}")
-            continue
+            msg = (
+                f"failed to extract site from path string '{host_dir}' "
+                f"using regex: '{config.hosts_site_regex}'"
+            )
+            logger.critical(msg)
+            raise DiscoveryError(msg)
 
         # Extract customer for multi-tenant data trees
         if config.hosts_customer_regex:
@@ -196,8 +211,12 @@ def get_all_hosts(config: Config) -> List[Host]:
             if m:
                 customer = m.group(1)
             else:
-                logger.fatal(f"failed to extract customer for host: {host_dir}")
-                continue
+                msg = (
+                    f"failed to extract customer from path string '{host_dir}' "
+                    f"using regex: '{config.hosts_customer_regex}'"
+                )
+                logger.critical(msg)
+                raise DiscoveryError(msg)
         # No customer single tenant tree
         else:
             customer = None

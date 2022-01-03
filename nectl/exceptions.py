@@ -1,3 +1,9 @@
+class DiscoveryError(Exception):
+    """
+    Indicates that an error has been encountered during data tree discovery.
+    """
+
+
 class ConfigFileError(Exception):
     """
     Indicates that errors have been encountered related to config file.
