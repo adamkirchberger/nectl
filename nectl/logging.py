@@ -76,6 +76,9 @@ def setup_logging(v: int = 0):
         2: logging.DEBUG,
     }
     _level = logging_levels[min(v, len(logging_levels) - 1)]
+
+    get_logger().setLevel(_level)
     coloredlogs.install(_level, logger=get_logger())
+
     if v > 0:
         print(f"logging level: {logging.getLevelName(_level)}", file=sys.stderr)
