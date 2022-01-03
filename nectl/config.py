@@ -101,9 +101,9 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
             elif filepath.endswith(".yaml"):
                 config_args = yaml.safe_load(fh)
             else:
-                raise ConfigFileError("config file format must YAML or JSON.")
+                raise ConfigFileError("config file format must YAML or JSON")
     except FileNotFoundError as e:
-        raise ConfigFileError(f"config file not found '{filepath}'.") from e
+        raise ConfigFileError(f"config file not found '{filepath}'") from e
 
     try:
         config = Config(
