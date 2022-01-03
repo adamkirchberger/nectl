@@ -1,5 +1,32 @@
 # Changelog
 
+# [0.5.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.4.0...0.5.0) (2022-01-03)
+
+
+### Bug Fixes
+
+* log and raise any template import errors ([ced65f4](https://gitlab.com/adamkirchberger/nectl-dev/commit/ced65f494a67e5e093c7e3753e86431027211690))
+* make get_config return same config every time ([0b65de2](https://gitlab.com/adamkirchberger/nectl-dev/commit/0b65de24a6e15c5637764f3ec452da0d2af07c2d))
+* move render context out of try block ([71776e1](https://gitlab.com/adamkirchberger/nectl-dev/commit/71776e1680f89b28d45ff7d4b939c679d69ca39b))
+* raise error for issues during discovery ([f310cf8](https://gitlab.com/adamkirchberger/nectl-dev/commit/f310cf8cde59674e9d1bb3383a88bc5cc147c290))
+* raise render error only after all errors found ([7fdaf43](https://gitlab.com/adamkirchberger/nectl-dev/commit/7fdaf433d5b83c323292bc2038a8b89e51873063))
+* remove unused imports and comments ([a2f0434](https://gitlab.com/adamkirchberger/nectl-dev/commit/a2f043459cf4ee9b6eaa51b30c4eddfaec73dd4b))
+* replace additional calls for single dict iter ([d396d9f](https://gitlab.com/adamkirchberger/nectl-dev/commit/d396d9fe126fa06cfdda5eccba3d55ffdde5b3a4))
+* resolve type issues ([508465e](https://gitlab.com/adamkirchberger/nectl-dev/commit/508465e7895a5ff19d66cd51709e199275bbd836))
+* return None if host attr not found in facts ([9863fe3](https://gitlab.com/adamkirchberger/nectl-dev/commit/9863fe30cfd4b16ed56fa2ad303fe9430b7c96a3))
+* rewrite block to catch multiple exceptions ([1e8bccc](https://gitlab.com/adamkirchberger/nectl-dev/commit/1e8bccc7339dab07e667bff9743d317d8e3b808f))
+* set host customer value to optional ([fb14a55](https://gitlab.com/adamkirchberger/nectl-dev/commit/fb14a55778e406b7503bef4b1d246490f019c2fe))
+* set logger level ([0fbeffa](https://gitlab.com/adamkirchberger/nectl-dev/commit/0fbeffaeee3981f016f1dfdd7b456143b353ffb5))
+* templates render based on order of definition ([05b62dc](https://gitlab.com/adamkirchberger/nectl-dev/commit/05b62dc4939a61f28c8309a318cafd8e394fb021))
+
+
+### Features
+
+* add render context ([4881af1](https://gitlab.com/adamkirchberger/nectl-dev/commit/4881af1eb187bb7d84c49a1a8c1656c51aa35040))
+* templates are determined based on os_name ([296267b](https://gitlab.com/adamkirchberger/nectl-dev/commit/296267b5ae31435bcf3c6581160a7879da6fbf83))
+* templates use functions with print methods ([a5a8a54](https://gitlab.com/adamkirchberger/nectl-dev/commit/a5a8a54e77666191110cfeb3e9ba681cb0b33853))
+* update dependencies ([e69edd5](https://gitlab.com/adamkirchberger/nectl-dev/commit/e69edd505c6ea22cb416fe22f0dd6a82da765918))
+
 # [0.4.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.3.0...0.4.0) (2021-12-19)
 
 
