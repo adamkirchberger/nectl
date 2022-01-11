@@ -38,14 +38,14 @@ logger = get_logger()
 _render_context: ContextVar[Dict] = ContextVar("render_context", default={})
 
 
-def get_host_facts() -> dict:
+def get_render_context() -> dict:
     """
-    Returns the current host facts, this should only be used within templates.
+    Returns render context var.
 
     Returns:
-        dict: current host facts.
+        dict: context.
     """
-    return _render_context.get().get("facts", {})
+    return _render_context.get()
 
 
 def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]:
