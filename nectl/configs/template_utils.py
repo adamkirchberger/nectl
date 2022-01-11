@@ -4,9 +4,9 @@ Utility functions for templates.
 from .render import get_render_context
 
 
-def get_host_facts() -> dict:
+def get_render_facts() -> dict:
     """
-    Returns the facts for a single host during render. This should only be used
+    Returns the facts for current host during render. This should only be used
     within templates.
 
     Returns:

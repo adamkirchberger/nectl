@@ -307,9 +307,9 @@ def test_should_return_config_when_rendering_template_that_has_conditional_impor
 
     # GIVEN main template which imports sub templates
     (templates / "fakeos" / "__init__.py").write_text(
-        "import nectl.utils\n"
+        "import nectl.configs.template_utils\n"
         "\n"
-        "if nectl.utils.get_host_facts().get('model') == 'az':\n"
+        "if nectl.configs.template_utils.get_render_facts().get('model') == 'az':\n"
         "    from .az_subtemplate import *\n"
         "\n"
         "def base_section(hostname):\n"
