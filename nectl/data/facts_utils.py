@@ -25,6 +25,7 @@ from typing import List, Dict, TYPE_CHECKING
 from enum import Enum
 from ipaddress import IPv4Interface
 from pydantic import BaseModel
+from dpath import util as merge_utils
 
 from ..logging import get_logger
 from ..config import Config, get_config
@@ -34,6 +35,7 @@ if TYPE_CHECKING:
     from .hosts import Host
 
 VALID_DATA_TYPES = (list, dict, str, int, float)
+MERGE_TYPE = merge_utils.MERGE_ADDITIVE
 logger = get_logger()
 
 
@@ -131,7 +133,10 @@ def load_host_facts(
 
             # Dict explicit merge
             elif var_type == dict and var_action == Actions.merge_with:
-                facts[var] = {**getattr(mod, var), **facts.get(var, {})}
+                facts[var] = merge_utils.merge(
+                    facts.get(var, {}), getattr(mod, var), flags=MERGE_TYPE
+                )
+                # facts[var] = {**getattr(mod, var), **facts.get(var, {})}
 
             # Replace
             else:

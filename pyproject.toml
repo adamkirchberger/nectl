@@ -13,6 +13,7 @@ PyYAML = "^5.4.1"
 ipaddress = "^1.0.23"
 lxml = "^4.6.3"
 tabulate = "^0.8.9"
+dpath = "^2.0.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
