@@ -191,7 +191,10 @@ def get_all_hosts(config: Config) -> List[Host]:
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
     """
-    hosts = []
+    hosts: List[Host] = []
+    hostname: str = ""
+    site: Optional[str] = None
+    customer: Optional[str] = None
 
     ts_start = time.perf_counter()
 
