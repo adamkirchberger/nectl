@@ -40,10 +40,45 @@ def mock_datatree(tmp_path) -> pathlib.PosixPath:
             hosts.mkdir(parents=True)
 
             # Make fake hosts
-            (hosts / "core0").mkdir()
-            (hosts / "core1").mkdir()
+            for hostname in ["core0", "core1"]:
+                host = hosts / hostname
+                host.mkdir()
+
+                # Add OS details to host
+                (host / "host.py").write_text(
+                    'os_name = "fakeos"\nos_version = "1.2.3"'
+                )
 
     return root
+
+
+@pytest.fixture(scope="function")
+def mock_template_generator():
+    """
+    Returns function which can be used to generate templates using provided
+    config object that contains kit path.
+
+    Returns:
+        Callable: template generating function.
+    """
+
+    def template_generator(config: Config):
+        templates = pathlib.Path(config.kit_path) / config.templates_dirname
+        templates.mkdir()
+
+        # Create fakeos template
+        (templates / "fakeos.py").write_text(
+            "def hostname_section(hostname):\n"
+            "    print(f'hostname is: {hostname}')\n"
+            "\n"
+            "def os_section(os_name):\n"
+            "    print(f'os_name is: {os_name}')\n"
+            "\n"
+            "def end_section():\n"
+            "    print('template end')\n"
+        )
+
+    return template_generator
 
 
 @pytest.fixture(scope="function")

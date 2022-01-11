@@ -69,7 +69,7 @@ def test_should_return_customer_common_ntp_value_when_loading_facts(mock_config)
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
 
     # GIVEN NTP server has been defined in datatree globally
-    (data / "glob" / "common" / "ntp.py").write_text('ntp_server_2 = "global.ntp.com"')
+    (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # GIVEN NTP server has been defined in datatree at global roles level
     (data / "glob" / "roles" / "switch").mkdir()
@@ -103,7 +103,7 @@ def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_config):
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
 
     # GIVEN NTP server has been defined in datatree globally
-    (data / "glob" / "common" / "ntp.py").write_text('ntp_server_2 = "global.ntp.com"')
+    (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # GIVEN NTP server has been defined in datatree at global roles level
     (data / "glob" / "roles" / "switch").mkdir()
@@ -143,7 +143,7 @@ def test_should_return_site_common_ntp_value_when_loading_facts(mock_config):
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
 
     # GIVEN NTP server has been defined in datatree globally
-    (data / "glob" / "common" / "ntp.py").write_text('ntp_server_2 = "global.ntp.com"')
+    (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # GIVEN NTP server has been defined in datatree at global roles level
     (data / "glob" / "roles" / "switch").mkdir()
@@ -188,7 +188,7 @@ def test_should_return_site_roles_ntp_value_when_loading_facts(mock_config):
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
 
     # GIVEN NTP server has been defined in datatree globally
-    (data / "glob" / "common" / "ntp.py").write_text('ntp_server_2 = "global.ntp.com"')
+    (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # GIVEN NTP server has been defined in datatree at global roles level
     (data / "glob" / "roles" / "switch").mkdir()
@@ -239,7 +239,7 @@ def test_should_return_host_local_ntp_value_when_loading_facts(mock_config):
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
 
     # GIVEN NTP server has been defined in datatree globally
-    (data / "glob" / "common" / "ntp.py").write_text('ntp_server_2 = "global.ntp.com"')
+    (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # GIVEN NTP server has been defined in datatree at global roles level
     (data / "glob" / "roles" / "switch").mkdir()

@@ -5,8 +5,6 @@ import nectl.config
 from nectl.configs.render import (
     render_hosts,
     render_template,
-    get_host_facts,
-    _render_context,
 )
 from nectl.configs.templates import _import_template
 from nectl.data.hosts import Host
@@ -101,13 +99,14 @@ def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(
     # GIVEN get_config() is patched to return mock_config
     nectl.config.__config = config
 
-    # GIVEN mock host with no os details provided
+    # GIVEN mock host with blank os details provided
     host = Host(
         hostname="core0",
         site="london",
         customer="acme",
         os_name=None,
         os_version=None,
+        _facts={},  # patch facts to avoid 'os_name' lookup in datatree
     )
 
     # WHEN rendering hosts
@@ -284,28 +283,53 @@ def test_should_raise_error_when_rendering_template_which_encounters_unexpected_
     )
 
 
-def test_should_return_empty_dict_when_returning_host_facts_with_default_context():
-    # GIVEN that we are not running in a template and render context is blank
+def test_should_return_config_when_rendering_template_that_has_conditional_imports_of_sub_templates(
+    mock_config,
+):
+    # GIVEN config
+    config = mock_config
 
-    # WHEN getting facts
-    facts = get_host_facts()
+    # GIVEN host with model facts
+    host = Host(
+        hostname="fakenode",
+        site="london",
+        os_name="fakeos",
+        os_version="1.2.3",
+        _facts={"hostname": "fakenode", "model": "az"},  # patch facts to avoid lookup
+    )
 
-    # THEN expect result to be empty dict
-    assert facts == {}
+    # GIVEN templates directory
+    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates.mkdir()
 
+    # GIVEN fakeos template is a directory of templates
+    (templates / "fakeos").mkdir()
 
-def test_should_return_empty_dict_when_returning_host_facts_with_context_set():
-    # GIVEN mock facts
-    mock_facts = {
-        "hostname": "fakenode",
-        "os_name": "fakeos",
-    }
+    # GIVEN main template which imports sub templates
+    (templates / "fakeos" / "__init__.py").write_text(
+        "import nectl.utils\n"
+        "\n"
+        "if nectl.utils.get_host_facts().get('model') == 'az':\n"
+        "    from .az_subtemplate import *\n"
+        "\n"
+        "def base_section(hostname):\n"
+        "    print(f'hostname is: {hostname}')\n"
+    )
 
-    # GIVEN that context has been set with facts
-    _render_context.set({"facts": mock_facts})
+    # GIVEN main template which imports two sub templates
+    (templates / "fakeos" / "az_subtemplate.py").write_text(
+        "def az_section_one():\n"
+        "    print('start of az template')\n"
+        "\n"
+        "def az_section_two(model):\n"
+        "    print(f'model is: {model}')\n"
+    )
 
-    # WHEN getting facts
-    facts = get_host_facts()
+    # GIVEN expected config
+    expected_config = "start of az template\n" "model is: az\n" "hostname is: fakenode"
 
-    # THEN expect result to match mock facts
-    assert facts == mock_facts
+    # WHEN rendering hosts
+    configs = render_hosts(hosts=[host], config=config)
+
+    # THEN expect config for host to match expected config
+    assert configs["fakenode.london"] == expected_config
