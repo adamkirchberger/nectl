@@ -1,5 +1,22 @@
 # Changelog
 
+# [0.6.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.5.0...0.6.0) (2022-01-11)
+
+
+### Bug Fixes
+
+* host types ([3535e92](https://gitlab.com/adamkirchberger/nectl-dev/commit/3535e927add7060e8ae06a929066958ce4e22f02))
+* increase log severity for hosts missing os vars ([472920b](https://gitlab.com/adamkirchberger/nectl-dev/commit/472920b81d4c4c5104f42231bfb553660db600fc))
+* issue related to frozen and merge data actions ([6eceace](https://gitlab.com/adamkirchberger/nectl-dev/commit/6eceacebb008d1efb7888873af846cc633415db5))
+* rename config var for readability ([c0eb13e](https://gitlab.com/adamkirchberger/nectl-dev/commit/c0eb13e24c03c43d4b617e5a09bcf06767bd8e2b))
+* separate render context functions ([1032403](https://gitlab.com/adamkirchberger/nectl-dev/commit/10324033c0ecdf3a538ecbc2b475211492c8402f))
+* unset config env var during tests ([a48133f](https://gitlab.com/adamkirchberger/nectl-dev/commit/a48133ff61b93b3d4c8858dc2f0748d8e3d2b1c0))
+
+
+### Features
+
+* add dict deep merging ([bace069](https://gitlab.com/adamkirchberger/nectl-dev/commit/bace069b08a49a73497dfcf01cb1646916d31186))
+
 # [0.5.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.4.0...0.5.0) (2022-01-03)
 
 
