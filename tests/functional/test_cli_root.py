@@ -1,6 +1,7 @@
 import os
 import click
 from unittest.mock import patch
+import pkg_resources
 
 import nectl.config
 from nectl.cli import cli_root
@@ -27,6 +28,12 @@ def test_should_return_version_when_running_cli_with_version_arg(cli_runner):
     # GIVEN args
     args = ["--version"]
 
+    # GIVEN version
+    try:
+        version = pkg_resources.get_distribution("nectl").version
+    except pkg_resources.DistributionNotFound:
+        version = "unknown"
+
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)
 
@@ -34,7 +41,7 @@ def test_should_return_version_when_running_cli_with_version_arg(cli_runner):
     assert result.exit_code == 0
 
     # THEN expect version unknown in output
-    assert result.output.strip() == "cli-root, version unknown"
+    assert result.output.strip() == f"cli-root, version {version}"
 
 
 def test_should_return_error_when_running_cli_with_no_config_file(cli_runner):
