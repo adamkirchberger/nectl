@@ -99,7 +99,7 @@ def load_host_facts(
             )
 
             # Frozen variables cannot be overwritten so first value wins
-            if var_action == Actions.frozen:
+            if var_action == Actions.frozen and var not in frozen_vars:
                 frozen_vars.append(var)
                 facts[var] = getattr(mod, var)  # set value first and only time
                 continue
@@ -109,11 +109,11 @@ def load_host_facts(
                 continue
 
             # List explicit merge
-            if isinstance(var_type, list) and var_action == Actions.merge_with:
+            if var_type == list and var_action == Actions.merge_with:
                 facts[var] = getattr(mod, var) + facts.get(var, [])
 
             # Dict explicit merge
-            elif isinstance(var_type, dict) and var_action == Actions.merge_with:
+            elif var_type == dict and var_action == Actions.merge_with:
                 facts[var] = {**getattr(mod, var), **facts.get(var, {})}
 
             # Replace
