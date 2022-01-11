@@ -16,6 +16,10 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 from os import getcwd
+
+"""
+Render functions used to convert templates and facts into configs.
+"""
 import time
 from typing import Sequence, Dict, Any
 import inspect
@@ -72,7 +76,7 @@ def render_hosts(hosts: Sequence[Host], config: Config = None) -> Dict[str, Any]
 
     for host in hosts:
         if host.os_name is None or host.os_version is None:
-            logger.info(
+            logger.error(
                 f"skipping host render with no 'os_name' or 'os_version': {host.id}"
             )
             continue
