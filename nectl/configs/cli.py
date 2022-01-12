@@ -62,12 +62,12 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str, director
             site=site,
             role=role,
         )
-        configs = render_hosts(config=ctx.obj["config"], hosts=hosts)
+        renders = render_hosts(config=ctx.obj["config"], hosts=hosts)
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    for host_id, conf in configs.items():
+    for host_id, conf in renders.items():
         print(f"host: {host_id}")
         print(conf)
         print("")
