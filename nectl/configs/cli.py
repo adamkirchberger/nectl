@@ -55,8 +55,14 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str, director
     Use this command to render configurations for hosts.
     """
     try:
-        hosts = get_filtered_hosts(hostname, customer, site, role)
-        configs = render_hosts(hosts)
+        hosts = get_filtered_hosts(
+            config=ctx.obj["config"],
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
+        configs = render_hosts(config=ctx.obj["config"], hosts=hosts)
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)

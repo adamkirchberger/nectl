@@ -55,7 +55,13 @@ def list_hosts_cmd(
     Use this command to list hosts discovered in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(hostname, customer, site, role)
+        hosts = get_filtered_hosts(
+            config=ctx.obj["config"],
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
     except DiscoveryError as e:
         print(f"Error: {e}")
         sys.exit(1)
@@ -84,7 +90,13 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     Use this command to get facts for hosts defined in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(hostname, customer, site, role)
+        hosts = get_filtered_hosts(
+            config=ctx.obj["config"],
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
     except DiscoveryError as e:
         print(f"Error: {e}")
         sys.exit(1)

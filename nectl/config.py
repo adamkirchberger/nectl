@@ -34,8 +34,6 @@ except pkg_resources.DistributionNotFound:
 
 APP_DESCRIPTION = "Network Control Tool"
 
-__config = None
-
 
 class Config(BaseSettings):
     """
@@ -88,11 +86,7 @@ def get_config() -> Config:
     Returns:
         Config: config.
     """
-    global __config
-    if not __config:
-        __config = load_config()
-
-    return __config
+    return load_config()
 
 
 def load_config(filepath: str = CONFIG_FILEPATH) -> Config:

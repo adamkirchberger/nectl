@@ -20,7 +20,7 @@ import sys
 import time
 from typing import Optional, Union, Any, List, Dict
 from glob import glob
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from ..logging import get_logger
 from ..exceptions import DiscoveryError
@@ -48,6 +48,7 @@ class Host:
     serial_number: Optional[str] = None
     asset_tag: Optional[str] = None
     _facts: Union[Dict, None] = None
+    _config: Config = field(default_factory=get_config)
 
     @property
     def id(self) -> str:
@@ -67,7 +68,7 @@ class Host:
         Returns read only facts.
         """
         if self._facts is None:
-            self._facts = load_host_facts(host=self)
+            self._facts = load_host_facts(host=self, config=self._config)
         return self._facts
 
     def __getattr__(self, name):
@@ -89,7 +90,12 @@ class Host:
         """
         Intercept calls to attributes and return the value from host facts.
         """
-        ignored_attrs = ("customer", "role", "_facts")  # don't try find value in facts
+        ignored_attrs = (
+            "customer",
+            "role",
+            "_facts",
+            "_config",
+        )  # don't try find value in facts
         if object.__getattribute__(self, name) is None and name not in ignored_attrs:
             logger.debug(f"{self.id}: fetching fact '{name}'")
             return object.__getattribute__(self, "facts").get(name)
@@ -123,21 +129,21 @@ class Host:
 
 
 def get_filtered_hosts(
+    config: Config,
     hostname: str = None,
     customer: str = None,
     site: str = None,
     role: str = None,
-    config: Config = None,
 ) -> List[Host]:
     """
     Returns a list of filtered hosts
 
     Args:
+        config (Config): config settings.
         hostname (str): filter by hostname.
         site (str): filter by site.
         customer (str): filter by customer.
         role (str): filter by role.
-        config (Config): config settings.
 
     Returns:
         List[Host]: list of discovered hosts.
@@ -145,7 +151,6 @@ def get_filtered_hosts(
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
     """
-    config = get_config() if config is None else config
     hosts = get_all_hosts(config)
 
     # Filter by customer
@@ -245,7 +250,7 @@ def get_all_hosts(config: Config) -> List[Host]:
         else:
             customer = None
 
-        new_host = Host(hostname=hostname, site=site, customer=customer)
+        new_host = Host(hostname=hostname, site=site, customer=customer, _config=config)
         logger.debug(f"found host '{new_host.id}' in directory: {host_dir}")
         hosts.append(new_host)
 

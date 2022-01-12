@@ -28,7 +28,7 @@ def test_should_return_8_hosts_when_getting_all_hosts(mock_config):
     config = mock_config
 
     # WHEN fetching all hosts
-    hosts = get_all_hosts(config=config)
+    hosts = get_all_hosts(config)
 
     # THEN expect each host to be of Host type
     for host in hosts:

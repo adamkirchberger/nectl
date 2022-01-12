@@ -32,9 +32,6 @@ def test_should_return_config_dict_when_rendering_with_valid_template(mock_confi
     # GIVEN mock config
     config = mock_config
 
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = config
-
     # GIVEN mock host
     host = Host(
         hostname="core0",
@@ -42,6 +39,7 @@ def test_should_return_config_dict_when_rendering_with_valid_template(mock_confi
         customer="acme",
         os_name="fakeos",
         os_version="5.1",
+        _config=config,
     )
 
     # GIVEN templates directory
@@ -74,9 +72,6 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
     # GIVEN mock config
     config = mock_config
 
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = config
-
     # GIVEN mock host
     host = Host(
         hostname="core0",
@@ -84,6 +79,7 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
         customer="acme",
         os_name="fakeos",
         os_version="5.1",
+        _config=config,
     )
 
     # GIVEN templates directory
@@ -112,9 +108,6 @@ def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(
 ):
     # GIVEN mock config
     config = mock_config
-
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = config
 
     # GIVEN mock host with blank os details provided
     host = Host(

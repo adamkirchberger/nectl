@@ -29,9 +29,6 @@ def test_should_raise_error_when_running_cli_configs_unimplemented_commands(
     # GIVEN command args
     args = ["configs", command]
 
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = mock_config
-
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)
 
@@ -55,9 +52,6 @@ def test_should_return_config_when_running_cli_configs_render_command(
         "os_name is: fakeos\n"
         "template end\n"
     )
-
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = mock_config
 
     # GIVEN template exists in kit directory
     mock_template_generator(mock_config)

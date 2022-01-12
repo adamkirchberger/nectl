@@ -92,8 +92,7 @@ def test_should_return_hosts_when_running_cli_data_list_hosts_command(
         "core0.london.hooli",
     ]
 
-    # GIVEN get_config() is patched to return mock_config
-    nectl.config.__config = mock_config
+
 
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)

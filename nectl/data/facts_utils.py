@@ -15,6 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Fact loading functions.
+"""
 import sys
 import json
 import time
@@ -28,7 +31,7 @@ from pydantic import BaseModel
 from dpath import util as merge_utils
 
 from ..logging import get_logger
-from ..config import Config, get_config
+from ..config import Config
 from .actions import Actions, DEFAULT_ACTION
 
 if TYPE_CHECKING:
@@ -40,20 +43,19 @@ logger = get_logger()
 
 
 def get_facts_for_hosts(
+    config: Config,
     hosts: List["Host"],
-    config: Config = None,
 ) -> Dict[str, Dict]:
     """
     Returns a dict of facts loaded from datatree for each provided host.
 
     Args:
-        hosts (List[BaseHost]): list of hosts.
         config (Config): config settings.
+        hosts (List[BaseHost]): list of hosts.
 
     Returns:
         Dict[str,Dict]: one item per unique host with loaded facts.
     """
-    config = get_config() if config is None else config
     facts = {}
 
     ts_start = time.perf_counter()
@@ -62,7 +64,7 @@ def get_facts_for_hosts(
     # Load facts for each host
     for host in hosts:
         host_id = f"{host.hostname}.{host.site}.{host.customer}"
-        facts[host_id] = load_host_facts(host, config=config)
+        facts[host_id] = load_host_facts(config=config, host=host)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished getting facts for {len(hosts)} hosts ({dur}s)")
@@ -70,22 +72,17 @@ def get_facts_for_hosts(
     return facts
 
 
-def load_host_facts(
-    host: "Host",
-    config: Config = None,
-) -> Dict:
+def load_host_facts(config: Config, host: "Host") -> Dict:
     """
     Loads datatree and returns facts for a single host.
 
     Args:
-        host (BaseHost): host instance.
         config (Config): config settings.
+        host (BaseHost): host instance.
 
     Returns:
         Dict: host facts.
     """
-    config = get_config() if config is None else config
-
     # ensure kit path is in pythonpath
     if sys.path[0] != config.kit_path:
         logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")

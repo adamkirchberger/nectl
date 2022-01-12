@@ -15,13 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+Template related discovery and import functions.
+"""
 import os
 import sys
 from importlib import import_module
 from types import ModuleType
 
 from ..logging import get_logger
-from ..config import Config, get_config
+from ..config import Config
 from ..exceptions import TemplateImportError, TemplateMissingError
 
 
@@ -31,13 +34,13 @@ logger = get_logger()
 Template = ModuleType  # Defines a template which is used to render host configurations.
 
 
-def get_template(os_name: str, config: Config = None) -> Template:
+def get_template(config: Config, os_name: str) -> Template:
     """
     Returns the template based on the host os_name value/
 
     Args:
-        os_name (str): host operating system.
         config (Config): config settings.
+        os_name (str): host operating system.
 
     Returns:
         template module.
@@ -46,8 +49,6 @@ def get_template(os_name: str, config: Config = None) -> Template:
         TemplateMissingError: if host template cannot be found.
         TemplateImportError: if template exists but cannot opened.
     """
-    config = get_config() if config is None else config
-
     return _import_template(
         name=os_name,
         templates_path=os.path.join(config.kit_path, config.templates_dirname),

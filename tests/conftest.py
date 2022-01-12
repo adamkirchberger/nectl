@@ -18,6 +18,8 @@
 import pytest
 import pathlib
 
+import nectl.config
+
 from nectl.config import Config
 
 
@@ -108,7 +110,7 @@ def mock_config(mock_datatree) -> Config:
     """
     datatree_path = mock_datatree
 
-    return Config(
+    conf = Config(
         kit_path=str(datatree_path.parent),
         config_path=str(datatree_path.parent) + "/config.yaml",
         datatree_lookup_paths=(
@@ -125,3 +127,8 @@ def mock_config(mock_datatree) -> Config:
         hosts_site_regex=".*/sites/(.*)/hosts/.*",
         hosts_customer_regex=".*/customers/(.*)/sites/.*",
     )
+
+    # Patch config load to use mocked config
+    nectl.config.load_config = lambda: conf
+
+    return conf
