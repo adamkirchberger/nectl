@@ -38,7 +38,7 @@ class Host:
     """
 
     hostname: str
-    site: str
+    site: Optional[str] = None
     customer: Optional[str] = None
     role: Optional[str] = None
     manufacturer: Optional[str] = None
@@ -54,13 +54,17 @@ class Host:
     def id(self) -> str:
         """
         Returns unique name for host.
-        """
-        # Single tenant datatree with no customer value
-        if not self.customer:
-            return f"{self.hostname}.{self.site}"
 
-        # Multi tenant datatree with customer value
-        return f"{self.hostname}.{self.site}.{self.customer}"
+        Example:
+            hostname.site.customer
+        """
+        return ".".join(
+            [
+                attr
+                for attr in [self.hostname, self.site, self.customer]
+                if attr is not None
+            ]
+        )
 
     @property
     def facts(self) -> Dict:
@@ -91,6 +95,7 @@ class Host:
         Intercept calls to attributes and return the value from host facts.
         """
         ignored_attrs = (
+            "site",
             "customer",
             "role",
             "_facts",
@@ -222,7 +227,8 @@ def get_all_hosts(config: Config) -> List[Host]:
             logger.critical(msg)
             raise DiscoveryError(msg)
 
-        # Extract site
+        # Extract site for multi-site data trees
+        if config.hosts_site_regex:
         m = re.match(re.compile(config.hosts_site_regex), host_dir)
         if m:
             site = m.group(1)
@@ -233,6 +239,9 @@ def get_all_hosts(config: Config) -> List[Host]:
             )
             logger.critical(msg)
             raise DiscoveryError(msg)
+        # No site single site tree
+        else:
+            site = None
 
         # Extract customer for multi-tenant data trees
         if config.hosts_customer_regex:

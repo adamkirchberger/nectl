@@ -46,6 +46,14 @@ def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
         (
             {
                 "hostname": "host1",
+                "site": None,  # no site value
+                "customer": None,  # no customer value
+            },
+            "host1",  # id should be hostname
+        ),
+        (
+            {
+                "hostname": "host1",
                 "site": "london",
                 "customer": None,  # no customer value
             },

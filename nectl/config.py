@@ -56,7 +56,7 @@ class Config(BaseSettings):
 
     # Regex to determine host properties
     hosts_hostname_regex: str
-    hosts_site_regex: str
+    hosts_site_regex: Optional[str] = None
     hosts_customer_regex: Optional[str] = None
 
     # Path to kit with datatree, models and templates
