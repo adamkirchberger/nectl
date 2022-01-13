@@ -32,16 +32,6 @@ def configs():
     """
 
 
-@configs.command(name="list-templates", help="List available templates.")
-@click.pass_context
-@logging_opts
-def list_templates_cmd(ctx):
-    """
-    Use this command to list all templates.
-    """
-    raise NotImplementedError
-
-
 @configs.command(name="render", help="Render configs for hosts.")
 @click.option("-h", "--hostname", help="Filter by hostname.")
 @click.option("-c", "--customer", help="Filter by customer.")
