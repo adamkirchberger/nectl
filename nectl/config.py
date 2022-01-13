@@ -25,7 +25,7 @@ from pydantic.error_wrappers import ValidationError
 
 from .exceptions import ConfigFileError
 
-CONFIG_FILEPATH = os.getenv("NECTL_CONFIG", "~/.config/nectl_config")
+CONFIG_FILEPATH = os.getenv("NECTL_CONFIG", "./config.yaml")
 
 try:
     APP_VERSION = pkg_resources.get_distribution("nectl").version
