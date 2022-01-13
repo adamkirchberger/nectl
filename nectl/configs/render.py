@@ -150,12 +150,16 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
                     args[arg_name] = facts[arg_name]
 
             # Render template section
-            with redirect_stdout(io.StringIO()) as f:
+            with redirect_stdout(io.StringIO()) as stdout:
                 # Capture section print statements
                 section(**args)
 
-            render = f.getvalue()  # assign output
-            render = render.strip("\n")  # strip empty newline at end
+            # Get output from section
+            render = stdout.getvalue().strip("\n")  # strip empty line between sections
+
+            # Skip empty sections
+            if not render:
+                continue
 
         except KeyError as e:
             # Catch missing facts errors
