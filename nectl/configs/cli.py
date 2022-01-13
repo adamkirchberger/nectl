@@ -22,6 +22,7 @@ from ..logging import logging_opts
 from ..exceptions import DiscoveryError, RenderError
 from ..data.hosts import get_filtered_hosts
 from .render import render_hosts
+from .utils import write_configs_to_dir
 
 
 @click.group(help="Configuration commands.")
@@ -37,30 +38,32 @@ def configs():
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
-@click.option("-d", "--directory", help="Write templates to directory.")
 @click.pass_context
 @logging_opts
-def render_cmd(ctx, hostname: str, customer: str, site: str, role: str, directory: str):
+def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     Use this command to render configurations for hosts.
     """
+    config = ctx.obj["config"]
+
     try:
         hosts = get_filtered_hosts(
-            config=ctx.obj["config"],
+            config=config,
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
         )
-        renders = render_hosts(config=ctx.obj["config"], hosts=hosts)
+        renders = render_hosts(config=config, hosts=hosts)
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    for host_id, conf in renders.items():
-        print(f"host: {host_id}")
-        print(conf)
-        print("")
+    output_dir = f"{config.kit_path}/{config.staged_configs_dir}"
+
+    write_configs_to_dir(configs=renders, output_dir=output_dir)
+
+    print(f"{len(renders)} configs created.")
 
 
 @configs.command(name="diff", help="Compare staged with active config.")

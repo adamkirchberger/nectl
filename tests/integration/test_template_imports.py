@@ -159,7 +159,7 @@ def test_should_raise_error_when_getting_template_file_that_does_not_exist(
         _import_template("fakeos", f"{config.kit_path}/{config.templates_dirname}")
 
     # THEN expect error message
-    assert str(error.value) == "template file not found matching os_name: fakeos"
+    assert str(error.value) == "template import error with os_name: fakeos"
 
 
 def test_should_raise_error_when_getting_template_that_is_invalid(

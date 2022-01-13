@@ -15,15 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import pathlib
 import pytest
 
-import nectl.config
-from nectl.configs.render import (
-    render_hosts,
-    render_template,
-)
+from nectl.configs.render import render_hosts, render_template
 from nectl.configs.templates import _import_template
+from nectl.configs.utils import write_configs_to_dir
 from nectl.data.hosts import Host
 from nectl.exceptions import RenderError
 
@@ -343,3 +341,29 @@ def test_should_return_config_when_rendering_template_that_has_conditional_impor
 
     # THEN expect config for host to match expected config
     assert configs["fakenode.london"] == expected_config
+
+
+def test_should_return_config_when_writing_configs_to_files(mock_config):
+    # GIVEN mock config
+    config = mock_config
+
+    # GIVEN output directory
+    output_dir = f"{config.kit_path}/{config.staged_configs_dir}"
+
+    # GIVEN mock rendered configs
+    rendered_configs = {
+        "host1": "config for host1",
+        "host2": "config for host2",
+        "host3": "config for host3",
+    }
+
+    # WHEN writing configs to staged output dir
+    write_configs_to_dir(configs=rendered_configs, output_dir=output_dir)
+
+    # THEN expect there to be 3 files written
+    assert len(os.listdir(output_dir))
+
+    # THEN expect each host file to have content
+    for host, conf in rendered_configs.items():
+        with open(f"{output_dir}/{host}.txt", "r") as fh:
+            assert fh.read() == conf + "\n"

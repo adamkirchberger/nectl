@@ -71,6 +71,18 @@ class Config(BaseSettings):
     # Default data action
     default_action: str = "merge_with"
 
+    # Default rendered configs output directory
+    staged_configs_dir: str = "configs/staged"
+
+    # Default configs diffs directory
+    config_diffs_dir: str = "configs/diffs"
+
+    # Default active configs directory
+    active_configs_dir: str = "configs/active"
+
+    # Default configs file extension
+    configs_file_extension: str = "txt"
+
     @property
     def datatree_path(self):
         """
