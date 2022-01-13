@@ -92,7 +92,7 @@ def _import_template(name: str, templates_path: str) -> Template:
         raise TemplateImportError(msg) from e
 
     except ModuleNotFoundError as e:
-        msg = f"template file not found matching os_name: {mod_name}"
+        msg = f"template import error with os_name: {mod_name}"
         logger.critical(msg)
         logger.exception(e)
         raise TemplateMissingError(msg) from e
