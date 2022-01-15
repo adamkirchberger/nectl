@@ -229,16 +229,16 @@ def get_all_hosts(config: Config) -> List[Host]:
 
         # Extract site for multi-site data trees
         if config.hosts_site_regex:
-        m = re.match(re.compile(config.hosts_site_regex), host_dir)
-        if m:
-            site = m.group(1)
-        else:
-            msg = (
-                f"failed to extract site from path string '{host_dir}' "
-                f"using regex: '{config.hosts_site_regex}'"
-            )
-            logger.critical(msg)
-            raise DiscoveryError(msg)
+            m = re.match(re.compile(config.hosts_site_regex), host_dir)
+            if m:
+                site = m.group(1)
+            else:
+                msg = (
+                    f"failed to extract site from path string '{host_dir}' "
+                    f"using regex: '{config.hosts_site_regex}'"
+                )
+                logger.critical(msg)
+                raise DiscoveryError(msg)
         # No site single site tree
         else:
             site = None
