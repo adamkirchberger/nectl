@@ -43,7 +43,7 @@ def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
 
 @pytest.mark.parametrize(
     "host_opts,expected_id",
-    [
+    (
         (
             {
                 "hostname": "host1",
@@ -68,7 +68,7 @@ def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
             },
             "host1.london.acme",  # id should be hostname.site.customer
         ),
-    ],
+    ),
 )
 def test_should_return_id_when_creating_host_with_opts(host_opts, expected_id):
     # GIVEN host opts

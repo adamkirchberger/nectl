@@ -32,7 +32,12 @@ def test_should_return_logger_when_getting_logger():
 
 
 @pytest.mark.parametrize(
-    "v_count,expected", [(0, logging.ERROR), (1, logging.INFO), (2, logging.DEBUG)]
+    "v_count,expected",
+    (
+        (0, logging.ERROR),
+        (1, logging.INFO),
+        (2, logging.DEBUG),
+    ),
 )
 def test_should_set_correct_logging_level_based_on_supplied_verbose_flag_count(
     v_count, expected
@@ -51,7 +56,12 @@ def test_should_set_correct_logging_level_based_on_supplied_verbose_flag_count(
 
 
 @pytest.mark.parametrize(
-    "v_count,expected", [(0, logging.ERROR), (1, logging.INFO), (2, logging.DEBUG)]
+    "v_count,expected",
+    (
+        (0, logging.ERROR),
+        (1, logging.INFO),
+        (2, logging.DEBUG),
+    ),
 )
 def test_should_return_logging_when_using_logging_dectorator_on_click_command(
     cli_runner, v_count, expected
