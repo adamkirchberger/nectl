@@ -67,6 +67,7 @@ def test_should_return_hosts_when_running_cli_data_get_facts_command(
             "os_version": "1.2.3",
             "serial_number": None,
             "asset_tag": None,
+            "mgmt_ip": None,
         }
     }
 

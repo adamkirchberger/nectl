@@ -36,7 +36,8 @@ def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
     assert host_str == (
         "Host(id='host1.london', hostname='host1', site='london', "
         "customer=None, role=None, manufacturer=None, model=None, "
-        "os_name=None, os_version=None, serial_number=None, asset_tag=None)"
+        "os_name=None, os_version=None, serial_number=None, asset_tag=None, "
+        "mgmt_ip=None)"
     )
 
 

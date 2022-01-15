@@ -47,6 +47,7 @@ class Host:
     os_version: Optional[str] = None
     serial_number: Optional[str] = None
     asset_tag: Optional[str] = None
+    mgmt_ip: Optional[str] = None
     _facts: Union[Dict, None] = None
     _config: Config = field(default_factory=get_config)
 
@@ -123,6 +124,7 @@ class Host:
             "os_version": self.os_version if include_facts else None,
             "serial_number": self.serial_number if include_facts else None,
             "asset_tag": self.asset_tag if include_facts else None,
+            "mgmt_ip": self.mgmt_ip if include_facts else None,
         }
 
     def __repr__(self) -> str:
