@@ -1,5 +1,22 @@
 # Changelog
 
+# [0.7.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.6.0...0.7.0) (2022-01-15)
+
+
+### Bug Fixes
+
+* remove templates list cmd ([5e7a6b7](https://gitlab.com/adamkirchberger/nectl-dev/commit/5e7a6b764e256ed00104752be88b6aebf77aea32))
+* set default  file path to current directory ([2fce693](https://gitlab.com/adamkirchberger/nectl-dev/commit/2fce693151dbf1ecec62ac06a5d6436857ced97c))
+* site discovery issue ([771fea8](https://gitlab.com/adamkirchberger/nectl-dev/commit/771fea88928dc8d0462663cae731136619e8cd7f))
+* skip empty render sections ([aaa4cf5](https://gitlab.com/adamkirchberger/nectl-dev/commit/aaa4cf52330f4fda8279962d489e989807e9e04f))
+* update error for failed sub template import ([f443628](https://gitlab.com/adamkirchberger/nectl-dev/commit/f443628978ff0031d01c700e7f50f95298b4b058))
+
+
+### Features
+
+* add single site datatree support ([85b9468](https://gitlab.com/adamkirchberger/nectl-dev/commit/85b946846a097e64ff5dee5a2e057a9f84fc3914))
+* write configs to staged directory ([2a35d1f](https://gitlab.com/adamkirchberger/nectl-dev/commit/2a35d1f3ac32cfef5879278156a3fc46b687b27d))
+
 # [0.6.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.5.0...0.6.0) (2022-01-11)
 
 
