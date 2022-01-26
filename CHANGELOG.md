@@ -1,5 +1,14 @@
 # Changelog
 
+# [0.8.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.7.0...0.8.0) (2022-01-26)
+
+
+### Features
+
+* add mgmt_ip core host fact. ([b6028cd](https://gitlab.com/adamkirchberger/nectl-dev/commit/b6028cdaac53bcde975d6bf1a4c3b2d2f298cc2e))
+* facts can be files or directories of files ([775cfbb](https://gitlab.com/adamkirchberger/nectl-dev/commit/775cfbb697dde439d6efb38bbb9def84074829dd))
+* log to console and file in kit ([c057f69](https://gitlab.com/adamkirchberger/nectl-dev/commit/c057f69bd5d58acd8bd6ea1249d98130a2e4a2fa))
+
 # [0.7.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.6.0...0.7.0) (2022-01-15)
 
 
