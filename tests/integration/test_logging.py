@@ -34,7 +34,7 @@ def test_should_return_logger_when_getting_logger():
 @pytest.mark.parametrize(
     "v_count,expected",
     (
-        (0, logging.ERROR),
+        (0, logging.WARN),
         (1, logging.INFO),
         (2, logging.DEBUG),
     ),
@@ -45,20 +45,17 @@ def test_should_set_correct_logging_level_based_on_supplied_verbose_flag_count(
     # GIVEN verbosity count
     verbosity = v_count
 
-    # GIVEN logger
-    logger = get_logger()
-
     # WHEN setting up logging
     setup_logging(verbosity)
 
     # THEN expect level to be set to expected
-    assert logger.getEffectiveLevel() == expected
+    assert logging.getLogger("").handlers[0].level == expected
 
 
 @pytest.mark.parametrize(
     "v_count,expected",
     (
-        (0, logging.ERROR),
+        (0, logging.WARNING),
         (1, logging.INFO),
         (2, logging.DEBUG),
     ),
@@ -68,9 +65,6 @@ def test_should_return_logging_when_using_logging_dectorator_on_click_command(
 ):
     # GIVEN verbosity arg based on count
     args = ["-v"] * v_count
-
-    # GIVEN logger
-    logger = get_logger()
 
     # GIVEN mock command which does nothing
     @click.command()
@@ -85,7 +79,7 @@ def test_should_return_logging_when_using_logging_dectorator_on_click_command(
     assert result.exit_code == 0
 
     # THEN expect log level
-    assert logger.getEffectiveLevel() == expected
+    assert logging.getLogger("").handlers[0].level == expected
 
     # THEN if "-v" arg supplied then expect level to be in output
     if v_count > 0:
