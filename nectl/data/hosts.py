@@ -262,7 +262,7 @@ def get_all_hosts(config: Config) -> List[Host]:
             customer = None
 
         new_host = Host(hostname=hostname, site=site, customer=customer, _config=config)
-        logger.debug(f"found host '{new_host.id}' in directory: {host_dir}")
+        logger.debug(f"found host '{new_host.id}' in: {host_dir}")
         hosts.append(new_host)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
