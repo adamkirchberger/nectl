@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.9.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.8.0...0.9.0) (2022-01-27)
+
+
+### Bug Fixes
+
+* host directory facts loading ([f380f23](https://gitlab.com/adamkirchberger/nectl-dev/commit/f380f239ef70ac160ff1a00bb8fd29d1a0ffe72e))
+
+
+### Features
+
+* support host core facts in datatree lookup paths ([d097019](https://gitlab.com/adamkirchberger/nectl-dev/commit/d0970198eb08f36b9965911182fad6d0928f55de))
+
 # [0.8.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.7.0...0.8.0) (2022-01-26)
 
 
