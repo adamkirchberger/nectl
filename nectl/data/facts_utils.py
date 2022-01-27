@@ -96,7 +96,7 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
 
     def _load_vars(mod: ModuleType):
         """
-        Function loads vars from a datatree file (python module).
+        Function loads vars from a datatree file or directory (python module).
         """
         # Pull out dict of all variables and their types
         variables = {
