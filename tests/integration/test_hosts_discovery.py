@@ -224,3 +224,44 @@ def test_should_return_host_properties_when_getting_filtered_hosts_by_site_and_c
     assert hosts[0].site == site
     assert hosts[0].hostname == hostname
     assert hosts[0].id == f"{hostname}.{site}.{customer}"
+
+
+def test_should_return_hosts_when_getting_all_hosts_that_are_not_directories(tmp_path):
+    # GIVEN data dir
+    datatree_path = tmp_path / "test" / "data"
+    datatree_path.mkdir(parents=True)
+
+    config = Config(
+        kit_path=str(datatree_path.parent),
+        config_path=str(datatree_path.parent) + "/config.yaml",
+        datatree_lookup_paths=(
+            "data.common",
+            "data.roles.{role}",
+            "data.sites.{site}.common",
+            "data.sites.{site}.roles.{role}",
+            "data.sites.{site}.hosts.{hostname}",
+        ),
+        hosts_glob_pattern="sites/*/hosts/*",
+        hosts_hostname_regex=".*/sites/.*/hosts/(.*)$",
+        hosts_site_regex=".*/sites/(.*)/hosts/.*",
+    )
+
+    # GIVEN hosts directory
+    (datatree_path / "sites" / "london" / "hosts").mkdir(parents=True)
+
+    # GIVEN host which is defined as single file not directory
+    (datatree_path / "sites" / "london" / "hosts" / "foonode.py").write_text(
+        'os_name = "fakeos"'
+    )
+
+    # WHEN fetching all hosts
+    hosts = get_all_hosts(config=config)
+
+    # THEN expect total hosts
+    assert len(hosts) == 1
+
+    # THEN expect id
+    assert hosts[0].id == "foonode.london"
+
+    # THEN expect os
+    assert hosts[0].os_name == "fakeos"
