@@ -35,7 +35,7 @@ logger = get_logger()
 @dataclass
 class Host:
     """
-    Defines a host instance which has facts and templates.
+    Defines a host instance which has facts.
     """
 
     hostname: str
