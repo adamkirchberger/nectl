@@ -160,29 +160,26 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             )
             continue
 
-        # If host is directory then load nested fact files
-        if hasattr(mod, "__path__") and getattr(mod, "__file__", None) is None:
-            # Module is namespace so load submodules
-            for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
-                # Import fact file
-                try:
-                    logger.info(
-                        f"{host.id}: loading facts file='{submod_info.name}' path='{path}'"
-                    )
-                    submod = importlib.import_module(path + "." + submod_info.name)
-                except (Exception, RecursionError) as e:
-                    logger.error(
-                        f"{host.id}: error loading facts file='{submod_info.name}' path='{path}'"
-                    )
-                    logger.exception(e)
-                    sys.exit(1)
+        # Load host python file or module __init__.py if host is directory
+        logger.info(f"{host.id}: loading facts file='{mod.__name__}' path='{path}'")
+        _load_vars(mod)
 
-                _load_vars(submod)
+        # If host is directory then load any nested fact files
+        for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
+            # Import fact file
+            try:
+                logger.info(
+                    f"{host.id}: loading facts file='{submod_info.name}' path='{path}'"
+                )
+                submod = importlib.import_module(path + "." + submod_info.name)
+            except (Exception, RecursionError) as e:
+                logger.error(
+                    f"{host.id}: error loading facts file='{submod_info.name}' path='{path}'"
+                )
+                logger.exception(e)
+                sys.exit(1)
 
-        # Host is not directory then load file
-        else:
-            logger.info(f"{host.id}: loading facts file='{mod.__name__}' path='{path}'")
-            _load_vars(mod)
+            _load_vars(submod)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"{host.id}: finished loading facts ({dur}s)")
