@@ -18,7 +18,7 @@
 # pylint: disable=C0116
 import pytest
 
-import nectl.config
+from nectl.config import Config
 from nectl.data.hosts import Host, get_all_hosts, get_filtered_hosts
 from nectl.exceptions import DiscoveryError
 
@@ -101,7 +101,30 @@ def test_should_return_no_customer_when_when_getting_all_hosts_and_no_customer_r
     # WHEN fetching all hosts
     hosts = get_all_hosts(config=config)
 
+    # THEN expect site to be set
+    assert hosts[0].site is not None
+
     # THEN expect customer to be none
+    assert hosts[0].customer is None
+
+
+def test_should_return_no_customer_and_site_when_when_getting_all_hosts_and_no_customer_or_site_regex_is_supplied(
+    mock_config,
+):
+    # GIVEN config using mock kit
+    config = mock_config
+
+    # GIVEN customer and site regex is not set in config
+    config.hosts_customer_regex = None
+    config.hosts_site_regex = None
+
+    # WHEN fetching all hosts
+    hosts = get_all_hosts(config=config)
+
+    # THEN expect customer to be none
+    assert hosts[0].customer is None
+
+    # THEN expect site to be none
     assert hosts[0].customer is None
 
 
@@ -138,6 +161,29 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_customer(
 
     # WHEN fetching hosts and using filters
     hosts = get_filtered_hosts(config=config, site=site, customer=customer)
+
+    # THEN expect each result to be of Host type
+    for host in hosts:
+        assert isinstance(host, Host), host
+
+    # THEN expect to have 2 hosts
+    assert len(hosts) == 2
+
+
+def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_role(
+    mock_config,
+):
+    # GIVEN config using mock kit
+    config = mock_config
+
+    # GIVEN role
+    role = "primary"
+
+    # GIVEN site
+    site = "london"
+
+    # WHEN fetching hosts and using filters
+    hosts = get_filtered_hosts(config=config, role=role, site=site)
 
     # THEN expect each result to be of Host type
     for host in hosts:

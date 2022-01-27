@@ -60,7 +60,7 @@ def test_should_return_hosts_when_running_cli_data_get_facts_command(
             "hostname": "core0",
             "site": "london",
             "customer": "acme",
-            "role": None,
+            "role": "primary",
             "manufacturer": None,
             "model": None,
             "os_name": "fakeos",

@@ -16,10 +16,12 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 # pylint: disable=C0116
+import sys
 import pytest
+from unittest.mock import patch
 
-import nectl.config
-from nectl.data.hosts import Host
+from nectl.config import Config
+from nectl.data.hosts import Host, _get_host_datatree_path_vars
 
 
 def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
@@ -119,3 +121,131 @@ def test_should_raise_error_when_accessing_undefined_protected_attribute_in_host
 
     # THEN expect error
     assert str(error.value) == "'Host' object has no attribute '_foo'"
+
+
+def test_should_return_attributes_when_getting_host_attributes_using_host_file(
+    tmp_path,
+):
+    # GIVEN tmp kit
+    kit = tmp_path
+
+    # GIVEN tmp host path
+    hosts_path = kit / "data" / "hosts"
+    hosts_path.mkdir(parents=True)
+
+    # GIVEN host file with role
+    (hosts_path / "foonode.py").write_text("role = 'foorole'\n")
+
+    # GIVEN mock kit in path
+    sys.path.insert(0, str(kit))
+
+    # WHEN getting host attributes
+    path_vars = _get_host_datatree_path_vars(
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+    )
+
+    # THEN expect role var
+    assert path_vars["role"] == "foorole"
+
+
+def test_should_return_attributes_when_getting_host_attributes_using_host_directory(
+    tmp_path,
+):
+    # GIVEN tmp kit
+    kit = tmp_path
+
+    # GIVEN tmp host path
+    hosts_path = kit / "data" / "hosts"
+    hosts_path.mkdir(parents=True)
+
+    # GIVEN host module with init file with role
+    (hosts_path / "foonode").mkdir()
+    (hosts_path / "foonode" / "__init__.py").write_text("role = 'foorole'\n")
+
+    # GIVEN mock kit in path
+    sys.path.insert(0, str(kit))
+
+    # WHEN getting host attributes
+    path_vars = _get_host_datatree_path_vars(
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+    )
+
+    # THEN expect role var
+    assert path_vars["role"] == "foorole"
+
+
+def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
+    tmp_path,
+):
+    # GIVEN tmp kit
+    kit = tmp_path
+
+    # GIVEN tmp host path
+    hosts_path = kit / "data" / "hosts"
+    hosts_path.mkdir(parents=True)
+
+    # GIVEN host file with non core variable
+    (hosts_path / "foonode.py").write_text("timezone = 'utc'\n")
+
+    # GIVEN mock kit in path
+    sys.path.insert(0, str(kit))
+
+    # WHEN getting host attributes
+    path_vars = _get_host_datatree_path_vars(
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+    )
+
+    # THEN expect blank
+    assert path_vars == {}
+
+
+def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
+    tmp_path,
+):
+    # GIVEN tmp kit
+    kit = tmp_path
+
+    # GIVEN tmp host path
+    hosts_path = kit / "data" / "hosts"
+    hosts_path.mkdir(parents=True)
+
+    # GIVEN host file with non core variable
+    (hosts_path / "foonode.py").write_text("timezone = 'utc'\n")
+
+    # GIVEN mock kit in path
+    sys.path.insert(0, str(kit))
+
+    # WHEN getting host attributes
+    path_vars = _get_host_datatree_path_vars(
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+    )
+
+    # THEN expect blank
+    assert path_vars == {}
+
+
+@patch("sys.exit")
+def test_should_raise_error_when_getting_host_attributes_using_invalid_host(
+    mock_exit,
+    tmp_path,
+):
+    # GIVEN tmp kit
+    kit = tmp_path
+
+    # GIVEN tmp host path
+    hosts_path = kit / "data" / "hosts"
+    hosts_path.mkdir(parents=True)
+
+    # GIVEN host file with invalid python
+    (hosts_path / "foonode.py").write_text("foo =!= invalid\n")
+
+    # GIVEN mock kit in path
+    sys.path.insert(0, str(kit))
+
+    # WHEN getting host attributes
+    _get_host_datatree_path_vars(
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+    )
+
+    # THEN expect exit to be called
+    mock_exit.assert_called_with(1)

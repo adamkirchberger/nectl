@@ -21,6 +21,7 @@ import time
 from typing import Optional, Union, Any, List, Dict
 from glob import glob
 from dataclasses import dataclass, field
+from platformdirs import importlib
 
 from ..logging import get_logger
 from ..exceptions import DiscoveryError
@@ -190,6 +191,41 @@ def get_filtered_hosts(
     return hosts
 
 
+def _get_host_datatree_path_vars(host_path: str, datatree_dirname: str) -> dict:
+    """
+    Imports the host to retrieve core vars like 'role' which are used in
+    the datatree lookup paths. These must be in host's python file or the
+    __init__.py file if host is defined as a directory.
+
+    Args:
+        host_path (str): the file path to the host module.
+        datatree_dirname (str): name of datatree directory.
+
+    Returns:
+        dict: host attributes used to instantiate a Host instance.
+    """
+    # Attributes we are interested in
+    attrs = ["role", "model", "manufacturer", "os_name", "os_version"]
+
+    # Extract host module import path
+    m = re.match(re.compile(fr".*({datatree_dirname}\/.*?)(\.py)?$"), host_path)
+    if m:
+        try:
+            # Import host module
+            mod = importlib.import_module(m.group(1).replace("/", "."))
+
+            # Extract and return any attributes we're interested in
+            return {
+                attr: mod.__dict__.get(attr) for attr in attrs if mod.__dict__.get(attr)
+            }
+        except Exception as e:
+            logger.error(f"error loading host in: {host_path}")
+            logger.exception(e)
+            sys.exit(1)
+
+    return {}
+
+
 def get_all_hosts(config: Config) -> List[Host]:
     """
     Returns list of all discovered hosts from datatree.
@@ -212,6 +248,11 @@ def get_all_hosts(config: Config) -> List[Host]:
 
     path = f"{config.datatree_path}/{config.hosts_glob_pattern}"
     logger.debug(f"starting hosts discovery in: {path}")
+
+    # Ensure kit path is in pythonpath
+    if sys.path[0] != config.kit_path:
+        logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")
+        sys.path.insert(0, config.kit_path)
 
     host_dirs = [
         h for h in glob(path) if not any(re.match(p, h) for p in HOSTS_IGNORE_REGEX)
@@ -261,7 +302,15 @@ def get_all_hosts(config: Config) -> List[Host]:
         else:
             customer = None
 
-        new_host = Host(hostname=hostname, site=site, customer=customer, _config=config)
+        # Get any core host vars which are defined and use to instantiate
+        host_vars = _get_host_datatree_path_vars(
+            host_path=host_dir, datatree_dirname=config.datatree_dirname
+        )
+
+        # Create host
+        new_host = Host(
+            hostname=hostname, site=site, customer=customer, _config=config, **host_vars
+        )
         logger.debug(f"found host '{new_host.id}' in: {host_dir}")
         hosts.append(new_host)
 

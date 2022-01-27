@@ -63,9 +63,11 @@ def mock_datatree(tmp_path) -> pathlib.PosixPath:
                 host = hosts / hostname
                 host.mkdir()
 
+                role = "primary" if hostname == "core0" else "backup"
+
                 # Add OS details to host
-                (host / "host.py").write_text(
-                    'os_name = "fakeos"\nos_version = "1.2.3"'
+                (host / "__init__.py").write_text(
+                    f'role="{role}"\nos_name = "fakeos"\nos_version = "1.2.3"'
                 )
 
     return root
