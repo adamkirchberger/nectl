@@ -32,7 +32,7 @@ T = TypeVar("T")
 CONSOLE_LOGGING_LEVEL = logging.WARNING
 FILE_LOGGING_LEVEL = logging.DEBUG
 try:
-    FILE_LOGGING_FILENAME = get_config().kit_path + "nectl.log"
+    FILE_LOGGING_FILENAME = get_config().kit_path + "/nectl.log"
 except ConfigFileError:
     FILE_LOGGING_FILENAME = "nectl.log"
 LOGGING_FORMAT = (
