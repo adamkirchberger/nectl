@@ -43,8 +43,12 @@ LOGGING_CONFIG = {
     "disable_existing_loggers": False,
     "loggers": {
         "": {
+            "level": "WARNING",
+            "handlers": ["file"],
+        },
+        "nectl": {
             "level": "DEBUG",
-            "handlers": ["console", "file"],
+            "handlers": ["console"],
         },
     },
     "formatters": {
@@ -122,15 +126,35 @@ def setup_logging(v: int = 0):
     Args:
         v (int): verbosity level.
     """
-    logging_levels = {
+    # Nectl logger verbosity flag count levels
+    nectl_log_levels = {
         0: logging.WARNING,
         1: logging.INFO,
         2: logging.DEBUG,
     }
-    _level = logging_levels[min(v, len(logging_levels) - 1)]
+    nectl_log_level = nectl_log_levels[min(v, len(nectl_log_levels) - 1)]
 
-    # Set console logger level
-    logging.getLogger("").handlers[0].setLevel(_level)
+    # Set nectl logger console level, file log level is not changed.
+    logging.getLogger("nectl").handlers[0].setLevel(nectl_log_level)
+
+    # All loggers verbosity flag count levels
+    all_log_levels = {
+        0: logging.ERROR,
+        1: logging.ERROR,
+        2: logging.INFO,
+        3: logging.DEBUG,
+    }
+    all_log_level = all_log_levels[min(v, len(all_log_levels) - 1)]
+
+    # Set all loggers level
+    logging.getLogger("").setLevel(all_log_level)
 
     if v > 0:
-        print(f"logging level: {logging.getLevelName(_level)}", file=sys.stderr)
+        print(
+            (
+                "logging levels:"
+                f" '*'={logging.getLevelName(all_log_level)}"
+                f" 'nectl'={logging.getLevelName(nectl_log_level)}"
+            ),
+            file=sys.stderr,
+        )
