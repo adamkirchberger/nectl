@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-from os import getcwd
-
 """
 Render functions used to convert templates and facts into configs.
 """
