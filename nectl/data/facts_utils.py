@@ -25,6 +25,7 @@ import importlib
 import pkgutil
 from types import ModuleType
 from typing import List, Dict, TYPE_CHECKING
+from dataclasses import is_dataclass
 from enum import Enum
 from ipaddress import IPv4Interface
 from pydantic import BaseModel
@@ -133,7 +134,6 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
                 facts[var] = merge_utils.merge(
                     facts.get(var, {}), getattr(mod, var), flags=MERGE_TYPE
                 )
-                # facts[var] = {**getattr(mod, var), **facts.get(var, {})}
 
             # Replace
             else:
@@ -146,13 +146,18 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             )  # replace path vars
         except KeyError as e:
             logger.critical(
-                f"{host.id}: datatree path variable for missing {e}: {raw_path}"
+                f"{host.id}: datatree path variable missing {e}: {raw_path}"
             )
             sys.exit(1)
 
         try:
+            # Import module
             mod = importlib.import_module(path)
             logger.debug(f"{host.id}: imported module: {path}")
+
+            # Load python file or module __init__.py if is directory
+            logger.info(f"{host.id}: loading facts file='{mod.__name__}' path='{path}'")
+            _load_vars(mod)
 
         except ModuleNotFoundError:
             logger.debug(
@@ -160,26 +165,22 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             )
             continue
 
-        # Load host python file or module __init__.py if host is directory
-        logger.info(f"{host.id}: loading facts file='{mod.__name__}' path='{path}'")
-        _load_vars(mod)
-
-        # If host is directory then load any nested fact files
-        for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
-            # Import fact file
-            try:
-                logger.info(
-                    f"{host.id}: loading facts file='{submod_info.name}' path='{path}'"
-                )
-                submod = importlib.import_module(path + "." + submod_info.name)
-            except (Exception, RecursionError) as e:
-                logger.error(
-                    f"{host.id}: error loading facts file='{submod_info.name}' path='{path}'"
-                )
-                logger.exception(e)
-                sys.exit(1)
-
-            _load_vars(submod)
+        # If module is a package (directory)
+        if getattr(mod, "__name__") == getattr(mod, "__package__"):
+            # Then load any nested fact files
+            for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
+                try:
+                    logger.info(
+                        f"{host.id}: loading facts file='{submod_info.name}' path='{path}'"
+                    )
+                    submod = importlib.import_module(path + "." + submod_info.name)
+                    _load_vars(submod)
+                except (Exception, RecursionError) as e:
+                    logger.error(
+                        f"{host.id}: error loading facts file='{submod_info.name}' path='{path}'"
+                    )
+                    logger.exception(e)
+                    sys.exit(1)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"{host.id}: finished loading facts ({dur}s)")
@@ -208,6 +209,8 @@ def facts_to_json_string(facts: Dict) -> str:
             return data.value
         if isinstance(data, IPv4Interface):
             return str(data)
+        if is_dataclass(data):
+            return vars(data)
 
         return str(data)
 
