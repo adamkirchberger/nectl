@@ -100,6 +100,7 @@ class Host:
             "site",
             "customer",
             "role",
+            "mgmt_ip",
             "_facts",
             "_config",
         )  # don't try find value in facts
@@ -125,7 +126,7 @@ class Host:
             "os_version": self.os_version if include_facts else None,
             "serial_number": self.serial_number if include_facts else None,
             "asset_tag": self.asset_tag if include_facts else None,
-            "mgmt_ip": self.mgmt_ip if include_facts else None,
+            "mgmt_ip": self.mgmt_ip,
         }
 
     def __repr__(self) -> str:
@@ -205,7 +206,16 @@ def _get_host_datatree_path_vars(host_path: str, datatree_dirname: str) -> dict:
         dict: host attributes used to instantiate a Host instance.
     """
     # Attributes we are interested in
-    attrs = ["role", "model", "manufacturer", "os_name", "os_version"]
+    attrs = [
+        "mgmt_ip",
+        "role",
+        "model",
+        "manufacturer",
+        "os_name",
+        "os_version",
+        "serial_number",
+        "asset_tag",
+    ]
 
     # Extract host module import path
     m = re.match(re.compile(fr".*({datatree_dirname}\/.*?)(\.py)?$"), host_path)
