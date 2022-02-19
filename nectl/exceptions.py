@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+from typing import Optional
+
 
 class DiscoveryError(Exception):
     """
@@ -44,3 +46,40 @@ class TemplateImportError(Exception):
     """
     Indicates that template file does not exist or has errors.
     """
+
+
+class DriverNotFoundError(Exception):
+    """
+    Indicates that a matching driver can not be found for the host.
+    """
+
+
+class DriverError(Exception):
+    """
+    Indicates that an error has been encountered by the host driver.
+    """
+
+
+class DriverNotConnectedError(Exception):
+    """
+    Indicates that a driver method has been run with no connection to host.
+    """
+
+
+class DriverConfigLoadError(Exception):
+    """
+    Indicates that errors have been encountered when loading config to host.
+    """
+
+
+class DriverCommitDisconnectError(Exception):
+    """
+    Indicates that a host disconnected after commit most likely from bad config.
+
+    Args:
+        diff (str): commit diff before disconnect.
+    """
+
+    def __init__(self, *args: object, diff: Optional[str] = None) -> None:
+        super().__init__(*args)
+        self.diff = diff
