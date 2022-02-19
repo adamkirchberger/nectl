@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-from .data.actions import Actions
+from .data.actions import Actions as actions
+from .configs.template_utils import get_render_facts
 
-actions = Actions
+
+__all__ = ["actions", "get_render_facts"]
