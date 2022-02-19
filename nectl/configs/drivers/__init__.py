@@ -85,25 +85,25 @@ def run_driver_method_on_hosts(
                 username="root",
             )
         except (DriverNotFoundError, DriverError) as e:
-            logger.error(f"{host.id}: {e}")
+            logger.error(f"[{host.id}] {e}")
             errors += 1
             continue  # skip host
 
         # Open connection to host
         try:
             with driver as con:
-                logger.info(f"{host.id}: opened connection to host")
+                logger.info(f"[{host.id}] opened connection to host")
                 # Load new config and get diff
                 diff = getattr(con, method_name)(
                     config_filepath=f"{config.kit_path}/{config.staged_configs_dir}/{host.id}.{config.configs_file_extension}"
                 )
-            logger.info(f"{host.id}: closed connection to host")
+            logger.info(f"[{host.id}] closed connection to host")
 
             # Update dict to hold diff results indexed by host id
             config_diffs.update({host.id: diff})
 
         except (DriverError, DriverConfigLoadError, DriverCommitDisconnectError) as e:
-            logger.error(f"{host.id}: {e}")
+            logger.error(f"[{host.id}] {e}")
             errors += 1
 
             if isinstance(e, DriverCommitDisconnectError):

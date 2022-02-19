@@ -77,7 +77,7 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
             )
             continue
 
-        logger.debug(f"{host.id}: setting render context")
+        logger.debug(f"[{host.id}] setting render context")
         _render_context.set({"facts": host.facts})  # set host facts
 
         try:
@@ -90,7 +90,7 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
         except (TemplateMissingError, TemplateImportError) as e:
             raise RenderError(str(e)) from e
         finally:
-            logger.debug(f"{host.id}: clearing render context")
+            logger.debug(f"[{host.id}] clearing render context")
             _render_context.set({})  # set context to empty dict
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
@@ -115,19 +115,19 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
     """
     ts_start = time.perf_counter()
     host_id = facts.get("id")
-    logger.debug(f"{host_id}: starting render")
+    logger.debug(f"[{host_id}] starting render")
 
     template_name = getattr(template, "__name__")
-    logger.info(f"{host_id}: using template '{template_name}'")
+    logger.info(f"[{host_id}] using template '{template_name}'")
 
-    logger.debug(f"{host_id}: collecting template sections")
+    logger.debug(f"[{host_id}] collecting template sections")
     sections = {
         name: func
         for name, func in template.__dict__.items()
         if inspect.isfunction(func) and not name.startswith("_")
     }
     logger.debug(
-        f"{host_id}: found {len(sections)} template sections: {list(sections.keys())}"
+        f"[{host_id}] found {len(sections)} template sections: {list(sections.keys())}"
     )
 
     out = []
@@ -135,7 +135,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
 
     # Loop through each template section
     for sname, section in sections.items():
-        logger.info(f"{host_id}: rendering template: {template_name}:{sname}")
+        logger.info(f"[{host_id}] rendering template: {template_name}:{sname}")
         try:
             # Get args that template needs
             args = {}
@@ -162,7 +162,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
         except KeyError as e:
             # Catch missing facts errors
             logger.critical(
-                f"{host_id}: template '{template_name}:{sname}' "
+                f"[{host_id}] template '{template_name}:{sname}' "
                 f"needs fact: {str(e)}"
             )
             errors += 1  # increase errors counter
@@ -170,7 +170,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
         except Exception as e:
             # Catch all other errors
             logger.critical(
-                f"{host_id}: template '{template_name}:{sname}' unknown error: {e}"
+                f"[{host_id}] template '{template_name}:{sname}' unknown error: {e}"
             )
             logger.exception(e)
             errors += 1  # increase errors counter
@@ -178,7 +178,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
         out.append(render)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
-    logger.info(f"{host_id}: finished render ({dur}s)")
+    logger.info(f"[{host_id}] finished render ({dur}s)")
 
     if errors:
         msg = f"render aborted due to {errors} render errors with host: {host_id}"

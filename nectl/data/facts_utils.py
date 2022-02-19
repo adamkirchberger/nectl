@@ -93,7 +93,7 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
     facts = {**host.dict(include_facts=False)}  # Add host inventory facts.
 
     ts_start = time.perf_counter()
-    logger.debug(f"{host.id}: start loading facts")
+    logger.debug(f"[{host.id}] start loading facts")
 
     def _load_vars(mod: ModuleType):
         """
@@ -146,22 +146,24 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             )  # replace path vars
         except KeyError as e:
             logger.critical(
-                f"{host.id}: datatree path variable missing {e}: {raw_path}"
+                f"[{host.id}] datatree path variable missing {e}: {raw_path}"
             )
             sys.exit(1)
 
         try:
             # Import module
             mod = importlib.import_module(path)
-            logger.debug(f"{host.id}: imported module: {path}")
+            logger.debug(f"[{host.id}] imported module: {path}")
 
             # Load python file or module __init__.py if is directory
-            logger.info(f"{host.id}: loading facts file='{mod.__name__}' path='{path}'")
+            logger.info(
+                f"[{host.id}] loading facts file='{mod.__name__}' path='{path}'"
+            )
             _load_vars(mod)
 
         except ModuleNotFoundError:
             logger.debug(
-                f"{host.id}: module not found path='{path}' raw_path='{raw_path}'"
+                f"[{host.id}] module not found path='{path}' raw_path='{raw_path}'"
             )
             continue
 
@@ -171,19 +173,19 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
                 try:
                     logger.info(
-                        f"{host.id}: loading facts file='{submod_info.name}' path='{path}'"
+                        f"[{host.id}] loading facts file='{submod_info.name}' path='{path}'"
                     )
                     submod = importlib.import_module(path + "." + submod_info.name)
                     _load_vars(submod)
                 except (Exception, RecursionError) as e:
                     logger.error(
-                        f"{host.id}: error loading facts file='{submod_info.name}' path='{path}'"
+                        f"[{host.id}] error loading facts file='{submod_info.name}' path='{path}'"
                     )
                     logger.exception(e)
                     sys.exit(1)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
-    logger.info(f"{host.id}: finished loading facts ({dur}s)")
+    logger.info(f"[{host.id}] finished loading facts ({dur}s)")
 
     return facts
 
