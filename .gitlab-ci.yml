@@ -34,16 +34,53 @@ stages:
     refs:
       - tags
 
-test:
+test-py3.7:
   extends: .mr_and_release_trigger
   stage: test
-  image: python:3.9.5-slim
+  image: python:3.7-slim
   variables:
     APP_VERSION: test
   script:
     - pip install poetry
     - poetry install
     - poetry run pytest -v
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+
+test-py3.8:
+  extends: .mr_and_release_trigger
+  stage: test
+  image: python:3.8-slim
+  variables:
+    APP_VERSION: test
+  script:
+    - pip install poetry
+    - poetry install
+    - poetry run pytest -v
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+
+test-py3.9:
+  extends: .mr_and_release_trigger
+  stage: test
+  image: python:3.9-slim
+  variables:
+    APP_VERSION: test
+  script:
+    - pip install poetry
+    - poetry install
+    - poetry run pytest -v
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+
+test-py3.10:
+  extends: .mr_and_release_trigger
+  stage: test
+  image: python:3.10-slim
+  variables:
+    APP_VERSION: test
+  script:
+    - pip install poetry
+    - poetry install
+    - poetry run pytest -v
+  coverage: '/TOTAL.*\s+(\d+%)$/'
 
 release:
   extends: .release_trigger
