@@ -38,4 +38,4 @@ class Actions:
     frozen = "frozen"
 
 
-DEFAULT_ACTION = Actions.merge_with
+DEFAULT_ACTION = Actions.replace_with
