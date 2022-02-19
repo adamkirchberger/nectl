@@ -24,7 +24,6 @@ from ...exceptions import (
     DriverNotFoundError,
     DriverCommitDisconnectError,
     DriverError,
-    DriverNotFoundError,
     DriverConfigLoadError,
 )
 from ..utils import write_configs_to_dir
@@ -95,7 +94,10 @@ def run_driver_method_on_hosts(
                 logger.info(f"[{host.id}] opened connection to host")
                 # Load new config and get diff
                 diff = getattr(con, method_name)(
-                    config_filepath=f"{settings.kit_path}/{settings.staged_configs_dir}/{host.id}.{settings.configs_file_extension}"
+                    config_filepath=(
+                        f"{settings.kit_path}/{settings.staged_configs_dir}/"
+                        + f"{host.id}.{settings.configs_file_extension}"
+                    )
                 )
             logger.info(f"[{host.id}] closed connection to host")
 
