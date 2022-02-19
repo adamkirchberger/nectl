@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.1](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.10.0...0.10.1) (2022-02-19)
+
+
+### Bug Fixes
+
+* ensure only funcs are used as template sections ([e8fc620](https://gitlab.com/adamkirchberger/nectl-dev/commit/e8fc620730d39fa0953510c9f4770bb1bfd915f7))
+* linting issues ([e8ad624](https://gitlab.com/adamkirchberger/nectl-dev/commit/e8ad624c32acd2b984c8fd06b8caadc760e335d8))
+
 # [0.10.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.9.0...0.10.0) (2022-02-19)
 
 
