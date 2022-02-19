@@ -100,10 +100,9 @@ def logging_opts(func: Callable[..., T]) -> Callable[..., T]:
 
     @click.option("-v", help="Increase logging (-vv, -vvv for more).", count=True)
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, v: int, **kwargs):
         # Configure logging
-        setup_logging(kwargs.get("v"))
-        del kwargs["v"]  # remove verbosity argument for child commands
+        setup_logging(v)
 
         # Debug show input arguments
         logger.debug(f"func '{func.__name__}' input args='{args}' kwargs='{kwargs}'")
@@ -119,7 +118,7 @@ def logging_opts(func: Callable[..., T]) -> Callable[..., T]:
     return wrapper
 
 
-def setup_logging(v: int = 0):
+def setup_logging(v: int = 0) -> None:
     """
     Setup logging level based on verbosity flags.
 
