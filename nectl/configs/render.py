@@ -124,7 +124,7 @@ def render_template(template: Template, facts: Dict[str, Any]) -> str:
     sections = {
         name: func
         for name, func in template.__dict__.items()
-        if callable(func) and not name.startswith("_")
+        if inspect.isfunction(func) and not name.startswith("_")
     }
     logger.debug(
         f"{host_id}: found {len(sections)} template sections: {list(sections.keys())}"
