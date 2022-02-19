@@ -1,5 +1,28 @@
 # Changelog
 
+# [0.10.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.9.0...0.10.0) (2022-02-19)
+
+
+### Bug Fixes
+
+* facts not being loaded from directories ([0611555](https://gitlab.com/adamkirchberger/nectl-dev/commit/0611555fd28656e635a15762c336f54b7b5cc359))
+* incorrect import for importlib ([b4a10e3](https://gitlab.com/adamkirchberger/nectl-dev/commit/b4a10e3de0b0076979484457462944b4136763f8))
+* linting issues ([548ac9e](https://gitlab.com/adamkirchberger/nectl-dev/commit/548ac9ed0ce82e5ccca6ed1e330fc27d2fc28798))
+* log file path missing slash ([d364d1a](https://gitlab.com/adamkirchberger/nectl-dev/commit/d364d1ac7b74233d44c576aade0a1c8ab6fb840f))
+* make mgmt_ip a core fact ([b3f1315](https://gitlab.com/adamkirchberger/nectl-dev/commit/b3f131579597b80653553d2482d22e510dd113c9))
+* set default data tree action to replace ([08c9300](https://gitlab.com/adamkirchberger/nectl-dev/commit/08c9300c7cede28fa558d14df1f15dc0d459d20c))
+* update logging setup methods and docstring ([5cc0f59](https://gitlab.com/adamkirchberger/nectl-dev/commit/5cc0f594c2b1db1904c7d535705a683f34da8ea9))
+* update writer to skip blank configs and return total ([eb31d90](https://gitlab.com/adamkirchberger/nectl-dev/commit/eb31d90bdc1343e35b4edc8d915c113dc2527032))
+
+
+### Features
+
+* add host drivers ([0100f39](https://gitlab.com/adamkirchberger/nectl-dev/commit/0100f39cae4317a4846e7dd6792686eda95a05e9))
+* add junos driver ([d0a81ea](https://gitlab.com/adamkirchberger/nectl-dev/commit/d0a81ea5a1173f7241450a40daac4b011f26a192))
+* add junos-eznc dependency ([77a08ed](https://gitlab.com/adamkirchberger/nectl-dev/commit/77a08ed2650b12f039599b0a04cf7a6434b99f22))
+* file and console logs include other loggers ([e1b3a52](https://gitlab.com/adamkirchberger/nectl-dev/commit/e1b3a52265b168f8ddcaadaec4fd4ee037f3ce03))
+* update public methods ([1c1bcee](https://gitlab.com/adamkirchberger/nectl-dev/commit/1c1bceebba767f92bd35b23691a8cbea7a9bd46c))
+
 # [0.9.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.8.0...0.9.0) (2022-01-27)
 
 
