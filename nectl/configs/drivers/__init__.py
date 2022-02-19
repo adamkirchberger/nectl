@@ -45,6 +45,9 @@ def get_driver(os_name: str) -> Type[BaseDriver]:
     Returns:
         BaseDriver: driver object.
     """
+    if os_name == "junos":
+        return JunosDriver
+
     raise DriverNotFoundError(f"no driver found that matches os_name: {os_name}")
 
 
