@@ -26,7 +26,7 @@ from contextvars import ContextVar
 import io
 
 from ..logging import get_logger
-from ..config import Config
+from ..settings import Settings
 from ..exceptions import (
     TemplateImportError,
     TemplateMissingError,
@@ -50,13 +50,13 @@ def get_render_context() -> dict:
     return _render_context.get()
 
 
-def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
+def render_hosts(settings: Settings, hosts: Sequence[Host]) -> Dict[str, Any]:
     """
     Returns rendered configs for hosts using templates which are matched based
     on the 'os_name' value.
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         hosts (List[Host]): hosts to render templates for.
 
     Returns:
@@ -82,7 +82,7 @@ def render_hosts(config: Config, hosts: Sequence[Host]) -> Dict[str, Any]:
 
         try:
             # Get matching template
-            template = get_template(os_name=host.os_name, config=config)
+            template = get_template(os_name=host.os_name, settings=settings)
 
             # Render template and add to results
             results[host.id] = render_template(template, host.facts)

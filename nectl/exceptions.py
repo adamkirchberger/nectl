@@ -24,9 +24,9 @@ class DiscoveryError(Exception):
     """
 
 
-class ConfigFileError(Exception):
+class SettingsFileError(Exception):
     """
-    Indicates that errors have been encountered related to config file.
+    Indicates that errors have been encountered related to settings file.
     """
 
 

@@ -21,12 +21,12 @@ from nectl.data.hosts import Host
 from nectl.data.facts_utils import load_host_facts
 
 
-def test_should_return_global_ntp_servers_list_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_global_ntp_servers_list_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme")
@@ -35,7 +35,7 @@ def test_should_return_global_ntp_servers_list_when_loading_facts(mock_config):
     (data / "glob" / "common" / "ntp.py").write_text('ntp_servers = ["global.ntp.com"]')
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_servers in facts
     assert "ntp_servers" in facts.keys(), facts
@@ -48,13 +48,13 @@ def test_should_return_global_ntp_servers_list_when_loading_facts(mock_config):
 
 
 def test_should_return_global_roles_merged_ntp_servers_list_when_loading_facts(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host with switch role
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -70,7 +70,7 @@ def test_should_return_global_roles_merged_ntp_servers_list_when_loading_facts(
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_servers in facts
     assert "ntp_servers" in facts.keys(), facts
@@ -83,13 +83,13 @@ def test_should_return_global_roles_merged_ntp_servers_list_when_loading_facts(
 
 
 def test_should_return_site_common_merged_ntp_servers_list_when_loading_facts(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -111,7 +111,7 @@ def test_should_return_site_common_merged_ntp_servers_list_when_loading_facts(
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_servers in facts
     assert "ntp_servers" in facts.keys(), facts
@@ -128,13 +128,13 @@ def test_should_return_site_common_merged_ntp_servers_list_when_loading_facts(
 
 
 def test_should_return_host_only_replaced_ntp_servers_list_when_loading_facts(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -164,7 +164,7 @@ def test_should_return_host_only_replaced_ntp_servers_list_when_loading_facts(
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_servers in facts
     assert "ntp_servers" in facts.keys(), facts
@@ -177,13 +177,13 @@ def test_should_return_host_only_replaced_ntp_servers_list_when_loading_facts(
 
 
 def test_should_return_global_frozen_ntp_servers_list_when_loading_facts_and_also_site_frozen(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -215,7 +215,7 @@ def test_should_return_global_frozen_ntp_servers_list_when_loading_facts_and_als
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_servers in facts
     assert "ntp_servers" in facts.keys(), facts

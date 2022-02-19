@@ -11,7 +11,7 @@ def test_should_raise_error_when_instantiating_driver_on_host_with_no_mgmt_ip(
 ):
     # GIVEN host with no mgmt_ip
     host = Host(
-        hostname="core0", site="london", customer="acme", _facts={}, _config=None
+        hostname="core0", site="london", customer="acme", _facts={}, _settings=None
     )
 
     # GIVEN should raise error
@@ -25,10 +25,10 @@ def test_should_raise_error_when_instantiating_driver_on_host_with_no_mgmt_ip(
 
 @pytest.mark.parametrize("driverclass", (JunosDriver,))
 def test_should_raise_error_when_running_driver_methods_outside_context_manager(
-    driverclass, mock_config
+    driverclass, mock_settings
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN host
     host = Host(hostname="core0", site="london", mgmt_ip="x.x.x.x")

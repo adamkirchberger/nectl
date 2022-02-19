@@ -19,7 +19,7 @@ import time
 from typing import List, Type
 
 from ...logging import get_logger
-from ...config import Config
+from ...settings import Settings
 from ...exceptions import (
     DriverNotFoundError,
     DriverCommitDisconnectError,
@@ -52,14 +52,14 @@ def get_driver(os_name: str) -> Type[BaseDriver]:
 
 
 def run_driver_method_on_hosts(
-    config: Config, hosts: List[Host], method_name: str, description: str
+    settings: Settings, hosts: List[Host], method_name: str, description: str
 ) -> int:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
     one of "compare_config", "replace_config" or "get_config".
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         hosts (List[Host]): list of hosts to run method against.
         method_name (str): name of driver method.
         description (str): action description used in log outputs.
@@ -95,7 +95,7 @@ def run_driver_method_on_hosts(
                 logger.info(f"[{host.id}] opened connection to host")
                 # Load new config and get diff
                 diff = getattr(con, method_name)(
-                    config_filepath=f"{config.kit_path}/{config.staged_configs_dir}/{host.id}.{config.configs_file_extension}"
+                    config_filepath=f"{settings.kit_path}/{settings.staged_configs_dir}/{host.id}.{settings.configs_file_extension}"
                 )
             logger.info(f"[{host.id}] closed connection to host")
 
@@ -116,7 +116,7 @@ def run_driver_method_on_hosts(
     # Write to files
     total_files = write_configs_to_dir(
         configs=config_diffs,
-        output_dir=f"{config.kit_path}/{config.config_diffs_dir}",
+        output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
         extension="diff.txt",
     )
 

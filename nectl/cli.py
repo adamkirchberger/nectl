@@ -19,8 +19,8 @@ import sys
 import click
 
 from .logging import logging_opts
-from .exceptions import ConfigFileError
-from .config import APP_VERSION, APP_DESCRIPTION, get_config
+from .exceptions import SettingsFileError
+from .settings import APP_VERSION, APP_DESCRIPTION, get_settings
 from .data.cli import data
 from .configs.cli import configs
 from .tests.cli import tests
@@ -41,15 +41,15 @@ def cli_root(ctx):
     """
     Root CLI group
     """
-    # Load config file
+    # Load settings file
     try:
-        config = get_config()
-    except ConfigFileError as e:
+        settings = get_settings()
+    except SettingsFileError as e:
         print(f"Error: {e}")
         sys.exit(1)
 
     # Set context for child commands
-    ctx.obj = {"config": config}
+    ctx.obj = {"settings": settings}
 
 
 # Add child groups

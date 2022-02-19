@@ -44,22 +44,22 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     Use this command to render configurations for hosts.
     """
-    config = ctx.obj["config"]
+    settings = ctx.obj["settings"]
 
     try:
         hosts = get_filtered_hosts(
-            config=config,
+            settings=settings,
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
         )
-        renders = render_hosts(config=config, hosts=hosts)
+        renders = render_hosts(settings=settings, hosts=hosts)
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    output_dir = f"{config.kit_path}/{config.staged_configs_dir}"
+    output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
 
     write_configs_to_dir(configs=renders, output_dir=output_dir)
 

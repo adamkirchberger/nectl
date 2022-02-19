@@ -18,12 +18,12 @@
 import click
 import json
 
-import nectl.config
+import nectl.settings
 from nectl.cli import cli_root
 
 
 def test_should_return_hosts_when_running_cli_data_list_hosts_command(
-    cli_runner, mock_config
+    cli_runner, mock_settings
 ):
     # GIVEN args
     args = ["data", "list-hosts"]
@@ -48,7 +48,7 @@ def test_should_return_hosts_when_running_cli_data_list_hosts_command(
 
 
 def test_should_return_hosts_when_running_cli_data_get_facts_command(
-    cli_runner, mock_config
+    cli_runner, mock_settings
 ):
     # GIVEN args
     args = ["data", "get-facts", "-h", "core0", "-s", "london", "-c", "acme"]

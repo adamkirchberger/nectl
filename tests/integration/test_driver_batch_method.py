@@ -32,10 +32,10 @@ from nectl.exceptions import (
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
 def test_should_call_method_when_running_driver_method_on_hosts(
-    mock_get_driver, mock_write_configs, mock_config, method_name
+    mock_get_driver, mock_write_configs, mock_settings, method_name
 ):
-    # GIVEN mock config
-    mock_config = mock_config
+    # GIVEN mock settings
+    mock_settings = mock_settings
 
     # GIVEN method name
     method_name = method_name
@@ -48,7 +48,7 @@ def test_should_call_method_when_running_driver_method_on_hosts(
         mgmt_ip="x.x.x.x",
         os_name="fakeos",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN write config patched
@@ -61,7 +61,7 @@ def test_should_call_method_when_running_driver_method_on_hosts(
 
     # WHEN running method
     rc = run_driver_method_on_hosts(
-        config=mock_config,
+        settings=mock_settings,
         hosts=[host],
         method_name=method_name,
         description=f"test {method_name} desc",
@@ -92,10 +92,10 @@ def test_should_call_method_when_running_driver_method_on_hosts(
 @patch("nectl.configs.drivers.get_driver")
 @patch("sys.exit")
 def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encountered(
-    mock_exit, mock_get_driver, mock_write_configs, mock_config, capsys, method_name
+    mock_exit, mock_get_driver, mock_write_configs, mock_settings, capsys, method_name
 ):
-    # GIVEN mock config
-    mock_config = mock_config
+    # GIVEN mock settings
+    mock_settings = mock_settings
 
     # GIVEN method name
     method_name = method_name
@@ -108,7 +108,7 @@ def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encou
         mgmt_ip="x.x.x.x",
         os_name="fakeos",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN write config patched to return no files
@@ -124,7 +124,7 @@ def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encou
 
     # WHEN running method
     rc = run_driver_method_on_hosts(
-        config=mock_config,
+        settings=mock_settings,
         hosts=[host],
         method_name=method_name,
         description=f"test {method_name} desc",
@@ -153,10 +153,10 @@ def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encou
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
 def test_should_create_diff_when_running_replace_method_and_host_disconnected_after_commit(
-    mock_get_driver, mock_write_configs, mock_config, capsys
+    mock_get_driver, mock_write_configs, mock_settings, capsys
 ):
-    # GIVEN mock config
-    mock_config = mock_config
+    # GIVEN mock settings
+    mock_settings = mock_settings
 
     # GIVEN host
     host = Host(
@@ -166,7 +166,7 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
         mgmt_ip="x.x.x.x",
         os_name="fakeos",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN write config patched to return 1 files
@@ -179,7 +179,7 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
 
     # WHEN running method
     rc = run_driver_method_on_hosts(
-        config=mock_config,
+        settings=mock_settings,
         hosts=[host],
         method_name="replace_config",
         description=f"test replace_config desc",
@@ -210,10 +210,10 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
 def test_should_return_1_when_running_driver_methods_on_host_with_no_matching_driver(
-    mock_get_driver, mock_write_configs, mock_config, capsys
+    mock_get_driver, mock_write_configs, mock_settings, capsys
 ):
-    # GIVEN mock config
-    mock_config = mock_config
+    # GIVEN mock settings
+    mock_settings = mock_settings
 
     # GIVEN host
     host = Host(
@@ -223,7 +223,7 @@ def test_should_return_1_when_running_driver_methods_on_host_with_no_matching_dr
         mgmt_ip="x.x.x.x",
         os_name="fakeos",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN write config patched to return 0 files
@@ -234,7 +234,7 @@ def test_should_return_1_when_running_driver_methods_on_host_with_no_matching_dr
 
     # WHEN running method
     rc = run_driver_method_on_hosts(
-        config=mock_config,
+        settings=mock_settings,
         hosts=[host],
         method_name="replace_config",
         description=f"test replace_config desc",

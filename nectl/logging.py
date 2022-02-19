@@ -23,8 +23,8 @@ import functools
 from typing import Callable, TypeVar
 import click
 
-from .config import get_config
-from .exceptions import ConfigFileError
+from .settings import get_settings
+from .exceptions import SettingsFileError
 
 
 T = TypeVar("T")
@@ -32,8 +32,8 @@ T = TypeVar("T")
 CONSOLE_LOGGING_LEVEL = logging.WARNING
 FILE_LOGGING_LEVEL = logging.DEBUG
 try:
-    FILE_LOGGING_FILENAME = get_config().kit_path + "/nectl.log"
-except ConfigFileError:
+    FILE_LOGGING_FILENAME = get_settings().kit_path + "/nectl.log"
+except SettingsFileError:
     FILE_LOGGING_FILENAME = "nectl.log"
 LOGGING_FORMAT = (
     f"%(asctime)s {platform.node()} %(name)s[%(process)d] %(levelname)s %(message)s"
@@ -107,9 +107,9 @@ def logging_opts(func: Callable[..., T]) -> Callable[..., T]:
         # Debug show input arguments
         logger.debug(f"func '{func.__name__}' input args='{args}' kwargs='{kwargs}'")
 
-        # Debug show loaded config
+        # Debug show loaded settings
         try:
-            logger.debug(f'config: {args[0].obj.get("config")}')
+            logger.debug(f'settings: {args[0].obj.get("settings")}')
         except (AttributeError, IndexError):
             pass
 

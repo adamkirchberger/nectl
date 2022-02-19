@@ -24,7 +24,7 @@ from importlib import import_module
 from types import ModuleType
 
 from ..logging import get_logger
-from ..config import Config
+from ..settings import Settings
 from ..exceptions import TemplateImportError, TemplateMissingError
 
 
@@ -34,12 +34,12 @@ logger = get_logger()
 Template = ModuleType  # Defines a template which is used to render host configurations.
 
 
-def get_template(config: Config, os_name: str) -> Template:
+def get_template(settings: Settings, os_name: str) -> Template:
     """
     Returns the template based on the host os_name value/
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         os_name (str): host operating system.
 
     Returns:
@@ -51,7 +51,7 @@ def get_template(config: Config, os_name: str) -> Template:
     """
     return _import_template(
         name=os_name,
-        templates_path=os.path.join(config.kit_path, config.templates_dirname),
+        templates_path=os.path.join(settings.kit_path, settings.templates_dirname),
     )
 
 

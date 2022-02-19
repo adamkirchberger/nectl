@@ -22,12 +22,12 @@ from nectl.exceptions import TemplateImportError, TemplateMissingError
 from nectl.configs.templates import get_template, _import_template
 
 
-def test_should_return_correct_template_when_getting_template(mock_config):
-    # GIVEN mock config
-    config = mock_config
+def test_should_return_correct_template_when_getting_template(mock_settings):
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN fakeos template exists
@@ -43,20 +43,20 @@ def test_should_return_correct_template_when_getting_template(mock_config):
     os_name = "fakeos"
 
     # WHEN getting template using os
-    template = get_template(os_name=os_name, config=config)
+    template = get_template(os_name=os_name, settings=settings)
 
     # THEN expect template name
     assert template.__name__ == "fakeos"
 
 
 def test_should_return_template_when_importing_template(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN fakeos template exists
@@ -70,7 +70,7 @@ def test_should_return_template_when_importing_template(
 
     # WHEN import template
     template = _import_template(
-        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # THEN expect section one to exist in template
@@ -81,13 +81,13 @@ def test_should_return_template_when_importing_template(
 
 
 def test_should_return_template_when_importing_template_in_subdir_using_slash(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN templates with subdirectory directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname / "foodir"
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname / "foodir"
     templates.mkdir(parents=True)
 
     # GIVEN fakeos template exists
@@ -101,7 +101,7 @@ def test_should_return_template_when_importing_template_in_subdir_using_slash(
 
     # WHEN import template
     template = _import_template(
-        "foodir/fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "foodir/fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # THEN expect section one to exist in template
@@ -112,13 +112,13 @@ def test_should_return_template_when_importing_template_in_subdir_using_slash(
 
 
 def test_should_return_template_when_importing_template_in_subdir_using_dot(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN templates with subdirectory directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname / "foodir"
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname / "foodir"
     templates.mkdir(parents=True)
 
     # GIVEN fakeos template exists
@@ -132,7 +132,7 @@ def test_should_return_template_when_importing_template_in_subdir_using_dot(
 
     # WHEN import template
     template = _import_template(
-        "foodir.fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "foodir.fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # THEN expect section one to exist in template
@@ -143,33 +143,33 @@ def test_should_return_template_when_importing_template_in_subdir_using_dot(
 
 
 def test_should_raise_error_when_getting_template_file_that_does_not_exist(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir(parents=True)
 
     # GIVEN no template file is present
 
     # WHEN import template
     with pytest.raises(TemplateMissingError) as error:
-        _import_template("fakeos", f"{config.kit_path}/{config.templates_dirname}")
+        _import_template("fakeos", f"{settings.kit_path}/{settings.templates_dirname}")
 
     # THEN expect error message
     assert str(error.value) == "template import error with os_name: fakeos"
 
 
 def test_should_raise_error_when_getting_template_that_is_invalid(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir(parents=True)
 
     # GIVEN fakeos template exists but is invalid
@@ -183,7 +183,7 @@ def test_should_raise_error_when_getting_template_that_is_invalid(
 
     # WHEN import template
     with pytest.raises(TemplateImportError) as error:
-        _import_template("fakeos", f"{config.kit_path}/{config.templates_dirname}")
+        _import_template("fakeos", f"{settings.kit_path}/{settings.templates_dirname}")
 
     # THEN expect error message
     assert "invalid syntax" in str(error.value)

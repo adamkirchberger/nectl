@@ -22,9 +22,11 @@ import pkg_resources
 import yaml
 from pydantic import BaseSettings, ValidationError
 
-from .exceptions import ConfigFileError
+from .exceptions import SettingsFileError
 
-CONFIG_FILEPATH = os.getenv("NECTL_CONFIG", "./config.yaml")
+SETTINGS_FILEPATH = os.getenv(
+    "NECTL_SETTINGS", os.getenv("NECTL_CONFIG", "./nectl.yaml")
+)
 
 try:
     APP_VERSION = pkg_resources.get_distribution("nectl").version
@@ -34,9 +36,9 @@ except pkg_resources.DistributionNotFound:
 APP_DESCRIPTION = "Network Control Tool"
 
 
-class Config(BaseSettings):
+class Settings(BaseSettings):
     """
-    Defines user configuration settings
+    Defines kit configuration settings.
     """
 
     class Config:
@@ -44,8 +46,8 @@ class Config(BaseSettings):
 
     # pylint: disable=R0902
 
-    # Path to config file
-    config_path: str
+    # Path to settings file
+    settings_path: str
 
     # List of data inheritance lookup paths
     datatree_lookup_paths: List[str]
@@ -90,28 +92,28 @@ class Config(BaseSettings):
         return os.path.join(self.kit_path, self.datatree_dirname)
 
 
-def get_config() -> Config:
+def get_settings() -> Settings:
     """
-    Return configuration.
+    Return kit settings.
 
     Returns:
-        Config: config.
+        Settings: kit settings.
     """
-    return load_config()
+    return load_settings()
 
 
-def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
+def load_settings(filepath: str = SETTINGS_FILEPATH) -> Settings:
     """
-    Load external JSON or YAML config file.
+    Load external JSON or YAML settings file.
 
     Args:
-        filepath (str): path to config file.
+        filepath (str): path to settings file.
 
     Returns:
-        Config: loaded config.
+        Settings: kit settings.
 
     Raises:
-        ConfigFileError: if an error is encountered with loading file.
+        SettingsFileError: if an error is encountered with loading file.
     """
     if not isinstance(filepath, str):
         raise TypeError("filepath must be str")
@@ -119,19 +121,19 @@ def load_config(filepath: str = CONFIG_FILEPATH) -> Config:
     try:
         with open(filepath, "r", encoding="utf-8") as fh:
             if filepath.endswith(".json"):
-                config_args = json.load(fh)
+                opts = json.load(fh)
             elif filepath.endswith(".yaml"):
-                config_args = yaml.safe_load(fh)
+                opts = yaml.safe_load(fh)
             else:
-                raise ConfigFileError("config file format must YAML or JSON")
+                raise SettingsFileError("settings file format must YAML or JSON")
     except FileNotFoundError as e:
-        raise ConfigFileError(f"config file not found '{filepath}'") from e
+        raise SettingsFileError(f"settings file not found '{filepath}'") from e
 
     try:
-        config = Config(
-            kit_path=os.path.dirname(filepath), config_path=filepath, **config_args
+        settings = Settings(
+            kit_path=os.path.dirname(filepath), settings_path=filepath, **opts
         )
     except ValidationError as e:
-        raise ConfigFileError(e) from e
+        raise SettingsFileError(e) from e
 
-    return config
+    return settings

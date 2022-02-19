@@ -18,62 +18,62 @@
 # pylint: disable=C0116
 import pytest
 
-from nectl.exceptions import ConfigFileError
-from nectl.config import load_config, APP_VERSION
+from nectl.exceptions import SettingsFileError
+from nectl.settings import load_settings, APP_VERSION
 
 
-def test_should_raise_error_when_loading_config_and_filepath_is_not_string():
-    # GIVEN invalid path to config
-    config_path = 12.34
+def test_should_raise_error_when_loading_settings_and_filepath_is_not_string():
+    # GIVEN invalid path to settings
+    settings_path = 12.34
 
-    # WHEN loading config
+    # WHEN loading settings
     with pytest.raises(TypeError) as error:
-        load_config(config_path)
+        load_settings(settings_path)
 
     # THEN expect error
     assert str(error.value) == "filepath must be str"
 
 
-def test_should_raise_error_when_loading_config_that_does_not_exist():
+def test_should_raise_error_when_loading_settings_that_does_not_exist():
     # GIVEN path to file that does not exist
-    config_path = "kit/config.yaml"
+    settings_path = "kit/settings.yaml"
 
-    # WHEN loading config
-    with pytest.raises(ConfigFileError) as error:
-        load_config(config_path)
+    # WHEN loading settings
+    with pytest.raises(SettingsFileError) as error:
+        load_settings(settings_path)
 
     # THEN expect error
-    assert str(error.value) == "config file not found 'kit/config.yaml'"
+    assert str(error.value) == "settings file not found 'kit/settings.yaml'"
 
 
-def test_should_raise_error_when_loading_config_file_with_invalid_format(tmp_path):
+def test_should_raise_error_when_loading_settings_file_with_invalid_format(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
-    # GIVEN config file which is not a valid format
-    conf_file = kit_dir / "config.xml"
+    # GIVEN settings file which is not a valid format
+    conf_file = kit_dir / "settings.xml"
 
-    # GIVEN config file content is XML which is not allowed
-    conf_file.write_text("<config><foo /><bar /></config>")
+    # GIVEN settings file content is XML which is not allowed
+    conf_file.write_text("<settings><foo /><bar /></settings>")
 
-    # WHEN loading config
-    with pytest.raises(ConfigFileError) as error:
-        load_config(str(conf_file))
+    # WHEN loading settings
+    with pytest.raises(SettingsFileError) as error:
+        load_settings(str(conf_file))
 
     # THEN expect error
-    assert str(error.value) == "config file format must YAML or JSON"
+    assert str(error.value) == "settings file format must YAML or JSON"
 
 
-def test_should_return_config_when_loading_config_from_json_file(tmp_path):
+def test_should_return_config_when_loading_settings_from_json_file(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
-    # GIVEN config file
-    conf_file = kit_dir / "config.json"
+    # GIVEN settings file
+    conf_file = kit_dir / "settings.json"
 
-    # GIVEN config file content is JSON
+    # GIVEN settings file content is JSON
     conf_file.write_text(
         "{"
         '"datatree_lookup_paths": ["data.a", "data.b", "data.c"],'
@@ -84,29 +84,29 @@ def test_should_return_config_when_loading_config_from_json_file(tmp_path):
         "}"
     )
 
-    # WHEN loading config from file
-    config = load_config(str(conf_file))
+    # WHEN loading settings from file
+    settings = load_settings(str(conf_file))
 
     # THEN expect config values to match
-    assert config.datatree_lookup_paths == ["data.a", "data.b", "data.c"]
-    assert config.hosts_glob_pattern == "customers/*/sites/*/hosts/*"
-    assert config.hosts_hostname_regex == ".*/sites/.*/hosts/(.*)$"
-    assert config.hosts_site_regex == ".*/sites/(.*)/hosts/.*"
-    assert config.hosts_customer_regex == ".*/customers/(.*)/sites/.*"
+    assert settings.datatree_lookup_paths == ["data.a", "data.b", "data.c"]
+    assert settings.hosts_glob_pattern == "customers/*/sites/*/hosts/*"
+    assert settings.hosts_hostname_regex == ".*/sites/.*/hosts/(.*)$"
+    assert settings.hosts_site_regex == ".*/sites/(.*)/hosts/.*"
+    assert settings.hosts_customer_regex == ".*/customers/(.*)/sites/.*"
 
     # THEN expect kit path to be set to tmp path
-    assert config.kit_path == str(kit_dir)
+    assert settings.kit_path == str(kit_dir)
 
 
-def test_should_return_config_when_loading_config_from_yaml_file(tmp_path):
+def test_should_return_config_when_loading_settings_from_yaml_file(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
-    # GIVEN config file
-    conf_file = kit_dir / "config.yaml"
+    # GIVEN settings file
+    conf_file = kit_dir / "settings.yaml"
 
-    # GIVEN config file content is YAML
+    # GIVEN settings file content is YAML
     conf_file.write_text(
         "---\n"
         "datatree_lookup_paths: [data.a, data.b, data.c]\n"
@@ -116,29 +116,29 @@ def test_should_return_config_when_loading_config_from_yaml_file(tmp_path):
         "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
     )
 
-    # WHEN loading config from file
-    config = load_config(str(conf_file))
+    # WHEN loading settings from file
+    settings = load_settings(str(conf_file))
 
     # THEN expect config values to match
-    assert config.datatree_lookup_paths == ["data.a", "data.b", "data.c"]
-    assert config.hosts_glob_pattern == "customers/*/sites/*/hosts/*"
-    assert config.hosts_hostname_regex == ".*/sites/.*/hosts/(.*)$"
-    assert config.hosts_site_regex == ".*/sites/(.*)/hosts/.*"
-    assert config.hosts_customer_regex == ".*/customers/(.*)/sites/.*"
+    assert settings.datatree_lookup_paths == ["data.a", "data.b", "data.c"]
+    assert settings.hosts_glob_pattern == "customers/*/sites/*/hosts/*"
+    assert settings.hosts_hostname_regex == ".*/sites/.*/hosts/(.*)$"
+    assert settings.hosts_site_regex == ".*/sites/(.*)/hosts/.*"
+    assert settings.hosts_customer_regex == ".*/customers/(.*)/sites/.*"
 
     # THEN expect kit path to be set to tmp path
-    assert config.kit_path == str(kit_dir)
+    assert settings.kit_path == str(kit_dir)
 
 
-def test_should_fail_when_loading_config_and_lookup_paths_not_string(tmp_path):
+def test_should_fail_when_loading_settings_and_lookup_paths_not_string(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
-    # GIVEN config file
-    conf_file = kit_dir / "config.yaml"
+    # GIVEN settings file
+    conf_file = kit_dir / "settings.yaml"
 
-    # GIVEN config file content is YAML
+    # GIVEN settings file content is YAML
     conf_file.write_text(
         "---\n"
         "datatree_lookup_paths: data.a, data.b, data.c\n"
@@ -148,23 +148,23 @@ def test_should_fail_when_loading_config_and_lookup_paths_not_string(tmp_path):
         "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
     )
 
-    # WHEN loading config from file
-    with pytest.raises(ConfigFileError) as error:
-        load_config(str(conf_file))
+    # WHEN loading settings from file
+    with pytest.raises(SettingsFileError) as error:
+        load_settings(str(conf_file))
 
     # THEN expect error message
     assert "value is not a valid list" in str(error.value)
 
 
-def test_should_fail_when_loading_config_and_lookup_paths_not_defined(tmp_path):
+def test_should_fail_when_loading_settings_and_lookup_paths_not_defined(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
-    # GIVEN config file
-    conf_file = kit_dir / "config.yaml"
+    # GIVEN settings file
+    conf_file = kit_dir / "settings.yaml"
 
-    # GIVEN config file content is YAML
+    # GIVEN settings file content is YAML
     conf_file.write_text(
         "---\n"
         "hosts_glob_pattern: customers/*/sites/*/hosts/*\n"
@@ -173,9 +173,9 @@ def test_should_fail_when_loading_config_and_lookup_paths_not_defined(tmp_path):
         "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
     )
 
-    # WHEN loading config from file
-    with pytest.raises(ConfigFileError) as error:
-        load_config(str(conf_file))
+    # WHEN loading settings from file
+    with pytest.raises(SettingsFileError) as error:
+        load_settings(str(conf_file))
 
     # THEN expect field required error
     assert "field required" in str(error.value)

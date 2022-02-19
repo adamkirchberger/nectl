@@ -18,15 +18,14 @@
 import pytest
 import click
 
-import nectl.config
 from nectl.cli import cli_root
 
 
 def test_should_return_config_when_running_cli_configs_render_command(
-    cli_runner, mock_config, mock_template_generator
+    cli_runner, mock_settings, mock_template_generator
 ):
-    # GIVEN mock config
-    config = mock_config
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN args
     args = ["configs", "render", "-h", "core0", "-s", "london", "-c", "acme"]
@@ -35,10 +34,10 @@ def test_should_return_config_when_running_cli_configs_render_command(
     rendered_config = "hostname is: core0\n" "os_name is: fakeos\n" "template end\n"
 
     # GIVEN expected staged output directory
-    staged_dir = f"{config.kit_path}/{config.staged_configs_dir}"
+    staged_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
 
     # GIVEN template exists in kit directory
-    mock_template_generator(config)
+    mock_template_generator(settings)
 
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)

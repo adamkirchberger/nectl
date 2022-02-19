@@ -56,7 +56,7 @@ def list_hosts_cmd(
     """
     try:
         hosts = get_filtered_hosts(
-            config=ctx.obj["config"],
+            settings=ctx.obj["settings"],
             hostname=hostname,
             customer=customer,
             site=site,
@@ -91,7 +91,7 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     try:
         hosts = get_filtered_hosts(
-            config=ctx.obj["config"],
+            settings=ctx.obj["settings"],
             hostname=hostname,
             customer=customer,
             site=site,

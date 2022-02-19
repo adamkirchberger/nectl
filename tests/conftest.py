@@ -18,9 +18,9 @@
 import pytest
 import pathlib
 
-import nectl.config
+import nectl.settings
 
-from nectl.config import Config
+from nectl.settings import Settings
 
 
 @pytest.fixture(scope="function")
@@ -83,8 +83,8 @@ def mock_template_generator():
         Callable: template generating function.
     """
 
-    def template_generator(config: Config):
-        templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    def template_generator(settings: Settings):
+        templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
         templates.mkdir()
 
         # Create fakeos template
@@ -103,18 +103,18 @@ def mock_template_generator():
 
 
 @pytest.fixture(scope="function")
-def mock_config(mock_datatree) -> Config:
+def mock_settings(mock_datatree) -> Settings:
     """
-    Creates mock config with a datatree.
+    Creates mock settings with a datatree.
 
     Returns:
-        Config: config settings.
+        settings: Settings settings.
     """
     datatree_path = mock_datatree
 
-    conf = Config(
+    settings = Settings(
         kit_path=str(datatree_path.parent),
-        config_path=str(datatree_path.parent) + "/config.yaml",
+        settings_path=str(datatree_path.parent) + "/nectl.yaml",
         datatree_lookup_paths=(
             "data.glob.common",
             "data.glob.roles.{role}",
@@ -131,6 +131,6 @@ def mock_config(mock_datatree) -> Config:
     )
 
     # Patch config load to use mocked config
-    nectl.config.load_config = lambda: conf
+    nectl.settings.load_settings = lambda: settings
 
-    return conf
+    return settings

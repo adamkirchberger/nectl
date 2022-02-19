@@ -26,9 +26,9 @@ from nectl.data.hosts import Host
 from nectl.exceptions import RenderError
 
 
-def test_should_return_config_dict_when_rendering_with_valid_template(mock_config):
-    # GIVEN mock config
-    config = mock_config
+def test_should_return_config_dict_when_rendering_with_valid_template(mock_settings):
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN mock host
     host = Host(
@@ -37,11 +37,11 @@ def test_should_return_config_dict_when_rendering_with_valid_template(mock_confi
         customer="acme",
         os_name="fakeos",
         os_version="5.1",
-        _config=config,
+        _settings=settings,
     )
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir(parents=True)
 
     # GIVEN fakeos template exists
@@ -54,7 +54,7 @@ def test_should_return_config_dict_when_rendering_with_valid_template(mock_confi
     )
 
     # WHEN rendering hosts
-    configs = render_hosts(hosts=[host], config=config)
+    configs = render_hosts(hosts=[host], settings=settings)
 
     # THEN expect to be dict
     assert isinstance(configs, dict)
@@ -66,9 +66,9 @@ def test_should_return_config_dict_when_rendering_with_valid_template(mock_confi
     assert configs.get(host.id) == "hostname is: core0\nsite is: london"
 
 
-def test_should_raise_render_error_when_rendering_with_invalid_template(mock_config):
-    # GIVEN mock config
-    config = mock_config
+def test_should_raise_render_error_when_rendering_with_invalid_template(mock_settings):
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN mock host
     host = Host(
@@ -77,11 +77,11 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
         customer="acme",
         os_name="fakeos",
         os_version="5.1",
-        _config=config,
+        _settings=settings,
     )
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir(parents=True)
 
     # GIVEN fakeos template exists but is invalid
@@ -95,17 +95,17 @@ def test_should_raise_render_error_when_rendering_with_invalid_template(mock_con
 
     # WHEN rendering hosts
     with pytest.raises(RenderError) as error:
-        render_hosts(hosts=[host], config=config)
+        render_hosts(hosts=[host], settings=settings)
 
     # THEN expect error message
     assert "invalid syntax" in str(error.value)
 
 
 def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN mock config
-    config = mock_config
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN mock host with blank os details provided
     host = Host(
@@ -118,15 +118,15 @@ def test_should_return_no_hosts_when_rendering_host_with_no_os_name_defined(
     )
 
     # WHEN rendering hosts
-    renders = render_hosts(hosts=[host], config=config)
+    renders = render_hosts(hosts=[host], settings=settings)
 
     # THEN expect empty dict
     assert renders == {}
 
 
-def test_should_return_config_when_rendering_template(mock_config):
-    # GIVEN config
-    config = mock_config
+def test_should_return_config_when_rendering_template(mock_settings):
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN facts
     facts = {
@@ -135,7 +135,7 @@ def test_should_return_config_when_rendering_template(mock_config):
     }
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN fakeos template file with non alphabetically sorted section names
@@ -155,7 +155,7 @@ def test_should_return_config_when_rendering_template(mock_config):
 
     # GIVEN template module
     template = _import_template(
-        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # WHEN config is rendered
@@ -168,10 +168,10 @@ def test_should_return_config_when_rendering_template(mock_config):
 
 
 def test_should_return_config_with_default_arg_value_when_rendering_template(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN facts
     facts = {
@@ -180,7 +180,7 @@ def test_should_return_config_with_default_arg_value_when_rendering_template(
     }
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN template with one section which has optional variable 'location'
@@ -192,7 +192,7 @@ def test_should_return_config_with_default_arg_value_when_rendering_template(
 
     # GIVEN template module
     template = _import_template(
-        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # WHEN config is rendered
@@ -205,10 +205,10 @@ def test_should_return_config_with_default_arg_value_when_rendering_template(
 
 
 def test_should_raise_error_when_rendering_template_with_required_variable_that_is_not_in_facts(
-    mock_config, caplog
+    mock_settings, caplog
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN facts
     facts = {
@@ -218,7 +218,7 @@ def test_should_raise_error_when_rendering_template_with_required_variable_that_
     }
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN template file with section that requires fact 'location'
@@ -230,7 +230,7 @@ def test_should_raise_error_when_rendering_template_with_required_variable_that_
 
     # GIVEN template module
     template = _import_template(
-        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # WHEN config is rendered
@@ -248,10 +248,10 @@ def test_should_raise_error_when_rendering_template_with_required_variable_that_
 
 
 def test_should_raise_error_when_rendering_template_which_encounters_unexpected_error(
-    mock_config, caplog
+    mock_settings, caplog
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN facts
     facts = {
@@ -261,7 +261,7 @@ def test_should_raise_error_when_rendering_template_which_encounters_unexpected_
     }
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN template file with section that performs invalid addition on string
@@ -271,7 +271,7 @@ def test_should_raise_error_when_rendering_template_which_encounters_unexpected_
 
     # GIVEN template module
     template = _import_template(
-        "fakeos", f"{config.kit_path}/{config.templates_dirname}"
+        "fakeos", f"{settings.kit_path}/{settings.templates_dirname}"
     )
 
     # WHEN config is rendered
@@ -292,10 +292,10 @@ def test_should_raise_error_when_rendering_template_which_encounters_unexpected_
 
 
 def test_should_return_config_when_rendering_template_that_has_conditional_imports_of_sub_templates(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config
-    config = mock_config
+    # GIVEN settings
+    settings = mock_settings
 
     # GIVEN host with model facts
     host = Host(
@@ -307,7 +307,7 @@ def test_should_return_config_when_rendering_template_that_has_conditional_impor
     )
 
     # GIVEN templates directory
-    templates = pathlib.Path(config.kit_path) / config.templates_dirname
+    templates = pathlib.Path(settings.kit_path) / settings.templates_dirname
     templates.mkdir()
 
     # GIVEN fakeos template is a directory of templates
@@ -337,18 +337,18 @@ def test_should_return_config_when_rendering_template_that_has_conditional_impor
     expected_config = "start of az template\n" "model is: az\n" "hostname is: fakenode"
 
     # WHEN rendering hosts
-    configs = render_hosts(hosts=[host], config=config)
+    configs = render_hosts(hosts=[host], settings=settings)
 
     # THEN expect config for host to match expected config
     assert configs["fakenode.london"] == expected_config
 
 
-def test_should_return_config_when_writing_configs_to_files(mock_config):
-    # GIVEN mock config
-    config = mock_config
+def test_should_return_config_when_writing_configs_to_files(mock_settings):
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN output directory
-    output_dir = f"{config.kit_path}/{config.staged_configs_dir}"
+    output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
 
     # GIVEN mock rendered configs
     rendered_configs = {

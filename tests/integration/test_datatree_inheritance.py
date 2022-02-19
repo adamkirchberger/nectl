@@ -23,12 +23,12 @@ from nectl.data.hosts import Host
 from nectl.data.facts_utils import load_host_facts
 
 
-def test_should_return_global_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_global_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme")
@@ -37,7 +37,7 @@ def test_should_return_global_ntp_value_when_loading_facts(mock_config):
     (data / "glob" / "common" / "ntp.py").write_text('ntp_server = "global.ntp.com"')
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -46,12 +46,12 @@ def test_should_return_global_ntp_value_when_loading_facts(mock_config):
     assert facts.get("ntp_server") == "global.ntp.com"
 
 
-def test_should_return_global_roles_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_global_roles_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host with switch role
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -66,7 +66,7 @@ def test_should_return_global_roles_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -75,12 +75,12 @@ def test_should_return_global_roles_ntp_value_when_loading_facts(mock_config):
     assert facts.get("ntp_server") == "switch.global.ntp.com"
 
 
-def test_should_return_customer_common_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_customer_common_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -100,7 +100,7 @@ def test_should_return_customer_common_ntp_value_when_loading_facts(mock_config)
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -109,12 +109,12 @@ def test_should_return_customer_common_ntp_value_when_loading_facts(mock_config)
     assert facts.get("ntp_server") == "acme.ntp.com"
 
 
-def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -140,7 +140,7 @@ def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -149,12 +149,12 @@ def test_should_return_customer_roles_ntp_value_when_loading_facts(mock_config):
     assert facts.get("ntp_server") == "switch.acme.ntp.com"
 
 
-def test_should_return_site_common_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_site_common_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -185,7 +185,7 @@ def test_should_return_site_common_ntp_value_when_loading_facts(mock_config):
     )
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -194,12 +194,12 @@ def test_should_return_site_common_ntp_value_when_loading_facts(mock_config):
     assert facts.get("ntp_server") == "london.acme.ntp.com"
 
 
-def test_should_return_site_roles_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_site_roles_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -236,7 +236,7 @@ def test_should_return_site_roles_ntp_value_when_loading_facts(mock_config):
     ).write_text('ntp_server = "switch.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -245,12 +245,12 @@ def test_should_return_site_roles_ntp_value_when_loading_facts(mock_config):
     assert facts.get("ntp_server") == "switch.london.acme.ntp.com"
 
 
-def test_should_return_host_local_ntp_value_when_loading_facts(mock_config):
-    # GIVEN config using mock kit
-    config = mock_config
+def test_should_return_host_local_ntp_value_when_loading_facts(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -292,7 +292,7 @@ def test_should_return_host_local_ntp_value_when_loading_facts(mock_config):
     ).write_text('ntp_server = "core0.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts
@@ -302,13 +302,13 @@ def test_should_return_host_local_ntp_value_when_loading_facts(mock_config):
 
 
 def test_should_return_global_ntp_value_when_loading_facts_and_var_action_is_frozen(
-    mock_config,
+    mock_settings,
 ):
-    # GIVEN config using mock kit
-    config = mock_config
+    # GIVEN settings using mock kit
+    settings = mock_settings
 
     # GIVEN datatree path
-    data = pathlib.Path(config.datatree_path)
+    data = pathlib.Path(settings.datatree_path)
 
     # GIVEN host
     host = Host(hostname="core0", site="london", customer="acme", role="switch")
@@ -329,7 +329,7 @@ def test_should_return_global_ntp_value_when_loading_facts_and_var_action_is_fro
     ).write_text('ntp_server = "core0.london.acme.ntp.com"')
 
     # WHEN loading facts for host
-    facts = load_host_facts(host=host, config=config)
+    facts = load_host_facts(host=host, settings=settings)
 
     # THEN expect ntp_server in facts
     assert "ntp_server" in facts.keys(), facts

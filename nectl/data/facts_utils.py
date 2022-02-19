@@ -32,7 +32,7 @@ from pydantic import BaseModel  # pylint: disable=E0611
 from dpath import util as merge_utils
 
 from ..logging import get_logger
-from ..config import Config
+from ..settings import Settings
 from .actions import Actions, DEFAULT_ACTION
 
 if TYPE_CHECKING:
@@ -44,14 +44,14 @@ logger = get_logger()
 
 
 def get_facts_for_hosts(
-    config: Config,
+    settings: Settings,
     hosts: List["Host"],
 ) -> Dict[str, Dict]:
     """
     Returns a dict of facts loaded from datatree for each provided host.
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         hosts (List[BaseHost]): list of hosts.
 
     Returns:
@@ -65,7 +65,7 @@ def get_facts_for_hosts(
     # Load facts for each host
     for host in hosts:
         host_id = f"{host.hostname}.{host.site}.{host.customer}"
-        facts[host_id] = load_host_facts(config=config, host=host)
+        facts[host_id] = load_host_facts(settings=settings, host=host)
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished getting facts for {len(hosts)} hosts ({dur}s)")
@@ -73,21 +73,21 @@ def get_facts_for_hosts(
     return facts
 
 
-def load_host_facts(config: Config, host: "Host") -> Dict:
+def load_host_facts(settings: Settings, host: "Host") -> Dict:
     """
     Loads datatree and returns facts for a single host.
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         host (BaseHost): host instance.
 
     Returns:
         Dict: host facts.
     """
     # ensure kit path is in pythonpath
-    if sys.path[0] != config.kit_path:
-        logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")
-        sys.path.insert(0, config.kit_path)
+    if sys.path[0] != settings.kit_path:
+        logger.debug(f"appending kit to PYTHONPATH: {settings.kit_path}")
+        sys.path.insert(0, settings.kit_path)
 
     frozen_vars = []  # Used for immutable/protected vars.
     facts = {**host.dict(include_facts=False)}  # Add host inventory facts.
@@ -139,7 +139,7 @@ def load_host_facts(config: Config, host: "Host") -> Dict:
             else:
                 facts[var] = getattr(mod, var)
 
-    for raw_path in config.datatree_lookup_paths:
+    for raw_path in settings.datatree_lookup_paths:
         try:
             path = raw_path.format(
                 **host.dict(include_facts=False)

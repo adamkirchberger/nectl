@@ -28,7 +28,7 @@ def test_should_open_and_close_connection_when_using_context_manager(
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver
@@ -55,7 +55,7 @@ def test_should_return_config_when_getting_junos_config():
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN junos driver
@@ -96,7 +96,7 @@ def test_should_claim_lock_when_comparing_config(
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver
@@ -173,7 +173,7 @@ def test_should_raise_error_when_comparing_config(
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver
@@ -201,7 +201,7 @@ def test_should_return_diff_and_not_commit_when_replacing_config_but_no_changes(
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver
@@ -243,7 +243,7 @@ def test_should_return_diff_and_commit_when_replacing_config_and_has_changes(
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver
@@ -291,7 +291,7 @@ def test_should_raise_error_when_replacing_config_and_host_connection_lost():
         customer="acme",
         mgmt_ip="x.x.x.x",
         _facts={},
-        _config=None,
+        _settings=None,
     )
 
     # GIVEN driver

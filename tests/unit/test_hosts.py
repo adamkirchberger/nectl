@@ -20,16 +20,16 @@ import sys
 import pytest
 from unittest.mock import patch
 
-from nectl.config import Config
+from nectl.settings import Settings
 from nectl.data.hosts import Host, _get_host_datatree_path_vars
 
 
-def test_should_return_str_when_creating_host_and_returning_repr(mock_config):
-    # GIVEN mock config
-    config = mock_config
+def test_should_return_str_when_creating_host_and_returning_repr(mock_settings):
+    # GIVEN mock settings
+    settings = mock_settings
 
     # GIVEN host
-    host = Host(hostname="host1", site="london", _config=config)
+    host = Host(hostname="host1", site="london", _settings=settings)
 
     # WHEN requesting string representation
     host_str = str(host)
@@ -77,7 +77,7 @@ def test_should_return_id_when_creating_host_with_opts(host_opts, expected_id):
     host_opts = host_opts
 
     # WHEN creating host
-    host = Host(**host_opts, _config=None)
+    host = Host(**host_opts, _settings=None)
 
     # THEN expect id
     assert host.id == expected_id
@@ -85,7 +85,7 @@ def test_should_return_id_when_creating_host_with_opts(host_opts, expected_id):
 
 def test_should_return_attribute_when_accessing_attribute_not_in_class_but_present_in_facts():
     # GIVEN host
-    host = Host(hostname="host1", site="london", _config=None)
+    host = Host(hostname="host1", site="london", _settings=None)
 
     # GIVEN facts are overriden
     host._facts = {"hostname": "host1", "site": "london", "location": "dc1-rack101"}
@@ -99,7 +99,7 @@ def test_should_return_attribute_when_accessing_attribute_not_in_class_but_prese
 
 def test_should_return_none_when_accessing_attribute_not_in_class_and_also_not_in_facts():
     # GIVEN host
-    host = Host(hostname="host1", site="london", _config=None)
+    host = Host(hostname="host1", site="london", _settings=None)
 
     # GIVEN facts are overriden
     host._facts = {"hostname": "host1", "site": "london"}
@@ -113,7 +113,7 @@ def test_should_return_none_when_accessing_attribute_not_in_class_and_also_not_i
 
 def test_should_raise_error_when_accessing_undefined_protected_attribute_in_host_class():
     # GIVEN host
-    host = Host(hostname="host1", site="london", _config=None)
+    host = Host(hostname="host1", site="london", _settings=None)
 
     with pytest.raises(AttributeError) as error:
         # WHEN accessing protected attribute which does not exist

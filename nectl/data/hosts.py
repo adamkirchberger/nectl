@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 
 from ..logging import get_logger
 from ..exceptions import DiscoveryError
-from ..config import Config, get_config
+from ..settings import Settings, get_settings
 from .facts_utils import load_host_facts
 
 HOSTS_IGNORE_REGEX = (r".*\/__pycache__.*",)
@@ -50,7 +50,7 @@ class Host:
     asset_tag: Optional[str] = None
     mgmt_ip: Optional[str] = None
     _facts: Union[Dict, None] = None
-    _config: Config = field(default_factory=get_config)
+    _settings: Settings = field(default_factory=get_settings)
 
     @property
     def id(self) -> str:
@@ -74,7 +74,7 @@ class Host:
         Returns read only facts.
         """
         if self._facts is None:
-            self._facts = load_host_facts(host=self, config=self._config)
+            self._facts = load_host_facts(host=self, settings=self._settings)
         return self._facts
 
     def __getattr__(self, name):
@@ -102,7 +102,7 @@ class Host:
             "role",
             "mgmt_ip",
             "_facts",
-            "_config",
+            "_settings",
         )  # don't try find value in facts
         if object.__getattribute__(self, name) is None and name not in ignored_attrs:
             logger.debug(f"{self.id}: fetching fact '{name}'")
@@ -138,7 +138,7 @@ class Host:
 
 
 def get_filtered_hosts(
-    config: Config,
+    settings: Settings,
     hostname: str = None,
     customer: str = None,
     site: str = None,
@@ -148,7 +148,7 @@ def get_filtered_hosts(
     Returns a list of filtered hosts
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
         hostname (str): filter by hostname.
         site (str): filter by site.
         customer (str): filter by customer.
@@ -160,7 +160,7 @@ def get_filtered_hosts(
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
     """
-    hosts = get_all_hosts(config)
+    hosts = get_all_hosts(settings=settings)
 
     # Filter by customer
     if customer:
@@ -236,12 +236,12 @@ def _get_host_datatree_path_vars(host_path: str, datatree_dirname: str) -> dict:
     return {}
 
 
-def get_all_hosts(config: Config) -> List[Host]:
+def get_all_hosts(settings: Settings) -> List[Host]:
     """
     Returns list of all discovered hosts from datatree.
 
     Args:
-        config (Config): config settings.
+        settings (Settings): config settings.
 
     Returns:
         List[Host]: list of discovered hosts.
@@ -256,39 +256,39 @@ def get_all_hosts(config: Config) -> List[Host]:
 
     ts_start = time.perf_counter()
 
-    path = f"{config.datatree_path}/{config.hosts_glob_pattern}"
+    path = f"{settings.datatree_path}/{settings.hosts_glob_pattern}"
     logger.debug(f"starting hosts discovery in: {path}")
 
     # Ensure kit path is in pythonpath
-    if sys.path[0] != config.kit_path:
-        logger.debug(f"appending kit to PYTHONPATH: {config.kit_path}")
-        sys.path.insert(0, config.kit_path)
+    if sys.path[0] != settings.kit_path:
+        logger.debug(f"appending kit to PYTHONPATH: {settings.kit_path}")
+        sys.path.insert(0, settings.kit_path)
 
     host_dirs = [
         h for h in glob(path) if not any(re.match(p, h) for p in HOSTS_IGNORE_REGEX)
     ]
     for host_dir in host_dirs:
         # Extract hostname
-        m = re.match(re.compile(config.hosts_hostname_regex), host_dir)
+        m = re.match(re.compile(settings.hosts_hostname_regex), host_dir)
         if m:
             hostname = re.sub(".py$", "", m.group(1))
         else:
             msg = (
                 f"failed to extract hostname from path string '{host_dir}' "
-                f"using regex: '{config.hosts_hostname_regex}'"
+                f"using regex: '{settings.hosts_hostname_regex}'"
             )
             logger.critical(msg)
             raise DiscoveryError(msg)
 
         # Extract site for multi-site data trees
-        if config.hosts_site_regex:
-            m = re.match(re.compile(config.hosts_site_regex), host_dir)
+        if settings.hosts_site_regex:
+            m = re.match(re.compile(settings.hosts_site_regex), host_dir)
             if m:
                 site = m.group(1)
             else:
                 msg = (
                     f"failed to extract site from path string '{host_dir}' "
-                    f"using regex: '{config.hosts_site_regex}'"
+                    f"using regex: '{settings.hosts_site_regex}'"
                 )
                 logger.critical(msg)
                 raise DiscoveryError(msg)
@@ -297,14 +297,14 @@ def get_all_hosts(config: Config) -> List[Host]:
             site = None
 
         # Extract customer for multi-tenant data trees
-        if config.hosts_customer_regex:
-            m = re.match(re.compile(config.hosts_customer_regex), host_dir)
+        if settings.hosts_customer_regex:
+            m = re.match(re.compile(settings.hosts_customer_regex), host_dir)
             if m:
                 customer = m.group(1)
             else:
                 msg = (
                     f"failed to extract customer from path string '{host_dir}' "
-                    f"using regex: '{config.hosts_customer_regex}'"
+                    f"using regex: '{settings.hosts_customer_regex}'"
                 )
                 logger.critical(msg)
                 raise DiscoveryError(msg)
@@ -314,12 +314,16 @@ def get_all_hosts(config: Config) -> List[Host]:
 
         # Get any core host vars which are defined and use to instantiate
         host_vars = _get_host_datatree_path_vars(
-            host_path=host_dir, datatree_dirname=config.datatree_dirname
+            host_path=host_dir, datatree_dirname=settings.datatree_dirname
         )
 
         # Create host
         new_host = Host(
-            hostname=hostname, site=site, customer=customer, _config=config, **host_vars
+            hostname=hostname,
+            site=site,
+            customer=customer,
+            _settings=settings,
+            **host_vars,
         )
         logger.debug(f"found host '{new_host.id}' in: {host_dir}")
         hosts.append(new_host)
