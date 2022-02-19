@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+
 class Actions:
     """
     Actions are used as type hints to tell nectl how facts should be loaded
