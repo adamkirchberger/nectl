@@ -18,10 +18,10 @@
 import re
 import sys
 import time
+import importlib
 from typing import Optional, Union, Any, List, Dict
 from glob import glob
 from dataclasses import dataclass, field
-from platformdirs import importlib
 
 from ..logging import get_logger
 from ..exceptions import DiscoveryError
