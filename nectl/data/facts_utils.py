@@ -28,7 +28,7 @@ from typing import List, Dict, TYPE_CHECKING
 from dataclasses import is_dataclass
 from enum import Enum
 from ipaddress import IPv4Interface
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=E0611
 from dpath import util as merge_utils
 
 from ..logging import get_logger

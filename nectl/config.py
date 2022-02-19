@@ -20,8 +20,7 @@ import json
 from typing import List, Optional
 import pkg_resources
 import yaml
-from pydantic import BaseSettings
-from pydantic.error_wrappers import ValidationError
+from pydantic import BaseSettings, ValidationError
 
 from .exceptions import ConfigFileError
 
@@ -84,7 +83,7 @@ class Config(BaseSettings):
     configs_file_extension: str = "txt"
 
     @property
-    def datatree_path(self):
+    def datatree_path(self) -> str:
         """
         Returns datapath tree using kit_path and datatree directory name
         """
