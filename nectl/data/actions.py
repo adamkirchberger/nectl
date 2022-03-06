@@ -36,6 +36,3 @@ class Actions:
     replace_with = "replace_with"
     merge_with = "merge_with"
     frozen = "frozen"
-
-
-DEFAULT_ACTION = Actions.replace_with

@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     templates_dirname: str = "templates"
 
     # Default data action
-    default_action: str = "merge_with"
+    default_action: str = "replace_with"
 
     # Default rendered configs output directory
     staged_configs_dir: str = "configs/staged"

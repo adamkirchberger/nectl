@@ -33,7 +33,7 @@ from dpath import util as merge_utils
 
 from ..logging import get_logger
 from ..settings import Settings
-from .actions import Actions, DEFAULT_ACTION
+from .actions import Actions
 
 if TYPE_CHECKING:
     from .hosts import Host
@@ -112,7 +112,7 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
             var_action = getattr(
                 Actions,
                 getattr(mod, "__annotations__", {}).get(var, ""),
-                DEFAULT_ACTION,
+                settings.default_action,
             )
 
             # Frozen variables cannot be overwritten so first value wins
