@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.2](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.10.1...0.10.2) (2022-03-06)
+
+
+### Bug Fixes
+
+* python for kit settings instead of yaml ([9e2f1a4](https://gitlab.com/adamkirchberger/nectl-dev/commit/9e2f1a4ffd89351f3d2aafb91666b4227a41223c))
+* use default fact action from settings ([09302df](https://gitlab.com/adamkirchberger/nectl-dev/commit/09302dfbe139e75721d4e205366e877ddd63b698))
+
 ## [0.10.1](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.10.0...0.10.1) (2022-02-19)
 
 
