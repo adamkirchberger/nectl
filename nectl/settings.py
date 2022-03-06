@@ -16,17 +16,15 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import json
+import sys
 from typing import List, Optional
+from importlib import import_module
 import pkg_resources
-import yaml
 from pydantic import BaseSettings, ValidationError
 
 from .exceptions import SettingsFileError
 
-SETTINGS_FILEPATH = os.getenv(
-    "NECTL_SETTINGS", os.getenv("NECTL_CONFIG", "./nectl.yaml")
-)
+KIT_FILEPATH = os.getenv("NECTL_KIT", "./kit.py")
 
 try:
     APP_VERSION = pkg_resources.get_distribution("nectl").version
@@ -102,9 +100,9 @@ def get_settings() -> Settings:
     return load_settings()
 
 
-def load_settings(filepath: str = SETTINGS_FILEPATH) -> Settings:
+def load_settings(filepath: str = KIT_FILEPATH) -> Settings:
     """
-    Load external JSON or YAML settings file.
+    Load kit settings file.
 
     Args:
         filepath (str): path to settings file.
@@ -118,21 +116,34 @@ def load_settings(filepath: str = SETTINGS_FILEPATH) -> Settings:
     if not isinstance(filepath, str):
         raise TypeError("filepath must be str")
 
-    try:
-        with open(filepath, "r", encoding="utf-8") as fh:
-            if filepath.endswith(".json"):
-                opts = json.load(fh)
-            elif filepath.endswith(".yaml"):
-                opts = yaml.safe_load(fh)
-            else:
-                raise SettingsFileError("settings file format must YAML or JSON")
-    except FileNotFoundError as e:
-        raise SettingsFileError(f"settings file not found '{filepath}'") from e
+    if not filepath.endswith(".py"):
+        raise SettingsFileError("settings file must have '.py' extension")
 
     try:
-        settings = Settings(
-            kit_path=os.path.dirname(filepath), settings_path=filepath, **opts
-        )
+        # Append kit to pythonpath
+        kit_path = os.path.dirname(filepath)
+        if kit_path not in sys.path:
+            sys.path.insert(0, kit_path)
+
+        # Extract keys and values from settings file
+        opts = {
+            k: v
+            for k, v in import_module(
+                os.path.splitext(os.path.basename(filepath))[
+                    0
+                ]  # get filename without path and extension
+            ).__dict__.items()
+            if not k.startswith("_")
+        }
+
+    except ModuleNotFoundError as e:
+        raise SettingsFileError(f"settings file not found '{filepath}'") from e
+
+    except SyntaxError as e:
+        raise SettingsFileError(f"settings file is not valid: {e}") from e
+
+    try:
+        settings = Settings(kit_path=kit_path, settings_path=filepath, **opts)
     except ValidationError as e:
         raise SettingsFileError(e) from e
 

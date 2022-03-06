@@ -36,17 +36,17 @@ def test_should_raise_error_when_loading_settings_and_filepath_is_not_string():
 
 def test_should_raise_error_when_loading_settings_that_does_not_exist():
     # GIVEN path to file that does not exist
-    settings_path = "kit/settings.yaml"
+    settings_path = "kit/kit.py"
 
     # WHEN loading settings
     with pytest.raises(SettingsFileError) as error:
         load_settings(settings_path)
 
     # THEN expect error
-    assert str(error.value) == "settings file not found 'kit/settings.yaml'"
+    assert str(error.value) == "settings file not found 'kit/kit.py'"
 
 
-def test_should_raise_error_when_loading_settings_file_with_invalid_format(tmp_path):
+def test_should_raise_error_when_loading_settings_file_with_invalid_extension(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
@@ -62,26 +62,43 @@ def test_should_raise_error_when_loading_settings_file_with_invalid_format(tmp_p
         load_settings(str(conf_file))
 
     # THEN expect error
-    assert str(error.value) == "settings file format must YAML or JSON"
+    assert str(error.value) == "settings file must have '.py' extension"
 
 
-def test_should_return_config_when_loading_settings_from_json_file(tmp_path):
+def test_should_raise_error_when_loading_settings_file_with_invalid_format(tmp_path):
+    # GIVEN kit directory
+    kit_dir = tmp_path / "kit"
+    kit_dir.mkdir()
+
+    # GIVEN settings file which is a valid format
+    conf_file = kit_dir / "kit.py"
+
+    # GIVEN settings file content is XML which is not expected python
+    conf_file.write_text("<settings><foo /><bar /></settings>")
+
+    # WHEN loading settings
+    with pytest.raises(SettingsFileError) as error:
+        load_settings(str(conf_file))
+
+    # THEN expect error
+    assert "settings file is not valid: invalid syntax" in str(error.value)
+
+
+def test_should_return_config_when_loading_settings_from_valid_file(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
     # GIVEN settings file
-    conf_file = kit_dir / "settings.json"
+    conf_file = kit_dir / "kit.py"
 
-    # GIVEN settings file content is JSON
+    # GIVEN settings file content
     conf_file.write_text(
-        "{"
-        '"datatree_lookup_paths": ["data.a", "data.b", "data.c"],'
-        '"hosts_glob_pattern": "customers/*/sites/*/hosts/*",'
-        '"hosts_hostname_regex": ".*/sites/.*/hosts/(.*)$",'
-        '"hosts_site_regex": ".*/sites/(.*)/hosts/.*",'
-        '"hosts_customer_regex": ".*/customers/(.*)/sites/.*"'
-        "}"
+        "datatree_lookup_paths=['data.a', 'data.b', 'data.c']\n"
+        "hosts_glob_pattern='customers/*/sites/*/hosts/*'\n"
+        "hosts_hostname_regex='.*/sites/.*/hosts/(.*)$'\n"
+        "hosts_site_regex='.*/sites/(.*)/hosts/.*'\n"
+        "hosts_customer_regex='.*/customers/(.*)/sites/.*'\n"
     )
 
     # WHEN loading settings from file
@@ -98,54 +115,21 @@ def test_should_return_config_when_loading_settings_from_json_file(tmp_path):
     assert settings.kit_path == str(kit_dir)
 
 
-def test_should_return_config_when_loading_settings_from_yaml_file(tmp_path):
+def test_should_fail_when_loading_settings_and_lookup_paths_is_string(tmp_path):
     # GIVEN kit directory
     kit_dir = tmp_path / "kit"
     kit_dir.mkdir()
 
     # GIVEN settings file
-    conf_file = kit_dir / "settings.yaml"
+    conf_file = kit_dir / "kit.py"
 
-    # GIVEN settings file content is YAML
+    # GIVEN settings file content
     conf_file.write_text(
-        "---\n"
-        "datatree_lookup_paths: [data.a, data.b, data.c]\n"
-        "hosts_glob_pattern: customers/*/sites/*/hosts/*\n"
-        "hosts_hostname_regex: .*/sites/.*/hosts/(.*)$\n"
-        "hosts_site_regex: .*/sites/(.*)/hosts/.*\n"
-        "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
-    )
-
-    # WHEN loading settings from file
-    settings = load_settings(str(conf_file))
-
-    # THEN expect config values to match
-    assert settings.datatree_lookup_paths == ["data.a", "data.b", "data.c"]
-    assert settings.hosts_glob_pattern == "customers/*/sites/*/hosts/*"
-    assert settings.hosts_hostname_regex == ".*/sites/.*/hosts/(.*)$"
-    assert settings.hosts_site_regex == ".*/sites/(.*)/hosts/.*"
-    assert settings.hosts_customer_regex == ".*/customers/(.*)/sites/.*"
-
-    # THEN expect kit path to be set to tmp path
-    assert settings.kit_path == str(kit_dir)
-
-
-def test_should_fail_when_loading_settings_and_lookup_paths_not_string(tmp_path):
-    # GIVEN kit directory
-    kit_dir = tmp_path / "kit"
-    kit_dir.mkdir()
-
-    # GIVEN settings file
-    conf_file = kit_dir / "settings.yaml"
-
-    # GIVEN settings file content is YAML
-    conf_file.write_text(
-        "---\n"
-        "datatree_lookup_paths: data.a, data.b, data.c\n"
-        "hosts_glob_pattern: customers/*/sites/*/hosts/*\n"
-        "hosts_hostname_regex: .*/sites/.*/hosts/(.*)$\n"
-        "hosts_site_regex: .*/sites/(.*)/hosts/.*\n"
-        "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
+        "datatree_lookup_paths='data.a, data.b, data.c'\n"
+        "hosts_glob_pattern='customers/*/sites/*/hosts/*'\n"
+        "hosts_hostname_regex='.*/sites/.*/hosts/(.*)$'\n"
+        "hosts_site_regex='.*/sites/(.*)/hosts/.*'\n"
+        "hosts_customer_regex='.*/customers/(.*)/sites/.*'\n"
     )
 
     # WHEN loading settings from file
@@ -162,15 +146,14 @@ def test_should_fail_when_loading_settings_and_lookup_paths_not_defined(tmp_path
     kit_dir.mkdir()
 
     # GIVEN settings file
-    conf_file = kit_dir / "settings.yaml"
+    conf_file = kit_dir / "kit.py"
 
-    # GIVEN settings file content is YAML
+    # GIVEN settings file content
     conf_file.write_text(
-        "---\n"
-        "hosts_glob_pattern: customers/*/sites/*/hosts/*\n"
-        "hosts_hostname_regex: .*/sites/.*/hosts/(.*)$\n"
-        "hosts_site_regex: .*/sites/(.*)/hosts/.*\n"
-        "hosts_customer_regex: .*/customers/(.*)/sites/.*\n"
+        "hosts_glob_pattern='customers/*/sites/*/hosts/*'\n"
+        "hosts_hostname_regex='.*/sites/.*/hosts/(.*)$'\n"
+        "hosts_site_regex='.*/sites/(.*)/hosts/.*'\n"
+        "hosts_customer_regex='.*/customers/(.*)/sites/.*'\n"
     )
 
     # WHEN loading settings from file
