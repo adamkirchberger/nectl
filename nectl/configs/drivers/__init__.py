@@ -27,6 +27,7 @@ from ...exceptions import (
     DriverConfigLoadError,
 )
 from ..utils import write_configs_to_dir
+from .utils import load_drivers_from_kit
 from .basedriver import BaseDriver
 from .junosdriver import JunosDriver
 from ...data.hosts import Host
@@ -34,18 +35,42 @@ from ...data.hosts import Host
 logger = get_logger()
 
 
-def get_driver(os_name: str) -> Type[BaseDriver]:
+class Drivers:
     """
-    Returns the driver from the supplied os_name if one exists.
+    Map os_name to drivers.
+    """
+
+    core_drivers = {"junos": JunosDriver}
+    kit_drivers = None
+
+
+def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
+    """
+    Returns the driver from the supplied os_name if one can be found. Checks
+    drivers in kit followed by core drivers.
 
     Args:
+        settings (Settings): config settings.
         os_name (str): host OS name.
 
     Returns:
         BaseDriver: driver object.
     """
-    if os_name == "junos":
-        return JunosDriver
+    if not Drivers.kit_drivers:
+        # Load kit drivers once
+        Drivers.kit_drivers = load_drivers_from_kit(settings)
+
+    # Lookup custom drivers in kit
+    logger.debug(f"checking kit drivers for os_name: {os_name}")
+    for driver_os_name, driver in Drivers.kit_drivers.items():
+        if os_name == driver_os_name:
+            return driver
+
+    # Lookup core drivers
+    logger.debug(f"checking core drivers for os_name: {os_name}")
+    for driver_os_name, driver in Drivers.core_drivers.items():
+        if os_name == driver_os_name:
+            return driver
 
     raise DriverNotFoundError(f"no driver found that matches os_name: {os_name}")
 
@@ -79,7 +104,7 @@ def run_driver_method_on_hosts(
 
         # Create host driver
         try:
-            driver = get_driver(host.os_name)(
+            driver = get_driver(settings=settings, os_name=host.os_name)(
                 host=host,
                 username="root",
             )

@@ -54,6 +54,12 @@ class DriverNotFoundError(Exception):
     """
 
 
+class DriverLoadError(Exception):
+    """
+    Indicates that an error was encountered when loading a custom kit driver.
+    """
+
+
 class DriverError(Exception):
     """
     Indicates that an error has been encountered by the host driver.

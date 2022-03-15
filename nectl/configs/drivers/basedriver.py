@@ -119,6 +119,7 @@ class BaseDriver(metaclass=abc.ABCMeta):
         Open connection to host when context manager starts.
         """
         logger.debug(f"{self.host.id}: opened connection")
+        return self
 
     @abc.abstractmethod
     def __exit__(self, exc_type, exc_val, exc_tb):

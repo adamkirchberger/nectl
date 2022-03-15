@@ -67,8 +67,8 @@ def test_should_call_method_when_running_driver_method_on_hosts(
         description=f"test {method_name} desc",
     )
 
-    # THEN expect get driver to be called with os_name
-    mock_get_driver.assert_called_with("fakeos")
+    # THEN expect get driver to be called with settings and os_name
+    mock_get_driver.assert_called_with(settings=mock_settings, os_name="fakeos")
 
     # THEN expect driver connection to be opened
     mock_get_driver.return_value.return_value.__enter__.assert_called()
@@ -130,8 +130,8 @@ def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encou
         description=f"test {method_name} desc",
     )
 
-    # THEN expect get driver to be called with os_name
-    mock_get_driver.assert_called_with("fakeos")
+    # THEN expect get driver to be called with settings and os_name
+    mock_get_driver.assert_called_with(settings=mock_settings, os_name="fakeos")
 
     # THEN expect driver connection to be opened
     mock_get_driver.return_value.return_value.__enter__.assert_called()
@@ -185,8 +185,8 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
         description=f"test replace_config desc",
     )
 
-    # THEN expect get driver to be called with os_name
-    mock_get_driver.assert_called_with("fakeos")
+    # THEN expect get driver to be called with settings and os_name
+    mock_get_driver.assert_called_with(settings=mock_settings, os_name="fakeos")
 
     # THEN expect driver connection to be opened
     mock_get_driver.return_value.return_value.__enter__.assert_called()
@@ -240,8 +240,8 @@ def test_should_return_1_when_running_driver_methods_on_host_with_no_matching_dr
         description=f"test replace_config desc",
     )
 
-    # THEN expect get driver to be called with os_name
-    mock_get_driver.assert_called_with("fakeos")
+    # THEN expect get driver to be called with settings and os_name
+    mock_get_driver.assert_called_with(settings=mock_settings, os_name="fakeos")
 
     # THEN expect no diff to be passed to write config
     mock_write_configs.assert_called_with(configs={}, extension=ANY, output_dir=ANY)

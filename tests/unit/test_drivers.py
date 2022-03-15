@@ -31,7 +31,7 @@ def test_should_raise_error_when_running_driver_methods_outside_context_manager(
     settings = mock_settings
 
     # GIVEN host
-    host = Host(hostname="core0", site="london", mgmt_ip="x.x.x.x")
+    host = Host(hostname="core0", site="london", mgmt_ip="x.x.x.x", _settings=settings)
 
     # GIVEN driver instance
     driver = driverclass(host=host, username="foo")
@@ -54,25 +54,33 @@ def test_should_raise_error_when_running_driver_methods_outside_context_manager(
 
 @pytest.mark.parametrize("os_name, expected_driver", (("junos", JunosDriver),))
 def test_should_return_driver_when_getting_driver_using_os_name(
-    os_name, expected_driver
+    mock_settings,
+    os_name,
+    expected_driver,
 ):
+    # GIVEN settings using mock kit
+    settings = mock_settings
+
     # GIVEN os_name
     os_name = os_name
 
     # WHEN calling get_driver using os_name
-    driver = get_driver(os_name)
+    driver = get_driver(settings, os_name)
 
     # THEN expect driver to match
     assert driver == expected_driver
 
 
-def test_should_raise_error_when_getting_driver_that_does_not_exist():
+def test_should_raise_error_when_getting_driver_that_does_not_exist(mock_settings):
+    # GIVEN settings using mock kit
+    settings = mock_settings
+
     # GIVEN os_name
     os_name = "foobar"
 
     with pytest.raises(DriverNotFoundError) as error:
         # WHEN calling get_driver using os_name
-        get_driver(os_name)
+        get_driver(mock_settings, os_name)
 
     # THEN expect error
     assert str(error.value) == "no driver found that matches os_name: foobar"

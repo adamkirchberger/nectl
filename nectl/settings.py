@@ -67,6 +67,10 @@ class Settings(BaseSettings):
     # Templates default directory name
     templates_dirname: str = "templates"
 
+    # Custom drivers directory name
+    # Note that these will override library drivers if same name is used
+    drivers_dirname: str = "drivers"
+
     # Default data action
     default_action: str = "replace_with"
 
