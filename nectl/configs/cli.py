@@ -18,11 +18,17 @@
 import sys
 import click
 
-from ..logging import logging_opts
-from ..exceptions import DiscoveryError, RenderError
+from ..logging import logging_opts, get_logger
+from ..exceptions import (
+    DiscoveryError,
+    RenderError,
+)
 from ..data.hosts import get_filtered_hosts
 from .render import render_hosts
 from .utils import write_configs_to_dir
+from .drivers import run_driver_method_on_hosts
+
+logger = get_logger()
 
 
 @click.group(help="Configuration commands.")
@@ -66,24 +72,78 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     print(f"{len(renders)} configs created.")
 
 
-@configs.command(name="diff", help="Compare staged with active config.")
+@configs.command(name="diff", help="Compare active configs to rendered configs.")
+@click.option("-h", "--hostname", help="Filter by hostname.")
+@click.option("-c", "--customer", help="Filter by customer.")
+@click.option("-s", "--site", help="Filter by site.")
+@click.option("-r", "--role", help="Filter by role.")
 @click.pass_context
 @logging_opts
-def diff_cmd(ctx):
+def diff_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
     Use this command to compare staged and active configurations on hosts.
     """
-    raise NotImplementedError
+    settings = ctx.obj["settings"]
+
+    try:
+        hosts = get_filtered_hosts(
+            settings=settings,
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
+    except (DiscoveryError, RenderError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    sys.exit(
+        run_driver_method_on_hosts(
+            settings=settings,
+            hosts=hosts,
+            method_name="compare_config",
+            description="comparing host configurations",
+        )
+    )
 
 
-@configs.command(name="apply", help="Apply staged config to hosts.")
+@configs.command(name="replace", help="Replace host active config with staged config.")
+@click.option("-h", "--hostname", help="Filter by hostname.")
+@click.option("-c", "--customer", help="Filter by customer.")
+@click.option("-s", "--site", help="Filter by site.")
+@click.option("-r", "--role", help="Filter by role.")
 @click.pass_context
 @logging_opts
-def apply_cmd(ctx):
+def replace_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     """
-    Use this command to apply staged configurations to hosts.
+    Use this command to replace host active configuration with staged config.
     """
-    raise NotImplementedError
+    settings = ctx.obj["settings"]
+
+    try:
+        hosts = get_filtered_hosts(
+            settings=settings,
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
+    except (DiscoveryError, RenderError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    click.confirm(
+        f"Are you sure you want to modify {len(hosts)} live hosts?", abort=True
+    )
+
+    sys.exit(
+        run_driver_method_on_hosts(
+            settings=settings,
+            hosts=hosts,
+            method_name="replace_config",
+            description="replacing host configurations",
+        )
+    )
 
 
 @configs.command(name="pull", help="Pull active config from hosts.")
