@@ -1,5 +1,19 @@
 # Changelog
 
+# [0.11.0](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/compare/0.10.2...0.11.0) (2022-03-15)
+
+
+### Bug Fixes
+
+* add encoding to generated config files ([5ed9ab5](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/commit/5ed9ab5c8d235d6d83d3cd20217e1854709aaa0e))
+* test kit settings filename ([f215702](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/commit/f2157021ad6546a99217f0db5fc4012c7c328e06))
+
+
+### Features
+
+* add config compare and replace cli actions ([c0f2aed](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/commit/c0f2aed2648588d2d2fdfe9778b13e5054bf4d44))
+* add kit custom drivers ([d6d9806](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/commit/d6d980689e25a74043b6cf26855177565c0896c2))
+
 ## [0.10.2](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.10.1...0.10.2) (2022-03-06)
 
 
