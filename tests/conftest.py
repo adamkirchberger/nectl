@@ -114,7 +114,7 @@ def mock_settings(mock_datatree) -> Settings:
 
     settings = Settings(
         kit_path=str(datatree_path.parent),
-        settings_path=str(datatree_path.parent) + "/nectl.yaml",
+        settings_path=str(datatree_path.parent) + "/kit.py",
         datatree_lookup_paths=(
             "data.glob.common",
             "data.glob.roles.{role}",
