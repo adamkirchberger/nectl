@@ -61,7 +61,7 @@ def write_configs_to_dir(
     for host, conf in configs.items():
         if conf:
             filename = f"{output_dir}/{host}.{extension}"
-            with open(filename, "w") as fh:
+            with open(filename, "w", encoding="utf-8") as fh:
                 fh.write(conf)  # write config
                 fh.write("\n")  # write config with newline at EOF
                 logger.debug(f"config written to file: {filename}")
