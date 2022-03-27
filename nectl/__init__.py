@@ -18,6 +18,7 @@
 from .data.actions import Actions as actions
 from .configs.template_utils import get_render_facts
 from .configs.drivers.basedriver import BaseDriver
+from .data.hosts import Host
 
 
-__all__ = ["actions", "get_render_facts", "BaseDriver"]
+__all__ = ["actions", "get_render_facts", "BaseDriver", "Host"]
