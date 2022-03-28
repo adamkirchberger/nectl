@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils import extension
 import pytest
 from unittest.mock import patch, ANY
 
