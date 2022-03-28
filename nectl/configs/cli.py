@@ -158,11 +158,48 @@ def apply_cmd(
     )
 
 
-@configs.command(name="pull", help="Pull active config from hosts.")
+@configs.command(name="get", help="Get active config from hosts.")
+@click.option("-h", "--hostname", help="Filter by hostname.")
+@click.option("-c", "--customer", help="Filter by customer.")
+@click.option("-s", "--site", help="Filter by site.")
+@click.option("-r", "--role", help="Filter by role.")
+@click.option("-u", "--username", help="Host driver username.")
+@click.option("-p", "--password", help="Host driver password.")
 @click.pass_context
 @logging_opts
-def pull_cmd(ctx):
+def get_cmd(
+    ctx,
+    hostname: str,
+    customer: str,
+    site: str,
+    role: str,
+    username: str,
+    password: str,
+):
     """
-    Use this command to pull active configurations from hosts.
+    Use this command to get active configurations from hosts.
     """
-    raise NotImplementedError
+    settings = ctx.obj["settings"]
+
+    try:
+        hosts = get_filtered_hosts(
+            settings=settings,
+            hostname=hostname,
+            customer=customer,
+            site=site,
+            role=role,
+        )
+    except (DiscoveryError, RenderError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    sys.exit(
+        run_driver_method_on_hosts(
+            settings=settings,
+            hosts=hosts,
+            method_name="get_config",
+            description="getting host configurations",
+            username=username,
+            password=password,
+        )
+    )

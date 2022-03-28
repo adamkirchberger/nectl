@@ -98,7 +98,7 @@ def run_driver_method_on_hosts(
     Returns:
         int: 0 if successful 1 if had errors.
     """
-    config_diffs = {}
+    host_outputs = {}
     errors = 0
 
     ts_start = time.perf_counter()
@@ -119,21 +119,23 @@ def run_driver_method_on_hosts(
             errors += 1
             continue  # skip host
 
+        kwargs = {}
+        if method_name in ["compare_config", "apply_config"]:
+            kwargs["config_filepath"] = (
+                f"{settings.kit_path}/{settings.staged_configs_dir}/"
+                + f"{host.id}.{settings.configs_file_extension}"
+            )
+
         # Open connection to host
         try:
             with driver as con:
                 logger.info(f"[{host.id}] opened connection to host")
-                # Load new config and get diff
-                diff = getattr(con, method_name)(
-                    config_filepath=(
-                        f"{settings.kit_path}/{settings.staged_configs_dir}/"
-                        + f"{host.id}.{settings.configs_file_extension}"
-                    )
-                )
+                # Run method with host and store output
+                output = getattr(con, method_name)(**kwargs)
             logger.info(f"[{host.id}] closed connection to host")
 
-            # Update dict to hold diff results indexed by host id
-            config_diffs.update({host.id: diff})
+            # Update dict to hold output results indexed by host id
+            host_outputs.update({host.id: output})
 
         except (DriverError, DriverConfigLoadError, DriverCommitDisconnectError) as e:
             logger.error(f"[{host.id}] {e}")
@@ -141,19 +143,26 @@ def run_driver_method_on_hosts(
 
             if isinstance(e, DriverCommitDisconnectError):
                 # Update with commit diff that caused disconnect
-                config_diffs.update({host.id: e.diff})
+                host_outputs.update({host.id: e.diff})
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished {description} ({dur}s)")
 
-    # Write to files
-    total_files = write_configs_to_dir(
-        configs=config_diffs,
-        output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
-        extension="diff.txt",
-    )
-
-    print(f"{total_files} config diffs created.")
+    # Write files
+    if method_name in ["compare_config", "apply_config"]:
+        total_files = write_configs_to_dir(
+            configs=host_outputs,
+            output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
+            extension="diff.txt",
+        )
+        print(f"{total_files} config diffs created.")
+    elif method_name == "get_config":
+        total_files = write_configs_to_dir(
+            configs=host_outputs,
+            output_dir=f"{settings.kit_path}/{settings.active_configs_dir}",
+            extension="txt",
+        )
+        print(f"{total_files} configs created.")
 
     if errors > 0:
         print(f"Error: {errors} errors encountered.")
