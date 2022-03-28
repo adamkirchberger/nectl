@@ -70,7 +70,7 @@ class JunosDriver(BaseDriver):
         )
 
         self._driver: Device = Device(
-            host=self.host.mgmt_ip.split("/")[0] if self.host.mgmt_ip else None,
+            host=self.host.mgmt_ip,
             user=self.username,
             passwd=self.password,
             ssh_private_key_file=self.ssh_private_key_file,

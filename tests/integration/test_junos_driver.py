@@ -26,7 +26,7 @@ def test_should_open_and_close_connection_when_using_context_manager(
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -53,7 +53,7 @@ def test_should_return_config_when_getting_junos_config():
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -94,7 +94,7 @@ def test_should_claim_lock_when_comparing_config(
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -171,7 +171,7 @@ def test_should_raise_error_when_comparing_config(
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -199,7 +199,7 @@ def test_should_return_diff_and_not_commit_when_applying_config_but_no_changes()
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -241,7 +241,7 @@ def test_should_return_diff_and_commit_when_replacing_config_and_has_changes(
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )
@@ -289,7 +289,7 @@ def test_should_raise_error_when_replacing_config_and_host_connection_lost():
         hostname="core0",
         site="london",
         customer="acme",
-        mgmt_ip="x.x.x.x",
+        mgmt_ip="10.0.0.1",
         _facts={},
         _settings=None,
     )

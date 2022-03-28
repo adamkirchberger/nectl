@@ -20,7 +20,7 @@ import sys
 import pytest
 from unittest.mock import patch
 
-from nectl.settings import Settings
+from nectl.exceptions import DiscoveryError
 from nectl.data.hosts import Host, _get_host_datatree_path_vars
 
 
@@ -81,6 +81,18 @@ def test_should_return_id_when_creating_host_with_opts(host_opts, expected_id):
 
     # THEN expect id
     assert host.id == expected_id
+
+
+def test_should_raise_error_when_host_mgmt_ip_is_invalid():
+    # GIVEN invalid mgmt ip
+    mgmt_ip = "10.0.0.999"
+
+    with pytest.raises(DiscoveryError) as error:
+        # WHEN creating host with mgmt_ip
+        host = Host(hostname="host1", site="london", mgmt_ip=mgmt_ip, _settings=None)
+
+    # THEN expect error
+    assert "has invalid mgmt_ip" in str(error.value)
 
 
 def test_should_return_attribute_when_accessing_attribute_not_in_class_but_present_in_facts():

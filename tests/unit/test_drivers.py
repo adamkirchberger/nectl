@@ -31,7 +31,7 @@ def test_should_raise_error_when_running_driver_methods_outside_context_manager(
     settings = mock_settings
 
     # GIVEN host
-    host = Host(hostname="core0", site="london", mgmt_ip="x.x.x.x", _settings=settings)
+    host = Host(hostname="core0", site="london", mgmt_ip="10.0.0.1", _settings=settings)
 
     # GIVEN driver instance
     driver = driverclass(host=host, username="foo")

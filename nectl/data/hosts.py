@@ -22,6 +22,7 @@ import importlib
 from typing import Optional, Union, Any, List, Dict
 from glob import glob
 from dataclasses import dataclass, field
+from ipaddress import AddressValueError, IPv4Address
 
 from ..logging import get_logger
 from ..exceptions import DiscoveryError
@@ -51,6 +52,17 @@ class Host:
     mgmt_ip: Optional[str] = None
     _facts: Union[Dict, None] = None
     _settings: Settings = field(default_factory=get_settings)
+
+    def __post_init__(self):
+        """
+        Host post transforms.
+        """
+        try:
+            # Validate MGMT IP address
+            if self.mgmt_ip:
+                self.mgmt_ip = str(IPv4Address(self.mgmt_ip))
+        except AddressValueError as e:
+            raise DiscoveryError(f"host '{self.id}' has invalid mgmt_ip: {e}") from e
 
     @property
     def id(self) -> str:
