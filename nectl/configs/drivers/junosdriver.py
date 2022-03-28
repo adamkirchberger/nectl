@@ -124,18 +124,18 @@ class JunosDriver(BaseDriver):
         )
         return diff
 
-    def replace_config(
+    def apply_config(
         self, config_filepath: str, format: str = "set", commit_timer: int = 1
     ):
         """
-        Replaces active config on host with supplied config.
+         Apply staged config onto host.
 
         Args:
             config_filepath (str): new config file.
             format (str): Junos config format. Defaults to "set".
-            commit_timer (int): automatic rollback in minutes if connection lost. Defaults to 2.
+            commit_timer (int): automatic rollback in minutes if connection lost. Defaults to 1.
         """
-        super().replace_config(config_filepath, commit_timer=commit_timer)
+        super().apply_config(config_filepath)
         # Run load config to check config, commit with timer and return diff.
         diff = self._load_config(
             config_filepath=config_filepath,

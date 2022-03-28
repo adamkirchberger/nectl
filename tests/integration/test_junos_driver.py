@@ -193,7 +193,7 @@ def test_should_raise_error_when_comparing_config(
         junos_driver.compare_config("/mock/config.txt")
 
 
-def test_should_return_diff_and_not_commit_when_replacing_config_but_no_changes():
+def test_should_return_diff_and_not_commit_when_applying_config_but_no_changes():
     # GIVEN host
     host = Host(
         hostname="core0",
@@ -214,8 +214,8 @@ def test_should_return_diff_and_not_commit_when_replacing_config_but_no_changes(
     # GIVEN diff method will return None
     junos_driver._driver.cu.diff.return_value = None
 
-    # WHEN calling replace config
-    diff = junos_driver.replace_config(
+    # WHEN calling apply config
+    diff = junos_driver.apply_config(
         config_filepath="/not/real/config.txt", format="set"
     )
 
@@ -256,8 +256,8 @@ def test_should_return_diff_and_commit_when_replacing_config_and_has_changes(
     # GIVEN diff method will return changes
     junos_driver._driver.cu.diff.return_value = "fakediff"
 
-    # WHEN calling replace config
-    diff = junos_driver.replace_config(
+    # WHEN calling apply config
+    diff = junos_driver.apply_config(
         config_filepath="/not/real/config.txt", format="set", commit_timer=10
     )
 
@@ -310,8 +310,8 @@ def test_should_raise_error_when_replacing_config_and_host_connection_lost():
     )
 
     with pytest.raises(DriverCommitDisconnectError) as error:
-        # WHEN calling replace config
-        junos_driver.replace_config(
+        # WHEN calling apply config
+        junos_driver.apply_config(
             config_filepath="/not/real/config.txt", format="set", commit_timer=10
         )
 

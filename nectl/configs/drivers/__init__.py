@@ -80,7 +80,7 @@ def run_driver_method_on_hosts(
 ) -> int:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
-    one of "compare_config", "replace_config" or "get_config".
+    one of "compare_config", "apply_config" or "get_config".
 
     Args:
         settings (Settings): config settings.

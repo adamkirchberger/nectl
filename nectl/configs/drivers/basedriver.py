@@ -101,16 +101,12 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     @ensure_connected
-    def replace_config(
-        self, config_filepath: str, format: str = None, commit_timer: int = 2
-    ):
+    def apply_config(self, config_filepath: str):
         """
-        Replaces active config on host with supplied config.
+        Apply staged config onto host.
 
         Args:
             config_filepath (str): new config file.
-            format (str): new config format.
-            commit_timer (int): automatic rollback in minutes if connection lost. Defaults to 2.
         """
 
     @abc.abstractmethod

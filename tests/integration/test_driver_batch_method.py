@@ -28,7 +28,9 @@ from nectl.exceptions import (
 )
 
 
-@pytest.mark.parametrize("method_name", ("replace_config", "compare_config"))
+@pytest.mark.parametrize(
+    "method_name", ("get_config", "compare_config", "apply_config")
+)
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
 def test_should_call_method_when_running_driver_method_on_hosts(
@@ -87,7 +89,7 @@ def test_should_call_method_when_running_driver_method_on_hosts(
     assert rc == 0
 
 
-@pytest.mark.parametrize("method_name", ("replace_config",))
+@pytest.mark.parametrize("method_name", ("apply_config",))
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
 @patch("sys.exit")
@@ -152,7 +154,7 @@ def test_should_exit_with_1_when_running_driver_method_on_hosts_with_error_encou
 
 @patch("nectl.configs.drivers.write_configs_to_dir")
 @patch("nectl.configs.drivers.get_driver")
-def test_should_create_diff_when_running_replace_method_and_host_disconnected_after_commit(
+def test_should_create_diff_when_running_apply_method_and_host_disconnected_after_commit(
     mock_get_driver, mock_write_configs, mock_settings, capsys
 ):
     # GIVEN mock settings
@@ -172,8 +174,8 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
     # GIVEN write config patched to return 1 files
     mock_write_configs.return_value = 1
 
-    # GIVEN driver replace method raises DriverCommitDisconnectError
-    mock_get_driver.return_value.return_value.__enter__.return_value.replace_config.side_effect = DriverCommitDisconnectError(
+    # GIVEN driver apply method raises DriverCommitDisconnectError
+    mock_get_driver.return_value.return_value.__enter__.return_value.apply_config.side_effect = DriverCommitDisconnectError(
         diff="foodiff"
     )
 
@@ -181,8 +183,8 @@ def test_should_create_diff_when_running_replace_method_and_host_disconnected_af
     rc = run_driver_method_on_hosts(
         settings=mock_settings,
         hosts=[host],
-        method_name="replace_config",
-        description=f"test replace_config desc",
+        method_name="apply_config",
+        description=f"test apply_config desc",
     )
 
     # THEN expect get driver to be called with settings and os_name
@@ -236,8 +238,8 @@ def test_should_return_1_when_running_driver_methods_on_host_with_no_matching_dr
     rc = run_driver_method_on_hosts(
         settings=mock_settings,
         hosts=[host],
-        method_name="replace_config",
-        description=f"test replace_config desc",
+        method_name="apply_config",
+        description=f"test apply_config desc",
     )
 
     # THEN expect get driver to be called with settings and os_name

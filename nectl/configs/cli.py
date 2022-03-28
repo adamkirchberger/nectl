@@ -107,16 +107,26 @@ def diff_cmd(ctx, hostname: str, customer: str, site: str, role: str):
     )
 
 
-@configs.command(name="replace", help="Replace host active config with staged config.")
+@configs.command(name="apply", help="Apply staged config onto host.")
 @click.option("-h", "--hostname", help="Filter by hostname.")
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-u", "--username", help="Host driver username.")
+@click.option("-p", "--password", help="Host driver password.")
 @click.pass_context
 @logging_opts
-def replace_cmd(ctx, hostname: str, customer: str, site: str, role: str):
+def apply_cmd(
+    ctx,
+    hostname: str,
+    customer: str,
+    site: str,
+    role: str,
+    username: str,
+    password: str,
+):
     """
-    Use this command to replace host active configuration with staged config.
+    Use this command to apply staged configurations onto hosts.
     """
     settings = ctx.obj["settings"]
 
@@ -140,8 +150,10 @@ def replace_cmd(ctx, hostname: str, customer: str, site: str, role: str):
         run_driver_method_on_hosts(
             settings=settings,
             hosts=hosts,
-            method_name="replace_config",
-            description="replacing host configurations",
+            method_name="apply_config",
+            description="applying host configurations",
+            username=username,
+            password=password,
         )
     )
 

@@ -40,7 +40,7 @@ def test_should_raise_error_when_running_driver_methods_outside_context_manager(
     methods = {
         "get_config": {},
         "compare_config": {"config_filepath": None},
-        "replace_config": {"config_filepath": None},
+        "apply_config": {"config_filepath": None},
     }
 
     for method, args in methods.items():
