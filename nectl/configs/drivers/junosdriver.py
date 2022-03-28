@@ -238,7 +238,7 @@ class JunosDriver(BaseDriver):
 
         except (LockError, UnlockError) as e:
             raise DriverError(
-                f"failed to take lock ensure no user in config mode"
+                "failed to take lock ensure no user in config mode"
             ) from e
         except FileNotFoundError as e:
             raise DriverConfigLoadError(
