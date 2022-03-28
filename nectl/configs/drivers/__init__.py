@@ -16,7 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from typing import List, Type
+from typing import List, Type, Optional
 
 from ...logging import get_logger
 from ...settings import Settings
@@ -41,7 +41,7 @@ class Drivers:
     """
 
     core_drivers = {"junos": JunosDriver}
-    kit_drivers = None
+    kit_drivers: Optional[dict] = None
 
 
 def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
