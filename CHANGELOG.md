@@ -1,5 +1,23 @@
 # Changelog
 
+# [0.12.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.11.0...0.12.0) (2022-03-28)
+
+
+### Bug Fixes
+
+* add Host object to module public attributes ([ea39a4c](https://gitlab.com/adamkirchberger/nectl-dev/commit/ea39a4cded32ef78a3a0d5773f4242f0316b5ec5))
+* remove unnecessary compare config parameter ([ccd013f](https://gitlab.com/adamkirchberger/nectl-dev/commit/ccd013f48094c848a82da2189882cabfa4e33ee2))
+* update app description ([3f10f84](https://gitlab.com/adamkirchberger/nectl-dev/commit/3f10f84c4abc8375bf9c424a9f331f654d5229e4))
+* use IPv4Address type for host mgmt_ip ([9fd76e2](https://gitlab.com/adamkirchberger/nectl-dev/commit/9fd76e228b95be2a4532e3bf73d7c560aaa3a4fa))
+
+
+### Features
+
+* add action to get active config from host ([89f9334](https://gitlab.com/adamkirchberger/nectl-dev/commit/89f93347ef86081ac4c568ca7a8d0990ab387cdf))
+* rename config replace to apply ([dbaae00](https://gitlab.com/adamkirchberger/nectl-dev/commit/dbaae00ada707a807c8d6302d18912f63083ccd7))
+* rename default datatree dirname to datatree ([ccbc90d](https://gitlab.com/adamkirchberger/nectl-dev/commit/ccbc90da18bedb0023970d59e4c155dea8f27b7f))
+* username and password are host core facts ([720750e](https://gitlab.com/adamkirchberger/nectl-dev/commit/720750e64bbc398fda9a88b410afc0600bce3f9e))
+
 # [0.11.0](https://git-us-east1-d.ci-gateway.int.gprd.gitlab.net:8989/adamkirchberger/nectl-dev/compare/0.10.2...0.11.0) (2022-03-15)
 
 
