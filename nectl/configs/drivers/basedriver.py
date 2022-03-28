@@ -90,13 +90,12 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     @ensure_connected
-    def compare_config(self, config_filepath: str, format: str = None) -> str:
+    def compare_config(self, config_filepath: str) -> str:
         """
         Returns the configuration diff between the active and supplied config.
 
         Args:
             config_filepath (str): new config file.
-            format (str): new config format.
         """
 
     @abc.abstractmethod
