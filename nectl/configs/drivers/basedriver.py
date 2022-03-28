@@ -114,7 +114,7 @@ class BaseDriver(metaclass=abc.ABCMeta):
         """
         Open connection to host when context manager starts.
         """
-        logger.debug(f"{self.host.id}: opened connection")
+        logger.debug(f"[{self.host.id}] opened connection")
         return self
 
     @abc.abstractmethod
@@ -122,4 +122,4 @@ class BaseDriver(metaclass=abc.ABCMeta):
         """
         Close connection to host when context manager finishes.
         """
-        logger.debug(f"{self.host.id}: closed connection")
+        logger.debug(f"[{self.host.id}] closed connection")
