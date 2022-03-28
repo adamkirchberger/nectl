@@ -31,7 +31,7 @@ try:
 except pkg_resources.DistributionNotFound:
     APP_VERSION = "unknown"
 
-APP_DESCRIPTION = "Network Control Tool"
+APP_DESCRIPTION = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
 
 
 class Settings(BaseSettings):
