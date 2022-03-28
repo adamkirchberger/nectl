@@ -31,9 +31,6 @@ def test_should_return_usage_when_running_cli_with_no_args(cli_runner):
     # THEN expect to be successful
     assert result.exit_code == 0
 
-    # THEN expect tool name in output
-    assert "Network Control Tool" in result.output
-
     # THEN expect usage commands
     assert "Commands:" in result.output
 
