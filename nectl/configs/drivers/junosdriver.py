@@ -49,7 +49,7 @@ class JunosDriver(BaseDriver):
     def __init__(
         self,
         host: Host,
-        username: str,
+        username: str = None,
         password: str = None,
         ssh_private_key_file: str = None,
     ) -> None:
@@ -64,7 +64,7 @@ class JunosDriver(BaseDriver):
         """
         super().__init__(
             host,
-            username,
+            username=username,
             password=password,
             ssh_private_key_file=ssh_private_key_file,
         )

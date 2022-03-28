@@ -45,7 +45,7 @@ class BaseDriver(metaclass=abc.ABCMeta):
     def __init__(
         self,
         host: Host,
-        username: str,
+        username: str = None,
         password: str = None,
         ssh_private_key_file: str = None,
     ) -> None:
@@ -60,8 +60,8 @@ class BaseDriver(metaclass=abc.ABCMeta):
             ssh_private_key (str): SSH private key file.
         """
         self.host = host
-        self.username = username
-        self.password = password
+        self.username = username if username else self.host.username
+        self.password = password if password else self.host.password
         self.ssh_private_key_file = ssh_private_key_file
         self._driver = None
 

@@ -76,7 +76,12 @@ def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
 
 
 def run_driver_method_on_hosts(
-    settings: Settings, hosts: List[Host], method_name: str, description: str
+    settings: Settings,
+    hosts: List[Host],
+    method_name: str,
+    description: str,
+    username: str = None,
+    password: str = None,
 ) -> int:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
@@ -87,6 +92,8 @@ def run_driver_method_on_hosts(
         hosts (List[Host]): list of hosts to run method against.
         method_name (str): name of driver method.
         description (str): action description used in log outputs.
+        username (str): override host username.
+        password (str): override host password.
 
     Returns:
         int: 0 if successful 1 if had errors.
@@ -105,8 +112,7 @@ def run_driver_method_on_hosts(
         # Create host driver
         try:
             driver = get_driver(settings=settings, os_name=host.os_name)(
-                host=host,
-                username="root",
+                host=host, username=username, password=password
             )
         except (DriverNotFoundError, DriverError) as e:
             logger.error(f"[{host.id}] {e}")

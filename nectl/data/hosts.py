@@ -50,6 +50,8 @@ class Host:
     serial_number: Optional[str] = None
     asset_tag: Optional[str] = None
     mgmt_ip: Optional[str] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
     _facts: Union[Dict, None] = None
     _settings: Settings = field(default_factory=get_settings)
 
