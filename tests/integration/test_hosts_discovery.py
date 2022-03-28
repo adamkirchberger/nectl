@@ -233,7 +233,7 @@ def test_should_return_hosts_when_getting_all_hosts_that_are_not_directories(tmp
 
     settings = Settings(
         kit_path=str(datatree_path.parent),
-        settings_path=str(datatree_path.parent) + "/settings.yaml",
+        settings_path=str(datatree_path.parent) + "/kit.py",
         datatree_lookup_paths=(
             "data.common",
             "data.roles.{role}",
