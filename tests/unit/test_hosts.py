@@ -130,7 +130,7 @@ def test_should_return_attributes_when_getting_host_attributes_using_host_file(
     kit = tmp_path
 
     # GIVEN tmp host path
-    hosts_path = kit / "data" / "hosts"
+    hosts_path = kit / "datatree" / "hosts"
     hosts_path.mkdir(parents=True)
 
     # GIVEN host file with role
@@ -141,7 +141,7 @@ def test_should_return_attributes_when_getting_host_attributes_using_host_file(
 
     # WHEN getting host attributes
     path_vars = _get_host_datatree_path_vars(
-        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="datatree"
     )
 
     # THEN expect role var
@@ -155,7 +155,7 @@ def test_should_return_attributes_when_getting_host_attributes_using_host_direct
     kit = tmp_path
 
     # GIVEN tmp host path
-    hosts_path = kit / "data" / "hosts"
+    hosts_path = kit / "datatree" / "hosts"
     hosts_path.mkdir(parents=True)
 
     # GIVEN host module with init file with role
@@ -167,7 +167,7 @@ def test_should_return_attributes_when_getting_host_attributes_using_host_direct
 
     # WHEN getting host attributes
     path_vars = _get_host_datatree_path_vars(
-        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="datatree"
     )
 
     # THEN expect role var
@@ -181,7 +181,7 @@ def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
     kit = tmp_path
 
     # GIVEN tmp host path
-    hosts_path = kit / "data" / "hosts"
+    hosts_path = kit / "datatree" / "hosts"
     hosts_path.mkdir(parents=True)
 
     # GIVEN host file with non core variable
@@ -192,7 +192,7 @@ def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
 
     # WHEN getting host attributes
     path_vars = _get_host_datatree_path_vars(
-        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="datatree"
     )
 
     # THEN expect blank
@@ -206,7 +206,7 @@ def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
     kit = tmp_path
 
     # GIVEN tmp host path
-    hosts_path = kit / "data" / "hosts"
+    hosts_path = kit / "datatree" / "hosts"
     hosts_path.mkdir(parents=True)
 
     # GIVEN host file with non core variable
@@ -217,7 +217,7 @@ def test_should_return_empty_dict_when_getting_host_attributes_using_host_file(
 
     # WHEN getting host attributes
     path_vars = _get_host_datatree_path_vars(
-        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="datatree"
     )
 
     # THEN expect blank
@@ -233,7 +233,7 @@ def test_should_raise_error_when_getting_host_attributes_using_invalid_host(
     kit = tmp_path
 
     # GIVEN tmp host path
-    hosts_path = kit / "data" / "hosts"
+    hosts_path = kit / "datatree" / "hosts"
     hosts_path.mkdir(parents=True)
 
     # GIVEN host file with invalid python
@@ -244,7 +244,7 @@ def test_should_raise_error_when_getting_host_attributes_using_invalid_host(
 
     # WHEN getting host attributes
     _get_host_datatree_path_vars(
-        host_path=str(hosts_path / "foonode.py"), datatree_dirname="data"
+        host_path=str(hosts_path / "foonode.py"), datatree_dirname="datatree"
     )
 
     # THEN expect exit to be called

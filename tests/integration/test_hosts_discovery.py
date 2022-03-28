@@ -228,18 +228,19 @@ def test_should_return_host_properties_when_getting_filtered_hosts_by_site_and_c
 
 def test_should_return_hosts_when_getting_all_hosts_that_are_not_directories(tmp_path):
     # GIVEN data dir
-    datatree_path = tmp_path / "test" / "data"
+    datatree_path = tmp_path / "test" / "datatree"
     datatree_path.mkdir(parents=True)
 
     settings = Settings(
         kit_path=str(datatree_path.parent),
         settings_path=str(datatree_path.parent) + "/kit.py",
+        datatree_dirname="datatree",
         datatree_lookup_paths=(
-            "data.common",
-            "data.roles.{role}",
-            "data.sites.{site}.common",
-            "data.sites.{site}.roles.{role}",
-            "data.sites.{site}.hosts.{hostname}",
+            "datatree.common",
+            "datatree.roles.{role}",
+            "datatree.sites.{site}.common",
+            "datatree.sites.{site}.roles.{role}",
+            "datatree.sites.{site}.hosts.{hostname}",
         ),
         hosts_glob_pattern="sites/*/hosts/*",
         hosts_hostname_regex=".*/sites/.*/hosts/(.*)$",

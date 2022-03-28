@@ -62,7 +62,7 @@ class Settings(BaseSettings):
     kit_path: str
 
     # Datatree default directory name
-    datatree_dirname: str = "data"
+    datatree_dirname: str = "datatree"
 
     # Templates default directory name
     templates_dirname: str = "templates"

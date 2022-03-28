@@ -31,7 +31,7 @@ def mock_datatree(tmp_path) -> pathlib.PosixPath:
     Returns:
         pathlib.PosixPath: path to tmp datatree.
     """
-    root = tmp_path / "data"
+    root = tmp_path / "datatree"
     root.mkdir()
     (root / "__init__.py").write_text("")
 
@@ -115,14 +115,15 @@ def mock_settings(mock_datatree) -> Settings:
     settings = Settings(
         kit_path=str(datatree_path.parent),
         settings_path=str(datatree_path.parent) + "/kit.py",
+        datatree_dirname="datatree",
         datatree_lookup_paths=(
-            "data.glob.common",
-            "data.glob.roles.{role}",
-            "data.customers.{customer}.common",
-            "data.customers.{customer}.roles.{role}",
-            "data.customers.{customer}.sites.{site}.common",
-            "data.customers.{customer}.sites.{site}.roles.{role}",
-            "data.customers.{customer}.sites.{site}.hosts.{hostname}",
+            "datatree.glob.common",
+            "datatree.glob.roles.{role}",
+            "datatree.customers.{customer}.common",
+            "datatree.customers.{customer}.roles.{role}",
+            "datatree.customers.{customer}.sites.{site}.common",
+            "datatree.customers.{customer}.sites.{site}.roles.{role}",
+            "datatree.customers.{customer}.sites.{site}.hosts.{hostname}",
         ),
         hosts_glob_pattern="customers/*/sites/*/hosts/*",
         hosts_hostname_regex=".*/sites/.*/hosts/(.*)$",
