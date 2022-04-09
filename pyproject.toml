@@ -6,7 +6,7 @@ authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-click = "^8.0.1"
+click = "8.0.4"
 coloredlogs = "^15.0.1"
 pydantic = "^1.8.2"
 ipaddress = "^1.0.23"
