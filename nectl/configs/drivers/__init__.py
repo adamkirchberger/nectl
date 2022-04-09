@@ -105,8 +105,9 @@ def run_driver_method_on_hosts(
     logger.debug(f"start {description}")
 
     for host in hosts:
-        # Skip hosts with no os_name
-        if not host.os_name:
+        # Skip hosts with no os_name or mgmt_ip
+        if not host.os_name or not host.mgmt_ip:
+            logger.warning(f"[{host.id}] skipping due to missing 'os_name' or 'mgmt_ip'")
             continue
 
         # Create host driver
