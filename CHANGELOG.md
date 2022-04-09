@@ -1,5 +1,21 @@
 # Changelog
 
+# [0.13.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.12.0...0.13.0) (2022-04-09)
+
+
+### Bug Fixes
+
+* add optional user and pass args for config diff ([478b1e4](https://gitlab.com/adamkirchberger/nectl-dev/commit/478b1e49f085bca4d6c59514287201b923105209))
+* fetch user and pass from datatree if no args supplied ([20fdd27](https://gitlab.com/adamkirchberger/nectl-dev/commit/20fdd27d36031cede5e1bf4c776ebb6d642e3028))
+* skip driver calls when os_name or mgmt_ip missing ([f7bef73](https://gitlab.com/adamkirchberger/nectl-dev/commit/f7bef736e18625a24f07dae611484a3c0517206d))
+
+
+### Features
+
+* add assume yes flag to config apply cli action ([462f5a8](https://gitlab.com/adamkirchberger/nectl-dev/commit/462f5a8aa07a1f13f0de58b1cc82c723c599eff3))
+* add cli facts check only action ([ae4316b](https://gitlab.com/adamkirchberger/nectl-dev/commit/ae4316b8d34f1dcdf86847127212de82d3284111))
+* rename data to datatree ([055ae4f](https://gitlab.com/adamkirchberger/nectl-dev/commit/055ae4f759f79ffa9a0ee4e2099534ed22fa3b3e))
+
 # [0.12.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.11.0...0.12.0) (2022-03-28)
 
 
