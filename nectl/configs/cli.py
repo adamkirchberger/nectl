@@ -77,9 +77,19 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-u", "--username", help="Host driver username.")
+@click.option("-p", "--password", help="Host driver password.")
 @click.pass_context
 @logging_opts
-def diff_cmd(ctx, hostname: str, customer: str, site: str, role: str):
+def diff_cmd(
+    ctx,
+    hostname: str,
+    customer: str,
+    site: str,
+    role: str,
+    username: str,
+    password: str,
+):
     """
     Use this command to compare staged and active configurations on hosts.
     """
@@ -103,6 +113,8 @@ def diff_cmd(ctx, hostname: str, customer: str, site: str, role: str):
             hosts=hosts,
             method_name="compare_config",
             description="comparing host configurations",
+            username=username,
+            password=password,
         )
     )
 
