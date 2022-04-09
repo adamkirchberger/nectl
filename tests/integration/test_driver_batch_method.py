@@ -18,7 +18,7 @@
 import pytest
 from unittest.mock import patch, ANY
 
-from nectl.data.hosts import Host
+from nectl.datatree.hosts import Host
 from nectl.configs.drivers import run_driver_method_on_hosts
 from nectl.exceptions import (
     DriverCommitDisconnectError,

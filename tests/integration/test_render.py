@@ -22,7 +22,7 @@ import pytest
 from nectl.configs.render import render_hosts, render_template
 from nectl.configs.templates import _import_template
 from nectl.configs.utils import write_configs_to_dir
-from nectl.data.hosts import Host
+from nectl.datatree.hosts import Host
 from nectl.exceptions import RenderError
 
 

@@ -30,7 +30,7 @@ from ..utils import write_configs_to_dir
 from .utils import load_drivers_from_kit
 from .basedriver import BaseDriver
 from .junosdriver import JunosDriver
-from ...data.hosts import Host
+from ...datatree.hosts import Host
 
 logger = get_logger()
 

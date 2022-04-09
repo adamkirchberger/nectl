@@ -28,13 +28,13 @@ from .facts_utils import facts_to_json_string
 
 @click.group(help="Inventory and datatree commands.")
 @logging_opts
-def data():
+def datatree():
     """
-    Data CLI group.
+    Datatree CLI group.
     """
 
 
-@data.command(name="list-hosts", help="List hosts discovered in datatree.")
+@datatree.command(name="list-hosts", help="List hosts discovered in datatree.")
 @click.option("-h", "--hostname", help="Filter by hostname.")
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
@@ -78,7 +78,7 @@ def list_hosts_cmd(
         )
 
 
-@data.command(name="get-facts", help="Get facts from datatree.")
+@datatree.command(name="get-facts", help="Get facts from datatree.")
 @click.option("-h", "--hostname", help="Filter by hostname.")
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")

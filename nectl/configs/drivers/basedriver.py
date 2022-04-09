@@ -20,7 +20,7 @@ from os import getenv
 
 from ...logging import get_logger
 from ...exceptions import DriverError, DriverNotConnectedError
-from ...data.hosts import Host
+from ...datatree.hosts import Host
 
 COMMIT_COMMENT = getenv("NECTL_COMMIT_COMMENT", "Configured by Nectl.")
 logger = get_logger()

@@ -21,7 +21,7 @@ import click
 from .logging import logging_opts
 from .exceptions import SettingsFileError
 from .settings import APP_VERSION, APP_DESCRIPTION, get_settings
-from .data.cli import data
+from .datatree.cli import datatree
 from .configs.cli import configs
 from .tests.cli import tests
 
@@ -53,6 +53,6 @@ def cli_root(ctx):
 
 
 # Add child groups
-cli_root.add_command(data)
+cli_root.add_command(datatree)
 cli_root.add_command(configs)
 cli_root.add_command(tests)

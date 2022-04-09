@@ -22,11 +22,11 @@ import nectl.settings
 from nectl.cli import cli_root
 
 
-def test_should_return_hosts_when_running_cli_data_list_hosts_command(
+def test_should_return_hosts_when_running_cli_datatree_list_hosts_command(
     cli_runner, mock_settings
 ):
     # GIVEN args
-    args = ["data", "list-hosts"]
+    args = ["datatree", "list-hosts"]
 
     # GIVEN expected hosts
     hosts = [
@@ -47,11 +47,11 @@ def test_should_return_hosts_when_running_cli_data_list_hosts_command(
         assert host in result.output, f"host '{host}' not found in hosts table"
 
 
-def test_should_return_hosts_when_running_cli_data_get_facts_command(
+def test_should_return_hosts_when_running_cli_datatree_get_facts_command(
     cli_runner, mock_settings
 ):
     # GIVEN args
-    args = ["data", "get-facts", "-h", "core0", "-s", "london", "-c", "acme"]
+    args = ["datatree", "get-facts", "-h", "core0", "-s", "london", "-c", "acme"]
 
     # GIVEN expected output
     expected_facts = {

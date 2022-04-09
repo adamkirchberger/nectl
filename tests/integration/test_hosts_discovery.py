@@ -19,7 +19,7 @@
 import pytest
 
 from nectl.settings import Settings
-from nectl.data.hosts import Host, get_all_hosts, get_filtered_hosts
+from nectl.datatree.hosts import Host, get_all_hosts, get_filtered_hosts
 from nectl.exceptions import DiscoveryError
 
 

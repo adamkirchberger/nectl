@@ -70,28 +70,3 @@ def test_should_return_error_when_running_cli_with_no_config_file(cli_runner):
 
     # THEN expect error message
     assert "Error: settings file not found" in result.output
-
-
-def test_should_return_hosts_when_running_cli_data_list_hosts_command(
-    cli_runner, mock_settings
-):
-    # GIVEN args
-    args = ["data", "list-hosts"]
-
-    # GIVEN expected hosts
-    hosts = [
-        "core0.newyork.acme",
-        "core0.london.acme",
-        "core0.newyork.hooli",
-        "core0.london.hooli",
-    ]
-
-    # WHEN cli command is run
-    result = cli_runner.invoke(cli_root, args)
-
-    # THEN expect to be successful
-    assert result.exit_code == 0
-
-    # THEN expect hosts to be listed
-    for host in hosts:
-        assert host in result.output, f"host '{host}' not found in hosts table"

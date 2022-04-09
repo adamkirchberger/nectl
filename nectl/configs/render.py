@@ -32,7 +32,7 @@ from ..exceptions import (
     TemplateMissingError,
     RenderError,
 )
-from ..data.hosts import Host
+from ..datatree.hosts import Host
 from .templates import Template, get_template
 
 

@@ -23,7 +23,7 @@ from ..exceptions import (
     DiscoveryError,
     RenderError,
 )
-from ..data.hosts import get_filtered_hosts
+from ..datatree.hosts import get_filtered_hosts
 from .render import render_hosts
 from .utils import write_configs_to_dir
 from .drivers import run_driver_method_on_hosts

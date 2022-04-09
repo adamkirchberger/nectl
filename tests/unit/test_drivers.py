@@ -1,6 +1,6 @@
 import pytest
 
-from nectl.data.hosts import Host
+from nectl.datatree.hosts import Host
 from nectl.configs.drivers import get_driver, JunosDriver
 from nectl.exceptions import DriverError, DriverNotConnectedError, DriverNotFoundError
 

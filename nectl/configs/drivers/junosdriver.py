@@ -37,7 +37,7 @@ from ...exceptions import (
     DriverConfigLoadError,
     DriverCommitDisconnectError,
 )
-from ...data.hosts import Host
+from ...datatree.hosts import Host
 from . import BaseDriver
 from .basedriver import COMMIT_COMMENT
 

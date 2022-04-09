@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock, call
 
 from nectl.configs.drivers import JunosDriver
-from nectl.data.hosts import Host
+from nectl.datatree.hosts import Host
 from nectl.exceptions import (
     DriverCommitDisconnectError,
     DriverConfigLoadError,

@@ -17,8 +17,8 @@
 
 import pathlib
 
-from nectl.data.hosts import Host
-from nectl.data.facts_utils import load_host_facts
+from nectl.datatree.hosts import Host
+from nectl.datatree.facts_utils import load_host_facts
 
 
 def test_should_return_global_ntp_servers_list_when_loading_facts(mock_settings):

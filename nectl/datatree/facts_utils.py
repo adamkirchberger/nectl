@@ -156,7 +156,7 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
             logger.debug(f"[{host.id}] imported module: {path}")
 
             # Load python file or module __init__.py if is directory
-            logger.info(
+            logger.debug(
                 f"[{host.id}] loading facts file='{mod.__name__}' path='{path}'"
             )
             _load_vars(mod)
@@ -172,7 +172,7 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
             # Then load any nested fact files
             for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
                 try:
-                    logger.info(
+                    logger.debug(
                         f"[{host.id}] loading facts file='{submod_info.name}' path='{path}'"
                     )
                     submod = importlib.import_module(path + "." + submod_info.name)

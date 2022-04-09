@@ -21,7 +21,7 @@ import pytest
 from unittest.mock import patch
 
 from nectl.exceptions import DiscoveryError
-from nectl.data.hosts import Host, _get_host_datatree_path_vars
+from nectl.datatree.hosts import Host, _get_host_datatree_path_vars
 
 
 def test_should_return_str_when_creating_host_and_returning_repr(mock_settings):
