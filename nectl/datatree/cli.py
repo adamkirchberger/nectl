@@ -83,9 +83,12 @@ def list_hosts_cmd(
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("--check", help="Check only with no JSON output.", is_flag=True)
 @click.pass_context
 @logging_opts
-def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
+def get_facts_cmd(
+    ctx, hostname: str, customer: str, site: str, role: str, check: bool = False
+):
     """
     Use this command to get facts for hosts defined in the datatree.
     """
@@ -103,4 +106,5 @@ def get_facts_cmd(ctx, hostname: str, customer: str, site: str, role: str):
 
     host_facts = {host.id: host.facts for host in hosts}
 
-    print(facts_to_json_string(host_facts))
+    if not check:
+        print(facts_to_json_string(host_facts))
