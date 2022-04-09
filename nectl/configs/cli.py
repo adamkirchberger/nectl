@@ -126,6 +126,12 @@ def diff_cmd(
 @click.option("-r", "--role", help="Filter by role.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option(
+    "-y",
+    "--assumeyes",
+    help="Automatically answer yes for all questions.",
+    is_flag=True,
+)
 @click.pass_context
 @logging_opts
 def apply_cmd(
@@ -136,6 +142,7 @@ def apply_cmd(
     role: str,
     username: str,
     password: str,
+    assumeyes: bool = False,
 ):
     """
     Use this command to apply staged configurations onto hosts.
@@ -154,9 +161,10 @@ def apply_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
-    click.confirm(
-        f"Are you sure you want to modify {len(hosts)} live hosts?", abort=True
-    )
+    if not assumeyes:
+        click.confirm(
+            f"Are you sure you want to modify {len(hosts)} live hosts?", abort=True
+        )
 
     sys.exit(
         run_driver_method_on_hosts(
