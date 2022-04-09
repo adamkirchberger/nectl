@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.1](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.13.0...0.13.1) (2022-04-09)
+
+
+### Bug Fixes
+
+* datatree list-hosts json output ([b578a6e](https://gitlab.com/adamkirchberger/nectl-dev/commit/b578a6e9da6b11bb7f1794317193b7c13146fac6))
+
 # [0.13.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.12.0...0.13.0) (2022-04-09)
 
 
