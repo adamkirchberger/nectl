@@ -67,7 +67,7 @@ def list_hosts_cmd(
         sys.exit(1)
 
     if output == "json":
-        print(json.dumps({"hosts": [h.dict() for h in hosts]}, indent=4, default=str))
+        print(json.dumps({h.id: h.dict() for h in hosts}, indent=4, default=str))
     else:
         print(
             tabulate(
