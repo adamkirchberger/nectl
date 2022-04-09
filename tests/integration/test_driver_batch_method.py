@@ -27,6 +27,42 @@ from nectl.exceptions import (
 )
 
 
+def test_should_log_warning_when_running_driver_method_on_invalid_host(
+    mock_settings,
+    caplog,
+):
+    # GIVEN mock settings
+    mock_settings = mock_settings
+
+    # GIVEN host with no os_name and mgmt_ip
+    host = Host(
+        hostname="core0",
+        site="london",
+        customer="acme",
+        mgmt_ip=None,
+        os_name=None,
+        _facts={},
+        _settings=None,
+    )
+
+    # GIVEN method name which should be irrelevant
+    method_name = "foo"
+
+    # WHEN running method
+    rc = run_driver_method_on_hosts(
+        settings=mock_settings,
+        hosts=[host],
+        method_name=method_name,
+        description=f"test {method_name} desc",
+    )
+
+    # THEN expect return code of 0
+    assert rc == 0
+
+    # THEN expect to have log with detailed error
+    assert "skipping due to missing 'os_name' or 'mgmt_ip'" in caplog.text
+
+
 @pytest.mark.parametrize(
     "method_name", ("get_config", "compare_config", "apply_config")
 )
