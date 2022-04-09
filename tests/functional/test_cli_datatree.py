@@ -15,10 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
 import json
 
-import nectl.settings
 from nectl.cli import cli_root
 
 
