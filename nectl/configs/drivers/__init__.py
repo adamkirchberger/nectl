@@ -112,7 +112,9 @@ def run_driver_method_on_hosts(
         # Create host driver
         try:
             driver = get_driver(settings=settings, os_name=host.os_name)(
-                host=host, username=username, password=password
+                host=host,
+                username=username if username else host.username,
+                password=password if password else host.password,
             )
         except (DriverNotFoundError, DriverError) as e:
             logger.error(f"[{host.id}] {e}")
