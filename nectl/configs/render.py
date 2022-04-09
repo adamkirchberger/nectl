@@ -72,7 +72,7 @@ def render_hosts(settings: Settings, hosts: Sequence[Host]) -> Dict[str, Any]:
 
     for host in hosts:
         if host.os_name is None or host.os_version is None:
-            logger.error(
+            logger.warning(
                 f"skipping host render with no 'os_name' or 'os_version': {host.id}"
             )
             continue
