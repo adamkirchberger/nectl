@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.14.0](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.13.1...0.14.0) (2022-04-17)
+
+
+### Features
+
+* add deployment groups ([417abd4](https://gitlab.com/adamkirchberger/nectl-dev/commit/417abd41b7e3d666ad511974da22adb8c6bd8dfc))
+
 ## [0.13.1](https://gitlab.com/adamkirchberger/nectl-dev/compare/0.13.0...0.13.1) (2022-04-09)
 
 
