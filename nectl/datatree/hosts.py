@@ -174,31 +174,37 @@ def get_filtered_hosts(
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
     """
-    hosts = get_all_hosts(settings=settings)
+    filters = dict(
+        customer=customer,
+        site=site,
+        role=role,
+        hostname=hostname,
+    )
 
-    # Filter by customer
-    if customer:
-        hosts = [h for h in hosts if h.customer == customer]
-        logger.info(f"filtered by customer=='{customer}'")
-        logger.debug(f"remaining hosts: {len(hosts)}")
+    # Return all hosts if no filter values provided
+    if all(filter is None for filter in filters.values()):
+        return get_all_hosts(settings=settings)
 
-    # Filter by site
-    if site:
-        hosts = [h for h in hosts if h.site == site]
-        logger.info(f"filtered by site=='{site}'")
-        logger.debug(f"remaining hosts: {len(hosts)}")
+    def is_match(host: Host) -> bool:
+        """
+        Returns True if host matches all filters that are not None.
+        """
+        for filter_name, filter_value in filters.items():
+            if filter_value is not None:
+                if not bool(getattr(host, filter_name) == filter_value):
+                    return False
+        return True
 
-    # Filter by role
-    if role:
-        hosts = [h for h in hosts if h.role == role]
-        logger.info(f"filtered by role == '{role}'")
-        logger.debug(f"remaining hosts: {len(hosts)}")
+    hosts = []
 
-    # Filter by hostname
-    if hostname:
-        hosts = [h for h in hosts if h.hostname == hostname]
-        logger.info(f"filtered by hostname=='{hostname}'")
-        logger.debug(f"remaining hosts: {len(hosts)}")
+    # Loop hosts
+    for host in get_all_hosts(settings=settings):
+        # Check for match against filters
+        if is_match(host):
+            # Add host
+            hosts.append(host)
+
+    logger.info(f"hosts after filter: {len(hosts)}")
 
     if len(hosts) == 0:
         print("No hosts found.", file=sys.stderr)
