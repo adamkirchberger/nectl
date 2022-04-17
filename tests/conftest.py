@@ -49,13 +49,18 @@ def mock_datatree(tmp_path) -> pathlib.PosixPath:
 
         # Make fake sites
         for site in ["london", "newyork"]:
-            site = c / "sites" / site
-            site.mkdir(parents=True)
+            s = c / "sites" / site
+            s.mkdir(parents=True)
 
-            (site / "common").mkdir(parents=True)
-            (site / "roles").mkdir(parents=True)
+            (s / "common").mkdir(parents=True)
+            (s / "roles").mkdir(parents=True)
 
-            hosts = site / "hosts"
+            # Add deployment group
+            (s / "common" / "deployment_group.py").write_text(
+                f"deployment_group = 'prod_{'1' if site == 'london' else '2'}'"
+            )
+
+            hosts = s / "hosts"
             hosts.mkdir(parents=True)
 
             # Make fake hosts

@@ -50,6 +50,7 @@ class Host:
     serial_number: Optional[str] = None
     asset_tag: Optional[str] = None
     mgmt_ip: Optional[str] = None
+    deployment_group: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
     _facts: Union[Dict, None] = None
@@ -134,6 +135,7 @@ class Host:
             "site": self.site,
             "customer": self.customer,
             "role": self.role,
+            "deployment_group": self.deployment_group if include_facts else None,
             "manufacturer": self.manufacturer if include_facts else None,
             "model": self.model if include_facts else None,
             "os_name": self.os_name if include_facts else None,
@@ -157,6 +159,7 @@ def get_filtered_hosts(
     customer: str = None,
     site: str = None,
     role: str = None,
+    deployment_group: str = None,
 ) -> List[Host]:
     """
     Returns a list of filtered hosts
@@ -167,6 +170,7 @@ def get_filtered_hosts(
         site (str): filter by site.
         customer (str): filter by customer.
         role (str): filter by role.
+        deployment_group (str): filter by deployment group.
 
     Returns:
         List[Host]: list of discovered hosts.
@@ -178,6 +182,7 @@ def get_filtered_hosts(
         customer=customer,
         site=site,
         role=role,
+        deployment_group=deployment_group,
         hostname=hostname,
     )
 

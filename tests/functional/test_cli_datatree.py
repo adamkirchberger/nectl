@@ -87,6 +87,7 @@ def test_should_return_hosts_when_running_cli_datatree_get_facts_command(
             "site": "london",
             "customer": "acme",
             "role": "primary",
+            "deployment_group": "prod_1",
             "manufacturer": None,
             "model": None,
             "os_name": "fakeos",

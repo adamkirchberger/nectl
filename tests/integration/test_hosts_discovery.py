@@ -189,8 +189,37 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_role(
     for host in hosts:
         assert isinstance(host, Host), host
 
+
+
+def test_should_return_2_hosts_when_getting_filtered_hosts_by_customer_and_deployment_group(
+    mock_settings,
+):
+    # GIVEN settings using mock kit
+    settings = mock_settings
+
+    # GIVEN customer
+    customer = "acme"
+
+    # GIVEN deployment group
+    deployment_group = "prod_1"
+
+    # WHEN fetching hosts and using filters
+    hosts = get_filtered_hosts(
+        settings=settings, customer=customer, deployment_group=deployment_group
+    )
+
     # THEN expect to have 2 hosts
     assert len(hosts) == 2
+
+    for host in hosts:
+        # THEN expect each result to be of Host type
+        assert isinstance(host, Host), host
+
+        # THEN expect host customer
+        assert host.customer == customer
+
+        # THEN expect host deployment group
+        assert host.deployment_group == deployment_group
 
 
 def test_should_return_host_properties_when_getting_filtered_hosts_by_site_and_customer_and_hostname(

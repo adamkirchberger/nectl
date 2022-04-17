@@ -39,6 +39,7 @@ def datatree():
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option(
     "-o",
     "--output",
@@ -49,7 +50,13 @@ def datatree():
 @click.pass_context
 @logging_opts
 def list_hosts_cmd(
-    ctx, hostname: str, customer: str, site: str, role: str, output: str
+    ctx,
+    hostname: str,
+    customer: str,
+    site: str,
+    role: str,
+    deployment_group: str,
+    output: str,
 ):
     """
     Use this command to list hosts discovered in the datatree.
@@ -61,6 +68,7 @@ def list_hosts_cmd(
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
     except DiscoveryError as e:
         print(f"Error: {e}")
@@ -83,11 +91,18 @@ def list_hosts_cmd(
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("--check", help="Check only with no JSON output.", is_flag=True)
 @click.pass_context
 @logging_opts
 def get_facts_cmd(
-    ctx, hostname: str, customer: str, site: str, role: str, check: bool = False
+    ctx,
+    hostname: str,
+    customer: str,
+    site: str,
+    role: str,
+    deployment_group: str,
+    check: bool = False,
 ):
     """
     Use this command to get facts for hosts defined in the datatree.
@@ -99,6 +114,7 @@ def get_facts_cmd(
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
     except DiscoveryError as e:
         print(f"Error: {e}")

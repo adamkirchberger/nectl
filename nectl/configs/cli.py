@@ -44,9 +44,12 @@ def configs():
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.pass_context
 @logging_opts
-def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
+def render_cmd(
+    ctx, hostname: str, customer: str, site: str, role: str, deployment_group: str
+):
     """
     Use this command to render configurations for hosts.
     """
@@ -59,6 +62,7 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
         renders = render_hosts(settings=settings, hosts=hosts)
     except (DiscoveryError, RenderError) as e:
@@ -77,6 +81,7 @@ def render_cmd(ctx, hostname: str, customer: str, site: str, role: str):
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
 @click.pass_context
@@ -87,6 +92,7 @@ def diff_cmd(
     customer: str,
     site: str,
     role: str,
+    deployment_group: str,
     username: str,
     password: str,
 ):
@@ -102,6 +108,7 @@ def diff_cmd(
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
@@ -124,6 +131,7 @@ def diff_cmd(
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
 @click.option(
@@ -140,6 +148,7 @@ def apply_cmd(
     customer: str,
     site: str,
     role: str,
+    deployment_group: str,
     username: str,
     password: str,
     assumeyes: bool = False,
@@ -156,6 +165,7 @@ def apply_cmd(
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
@@ -183,6 +193,7 @@ def apply_cmd(
 @click.option("-c", "--customer", help="Filter by customer.")
 @click.option("-s", "--site", help="Filter by site.")
 @click.option("-r", "--role", help="Filter by role.")
+@click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
 @click.pass_context
@@ -193,6 +204,7 @@ def get_cmd(
     customer: str,
     site: str,
     role: str,
+    deployment_group: str,
     username: str,
     password: str,
 ):
@@ -208,6 +220,7 @@ def get_cmd(
             customer=customer,
             site=site,
             role=role,
+            deployment_group=deployment_group,
         )
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
