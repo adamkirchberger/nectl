@@ -128,13 +128,18 @@ class Host:
     def dict(self, include_facts=True) -> Dict[str, Any]:
         """
         Returns a dict with reordered fields.
+
+        Args:
+            include_facts (bool): If False only core facts are returned.
         """
         return {
+            # Core facts from host file
             "id": self.id,
             "hostname": self.hostname,
             "site": self.site,
             "customer": self.customer,
             "role": self.role,
+            # Facts from anywhere in datatree
             "deployment_group": self.deployment_group if include_facts else None,
             "manufacturer": self.manufacturer if include_facts else None,
             "model": self.model if include_facts else None,
