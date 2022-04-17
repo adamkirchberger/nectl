@@ -86,6 +86,9 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
         Args:
             format (str): new config format.
+
+        Returns:
+            str: active config.
         """
 
     @abc.abstractmethod
@@ -96,16 +99,22 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
         Args:
             config_filepath (str): new config file.
+
+        Returns:
+            str: active vs staged diff.
         """
 
     @abc.abstractmethod
     @ensure_connected
-    def apply_config(self, config_filepath: str):
+    def apply_config(self, config_filepath: str) -> str:
         """
         Apply staged config onto host.
 
         Args:
             config_filepath (str): new config file.
+
+        Returns:
+            str: active vs staged diff.
         """
 
     @abc.abstractmethod

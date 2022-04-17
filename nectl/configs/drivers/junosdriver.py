@@ -63,7 +63,7 @@ class JunosDriver(BaseDriver):
             ssh_private_key_file (str): SSH private key file.
         """
         super().__init__(
-            host,
+            host=host,
             username=username,
             password=password,
             ssh_private_key_file=ssh_private_key_file,
@@ -126,7 +126,7 @@ class JunosDriver(BaseDriver):
 
     def apply_config(
         self, config_filepath: str, format: str = "set", commit_timer: int = 1
-    ):
+    ) -> str:
         """
          Apply staged config onto host.
 
@@ -134,6 +134,9 @@ class JunosDriver(BaseDriver):
             config_filepath (str): new config file.
             format (str): Junos config format. Defaults to "set".
             commit_timer (int): automatic rollback in minutes if connection lost. Defaults to 1.
+
+        Returns:
+            str: config diff between active and supplied config file.
         """
         super().apply_config(config_filepath)
         # Run load config to check config, commit with timer and return diff.
