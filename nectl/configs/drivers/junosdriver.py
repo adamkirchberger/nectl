@@ -177,7 +177,7 @@ class JunosDriver(BaseDriver):
         try:
             # Obtain config lock on device
             self._driver.cu.lock()
-            logger.debug(f"{self.host.id}: took config lock")
+            logger.debug(f"[{self.host.id}] took config lock")
 
             # Set format uses merge with an initial delete to replace config
             if format == "set":
@@ -193,23 +193,23 @@ class JunosDriver(BaseDriver):
 
             # Check commit
             self._driver.cu.commit_check()
-            logger.debug(f"{self.host.id}: config check passed")
+            logger.debug(f"[{self.host.id}] config check passed")
 
             # Get config diff
             diff = self._driver.cu.diff()
 
             # No diff skip commit
             if diff is None:
-                logger.info(f"{self.host.id}: no changes skipping commit")
+                logger.info(f"[{self.host.id}] no changes skipping")
 
             # No commit, diff only
             elif commit is False:
-                logger.info(f"{self.host.id}: has changes but not comitting")
+                logger.info(f"[{self.host.id}] has changes but not comitting")
 
             # Commit requested
             elif commit is True:
                 logger.info(
-                    f"{self.host.id}: config committed with {commit_timer} "
+                    f"[{self.host.id}] config committed with {commit_timer} "
                     "minutes automatic rollback"
                 )
                 self._driver.cu.commit(
@@ -219,25 +219,25 @@ class JunosDriver(BaseDriver):
                 )
 
                 # Restart connection to validate mgmt access post commit
-                logger.debug(f"{self.host.id}: restarting connection")
+                logger.debug(f"[{self.host.id}] restarting connection")
                 self._driver.close()
                 self.__enter__()
-                logger.info(f"{self.host.id}: restarted connection")
+                logger.info(f"[{self.host.id}] restarted connection")
 
                 # Wait for 75% of commit timer
                 sleep_mins = commit_timer * 0.75
                 logger.info(
-                    f"{self.host.id}: waiting {sleep_mins} minutes for config "
+                    f"[{self.host.id}] waiting {sleep_mins} minutes for config "
                     "to settle"
                 )
                 time.sleep(sleep_mins * 60)
 
                 # Confirm previous commit
                 self._driver.cu.commit_check()
-                logger.info(f"{self.host.id}: config commit confirmed")
+                logger.info(f"[{self.host.id}] config commit confirmed")
 
             # Unlock
-            logger.debug(f"{self.host.id}: released config lock")
+            logger.debug(f"[{self.host.id}] released config lock")
 
         except (LockError, UnlockError) as e:
             raise DriverError(
@@ -277,7 +277,7 @@ class JunosDriver(BaseDriver):
         """
         Open connection to host when context manager starts.
         """
-        logger.debug(f"{self.host.id}: opening connection to host")
+        logger.debug(f"[{self.host.id}] opening connection to host")
         try:
             self._driver.open()
             try:
@@ -301,7 +301,7 @@ class JunosDriver(BaseDriver):
         """
         Close connection to host when context manager finishes.
         """
-        logger.debug(f"{self.host.id}: closing connection to host")
+        logger.debug(f"[{self.host.id}] closing connection to host")
         try:
             self._driver.close()
         except RpcTimeoutError:
