@@ -123,6 +123,9 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
 
             # Skip frozen variables
             if var in frozen_vars:
+                logger.warning(
+                    f"[{host.id}] attempted to modify frozen fact '{var}' from file: {mod.__file__}"
+                )
                 continue
 
             # List explicit merge
