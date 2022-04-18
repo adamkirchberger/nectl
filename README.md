@@ -31,7 +31,7 @@ pip install nectl
 
 ## Authors
 
-_Nectl_ was created by Adam Kirchberger in 2022.
+_Nectl_ was created by Adam Kirchberger in 2021.
 
 Anyone is welcome to contribute!
 
