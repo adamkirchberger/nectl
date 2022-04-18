@@ -23,7 +23,7 @@ from .exceptions import SettingsFileError
 from .settings import APP_VERSION, APP_DESCRIPTION, get_settings
 from .datatree.cli import datatree
 from .configs.cli import configs
-from .tests.cli import tests
+from .checks.cli import checks
 
 
 def main():
@@ -55,4 +55,4 @@ def cli_root(ctx):
 # Add child groups
 cli_root.add_command(datatree)
 cli_root.add_command(configs)
-cli_root.add_command(tests)
+cli_root.add_command(checks)

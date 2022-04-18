@@ -20,29 +20,29 @@ import click
 from ..logging import logging_opts
 
 
-@click.group(help="Verification commands.")
+@click.group(help="Validation commands.")
 @logging_opts
-def tests():
+def checks():
     """
-    Tests CLI group.
+    Checks CLI group.
     """
 
 
-@tests.command(name="list")
+@checks.command(name="list")
 @click.pass_context
 @logging_opts
 def list_cmd(ctx):
     """
-    Use this command to list all configured tests.
+    Use this command to list all configured checks.
     """
-    raise NotImplementedError
+    print("Not implemented.")
 
 
-@tests.command(name="run")
+@checks.command(name="run")
 @click.pass_context
 @logging_opts
 def run_cmd(ctx):
     """
-    Use this command to run tests.
+    Use this command to run checks.
     """
-    raise NotImplementedError
+    print("Not implemented.")
