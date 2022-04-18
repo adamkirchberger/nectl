@@ -156,12 +156,15 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
         try:
             # Import module
             mod = importlib.import_module(path)
-            logger.debug(f"[{host.id}] imported module: {path}")
+
+            # Check if directory
+            if getattr(mod, "__name__") == getattr(mod, "__package__"):
+                logger.debug(f"[{host.id}] imported directory module: {path}")
+            else:
+                logger.debug(f"[{host.id}] imported file module: {path}")
 
             # Load python file or module __init__.py if is directory
-            logger.debug(
-                f"[{host.id}] loading facts file='{mod.__name__}' path='{path}'"
-            )
+            logger.debug(f"[{host.id}] loading facts file: {path}")
             _load_vars(mod)
 
         except ModuleNotFoundError:
@@ -170,19 +173,24 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
             )
             continue
 
+        except Exception as e:
+            logger.error(f"[{host.id}] error loading facts file: {path}")
+            logger.exception(e)
+            sys.exit(1)
+
         # If module is a package (directory)
         if getattr(mod, "__name__") == getattr(mod, "__package__"):
             # Then load any nested fact files
             for submod_info in pkgutil.iter_modules(getattr(mod, "__path__")):
                 try:
                     logger.debug(
-                        f"[{host.id}] loading facts file='{submod_info.name}' path='{path}'"
+                        f"[{host.id}] loading facts file: {path}.{submod_info.name}"
                     )
                     submod = importlib.import_module(path + "." + submod_info.name)
                     _load_vars(submod)
                 except (Exception, RecursionError) as e:
                     logger.error(
-                        f"[{host.id}] error loading facts file='{submod_info.name}' path='{path}'"
+                        f"[{host.id}] error loading facts file: {path}.{submod_info.name}"
                     )
                     logger.exception(e)
                     sys.exit(1)
