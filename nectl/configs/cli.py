@@ -171,9 +171,12 @@ def apply_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
+    print("Applying config to:")
+    print("\n".join([f"- {host.id}" for host in hosts]))
+
     if not assumeyes:
         click.confirm(
-            f"Are you sure you want to modify {len(hosts)} live hosts?", abort=True
+            f"\nAre you sure you want to modify {len(hosts)} live hosts?", abort=True
         )
 
     sys.exit(

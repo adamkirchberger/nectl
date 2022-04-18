@@ -214,7 +214,10 @@ def get_filtered_hosts(
             # Add host
             hosts.append(host)
 
-    logger.info(f"hosts after filter: {len(hosts)}")
+    logger.info(
+        f"filter matched {len(hosts)} hosts: "
+        f"{','.join([host.id for host in hosts])}"
+    )
 
     if len(hosts) == 0:
         print("No hosts found.", file=sys.stderr)
