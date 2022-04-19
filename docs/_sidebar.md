@@ -19,7 +19,7 @@
 
 - Nectl Documentation
 
-  - [Introduction](general/introduction.md)
+  - [Introduction](/)
   - [Concepts](general/concepts.md)
   - [Features](general/features.md)
   - [Quick start](general/quickstart.md)

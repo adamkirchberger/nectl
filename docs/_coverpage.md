@@ -23,7 +23,7 @@
 
 An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration.
 
-[GitHub](https://github.com/docsifyjs/docsify/)
+[GitHub](https://github.com/adamkirchberger/nectl)
 [Get Started](#Introduction)
 
 <!-- background color -->
