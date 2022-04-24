@@ -6,7 +6,7 @@ authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
 readme = "README.md"
 homepage = ""
 repository = "https://github.com/adamkirchberger/nectl"
-documentation = "nectl.netlify.app"
+documentation = "https://nectl.netlify.app"
 keywords = [
     "Network automation",
     "Network orchestration",
