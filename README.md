@@ -1,4 +1,4 @@
-![Cover icon](docs/images/cover_icon_128.png)
+![Cover icon](https://github.com/adamkirchberger/nectl/raw/main/docs/images/cover_icon_128.png)
 
 # Nectl
 
@@ -19,7 +19,7 @@ An end-to-end Python-based Infrastructure as Code framework for network automati
 
 For information on what the tool does and how it works have a look at the documentation site.
 
-[Nectl Documentation](nectl.netlify.app)
+[Nectl Documentation](https://nectl.netlify.app)
 
 ### Installation
 
@@ -43,8 +43,8 @@ See docs page [Support & Help](https://nectl.netlify.app/#/project/support)
 
 GNU General Public License v3.0
 
-See [COPYING](COPYING).
+See [COPYING](https://github.com/adamkirchberger/nectl/blob/main/COPYING).
 
 ## Change Log
 
-See [CHANGELOG](CHANGELOG.md)
+See [CHANGELOG](https://github.com/adamkirchberger/nectl/blob/main/CHANGELOG.md)
