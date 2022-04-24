@@ -19,6 +19,7 @@ import click
 import pkg_resources
 
 from nectl.cli import cli_root
+from nectl.settings import APP_VERSION
 
 
 def test_should_return_usage_when_running_cli_with_no_args(cli_runner):
@@ -40,10 +41,7 @@ def test_should_return_version_when_running_cli_with_version_arg(cli_runner):
     args = ["--version"]
 
     # GIVEN version
-    try:
-        version = pkg_resources.get_distribution("nectl").version
-    except pkg_resources.DistributionNotFound:
-        version = "unknown"
+    version = APP_VERSION
 
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)
