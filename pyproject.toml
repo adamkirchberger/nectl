@@ -49,12 +49,9 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
-<<<<<<< HEAD
 version_variable = [
     "nectl/settings.py:APP_VERSION"
 ]
-=======
->>>>>>> origin/main
 version_toml = [
     "pyproject.toml:tool.poetry.version"
 ]
