@@ -19,19 +19,14 @@ import os
 import sys
 from typing import List, Optional
 from importlib import import_module
-import pkg_resources
 from pydantic import BaseSettings, ValidationError
 
 from .exceptions import SettingsFileError
 
 KIT_FILEPATH = os.getenv("NECTL_KIT", "./kit.py")
 
-try:
-    APP_VERSION = pkg_resources.get_distribution("nectl").version
-except pkg_resources.DistributionNotFound:
-    APP_VERSION = "unknown"
-
-APP_DESCRIPTION = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
+APP_VERSION = "dev"
+APP_DESCRIPTION = "Network control framework for network automation and orchestration."
 
 
 class Settings(BaseSettings):
