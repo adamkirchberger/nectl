@@ -1,0 +1,56 @@
+name: release-dockerhub
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  build-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - name: Install Python Poetry
+        uses: abatilo/actions-poetry@v2.1.0
+        with:
+          poetry-version: 1.1.2
+      - name: Configure poetry
+        shell: bash
+        run: python -m poetry config virtualenvs.in-project true
+      - name: Show poetry version
+        run: poetry --version
+      - name: Build wheel
+        run: poetry build --format wheel
+      - uses: actions/upload-artifact@master
+        with:
+          name: nectl.wheel
+          path: dist/
+
+  docker-build-push:
+    needs: [build-wheel]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@master
+        with:
+          name: nectl.wheel
+          path: docker/dist/
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./docker
+          tags: |
+            nectl/nectl:latest
+            nectl/nectl:${{ github.event.release.tag_name }}
+          push: true
