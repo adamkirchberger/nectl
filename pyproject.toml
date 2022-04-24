@@ -3,6 +3,17 @@ name = "nectl"
 version = "0.14.0"
 description = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
 authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
+readme = "README.md"
+homepage = ""
+repository = "https://github.com/adamkirchberger/nectl"
+documentation = "nectl.netlify.app"
+keywords = [
+    "Network automation",
+    "Network orchestration",
+    "Network engineering",
+    "Automation",
+    "Orchestration"
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -38,6 +49,9 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.semantic_release]
+version_variable = [
+    "nectl/settings.py:APP_VERSION"
+]
 version_toml = [
     "pyproject.toml:tool.poetry.version"
 ]
