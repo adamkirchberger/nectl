@@ -11,7 +11,7 @@ This kit requires
 - nectl
 - pydantic
 
-## Sites and Hosts
+## Sites and Hosts
 
 There are 2 sites each with 2 hosts.
 
