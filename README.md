@@ -1,4 +1,4 @@
-![Cover icon](https://github.com/adamkirchberger/nectl/raw/main/docs/images/cover_icon_128.png)
+![](https://github.com/adamkirchberger/nectl/raw/main/docs/images/cover_icon_128.png)
 
 # Nectl
 
