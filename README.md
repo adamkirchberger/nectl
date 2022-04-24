@@ -19,7 +19,7 @@ An end-to-end Python-based Infrastructure as Code framework for network automati
 
 For information on what the tool does and how it works have a look at the documentation site.
 
-[Nectl Documentation]()
+[Nectl Documentation](nectl.netlify.app)
 
 ### Installation
 
@@ -37,7 +37,7 @@ Anyone is welcome to contribute!
 
 ## Support & Help
 
-See docs page [Support & Help]()
+See docs page [Support & Help](https://nectl.netlify.app/#/project/support)
 
 ## License
 
