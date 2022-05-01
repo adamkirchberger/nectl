@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.5 (2022-05-01)
+### Fix
+* Update dependencies ([#4](https://github.com/adamkirchberger/nectl/issues/4)) ([`320583d`](https://github.com/adamkirchberger/nectl/commit/320583d0a1cb39afa8c5911bd6a86411785b29d9))
+
+### Documentation
+* Fix bad character ([`36f2370`](https://github.com/adamkirchberger/nectl/commit/36f237039d7020b72ada6233dc3cdd630ed41655))
+* Fix changelog ([#3](https://github.com/adamkirchberger/nectl/issues/3)) ([`5cab1be`](https://github.com/adamkirchberger/nectl/commit/5cab1bec4c23af4420b195e23a22cd805341087d))
+
 ## 0.15.4 (2022-04-24)
 ### Fix
 * readme image ([`680d264`](https://github.com/adamkirchberger/nectl/commit/680d264518dc44be57e04ea6e39795883f587e19))
