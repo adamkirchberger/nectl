@@ -2,6 +2,31 @@
 
 <!--next-version-placeholder-->
 
+## 0.15.4 (2022-04-24)
+### Fix
+* readme image ([`680d264`](https://github.com/adamkirchberger/nectl/commit/680d264518dc44be57e04ea6e39795883f587e19))
+
+## 0.15.3 (2022-04-24)
+### Fix
+* update broken links and img ([`b8df020`](https://github.com/adamkirchberger/nectl/commit/b8df020b32b42617af16cd1bbd55d11c163c53d9))
+
+## 0.15.2 (2022-04-24)
+### Fix
+* package documentation link ([`a4bf460`](https://github.com/adamkirchberger/nectl/commit/a4bf460eab17ff34584abe0a20c7fa741e4db0d0))
+
+## 0.15.1 (2022-04-24)
+### Fix
+* update readme and docs favicon ([`6dbc6ed`](https://github.com/adamkirchberger/nectl/commit/6dbc6ed22a384e5f191686d1a4955859e82f27ae))
+
+## 0.15.0 (2022-04-24)
+### Feature
+* add example demo-kit1 ([`b55e6b`](https://github.com/adamkirchberger/nectl/commit/b55e6b0304798e99fd2772a6cce6e90b0c3e5437))
+### Fix
+* host discovery regex ([`7ff0f1a`](https://github.com/adamkirchberger/nectl/commit/7ff0f1ac0e31daacaf6420f42513639405ad731e))
+* log attempts to modify frozen facts ([`9f26e13`](https://github.com/adamkirchberger/nectl/commit/9f26e13ec95edb59e671b30696ce5a17b4efa6a0))
+* show matched hosts when applying ([`c9bf83b`](https://github.com/adamkirchberger/nectl/commit/c9bf83b44dc5ed7d90aeb1a67f82797d7b08ea46))
+* rename test to checks ([`afacfd6`](https://github.com/adamkirchberger/nectl/commit/afacfd62f58b859aa1a4f3354dac3a6e57e9576d))
+
 ## 0.14.0 (2022-04-17)
 ### Feature
 * add deployment groups ([`417abd4`](https://github.com/adamkirchberger/nectl/commit/417abd41b7e3d666ad511974da22adb8c6bd8dfc))
