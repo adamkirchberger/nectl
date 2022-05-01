@@ -45,4 +45,4 @@
 - Project
   - [Support & Help](project/support.md)
   - [Credits](project/credits.md)
-  - [Change log](project/changelog.md)
+  - [Change log](https://github.com/adamkirchberger/nectl/blob/main/CHANGELOG.md)
