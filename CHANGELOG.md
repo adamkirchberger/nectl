@@ -31,7 +31,7 @@
 ### Feature
 * add deployment groups ([`417abd4`](https://github.com/adamkirchberger/nectl/commit/417abd41b7e3d666ad511974da22adb8c6bd8dfc))
 
-## [0.13.1 (2022-04-09)
+## 0.13.1 (2022-04-09)
 ### Fix
 * datatree list-hosts json output ([`b578a6e`](https://github.com/adamkirchberger/nectl/commit/b578a6e9da6b11bb7f1794317193b7c13146fac6))
 
@@ -68,12 +68,12 @@
 * add config compare and replace cli actions ([`c0f2aed`](https://github.com/adamkirchberger/nectl/commit/c0f2aed2648588d2d2fdfe9778b13e5054bf4d44))
 * add kit custom drivers ([`d6d9806`](https://github.com/adamkirchberger/nectl/commit/d6d980689e25a74043b6cf26855177565c0896c2))
 
-## [0.10.2 (2022-03-06)
+## 0.10.2 (2022-03-06)
 ### Fix
 * python for kit settings instead of yaml ([`9e2f1a4`](https://github.com/adamkirchberger/nectl/commit/9e2f1a4ffd89351f3d2aafb91666b4227a41223c))
 * use default fact action from settings ([`09302df`](https://github.com/adamkirchberger/nectl/commit/09302dfbe139e75721d4e205366e877ddd63b698))
 
-## [0.10.1 (2022-02-19)
+## 0.10.1 (2022-02-19)
 ### Fix
 * ensure only funcs are used as template sections ([`e8fc620`](https://github.com/adamkirchberger/nectl/commit/e8fc620730d39fa0953510c9f4770bb1bfd915f7))
 * linting issues ([`e8ad624`](https://github.com/adamkirchberger/nectl/commit/e8ad624c32acd2b984c8fd06b8caadc760e335d8))
