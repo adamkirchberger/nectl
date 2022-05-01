@@ -34,7 +34,7 @@ Should you need additional help or are looking for automation consultancy please
 <head>
   <style>
     input[type="text"],
-    select,
+    input[type="email"],
     textarea {
       font-family: inherit;
       width: 100%; /* Full width */
@@ -64,19 +64,14 @@ Should you need additional help or are looking for automation consultancy please
 </head>
 
 <div class="form-container">
-  <form
-    name="contact"
-    method="POST"
-    data-netlify="true"
-    data-netlify-recaptcha="true"
-  >
+  <form name="contact" method="post">
+    <input type="hidden" name="form-name" value="contact"/>
     <label for="name">Name</label>
     <input type="text" id="name" name="name" placeholder="Your name..">
     <label for="email">Email</label>
-    <input type="text" id="email" name="email" placeholder="Your email..">
+    <input type="email" id="email" name="email" placeholder="Your email..">
     <label for="message">Message</label>
     <textarea id="message" name="message" placeholder="Your message.." style="height:200px"></textarea>
-    <div data-netlify-recaptcha="true"></div>
     <input type="submit" value="Submit">
   </form>
 </div>
