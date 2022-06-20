@@ -103,7 +103,12 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
         variables = {
             attr_name: type(attr_value)
             for attr_name, attr_value in mod.__dict__.items()
-            if isinstance(attr_value, VALID_DATA_TYPES)
+            if (
+                isinstance(attr_value, VALID_DATA_TYPES)
+                or is_dataclass(attr_value)
+                or isinstance(attr_value, BaseModel)
+            )
+            and not isinstance(attr_value, type)
             and not attr_name.startswith("_")
         }
 
