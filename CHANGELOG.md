@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.6 (2022-06-20)
+### Fix
+* Custom types being ignored if not in list or dict ([#6](https://github.com/adamkirchberger/nectl/issues/6)) ([`9f72e9c`](https://github.com/adamkirchberger/nectl/commit/9f72e9cfa9b14de00afcc9a762fdc52b7af28359))
+
+### Documentation
+* Add contact form ([#5](https://github.com/adamkirchberger/nectl/issues/5)) ([`949af88`](https://github.com/adamkirchberger/nectl/commit/949af88c6847c51742c28168e1ca65117b3e2164))
+
 ## v0.15.5 (2022-05-01)
 ### Fix
 * Update dependencies ([#4](https://github.com/adamkirchberger/nectl/issues/4)) ([`320583d`](https://github.com/adamkirchberger/nectl/commit/320583d0a1cb39afa8c5911bd6a86411785b29d9))
