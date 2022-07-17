@@ -40,7 +40,7 @@ class Drivers:
     Map os_name to drivers.
     """
 
-    core_drivers = {"junos": NapalmDriver}
+    core_drivers = {"junos": NapalmDriver, "eos": NapalmDriver}
     kit_drivers: Optional[dict] = None
 
 
