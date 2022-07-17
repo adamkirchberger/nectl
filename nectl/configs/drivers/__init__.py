@@ -29,7 +29,7 @@ from ...exceptions import (
 from ..utils import write_configs_to_dir
 from .utils import load_drivers_from_kit
 from .basedriver import BaseDriver
-from .junosdriver import JunosDriver
+from .napalmdriver import NapalmDriver
 from ...datatree.hosts import Host
 
 logger = get_logger()
@@ -40,7 +40,7 @@ class Drivers:
     Map os_name to drivers.
     """
 
-    core_drivers = {"junos": JunosDriver}
+    core_drivers = {"junos": NapalmDriver}
     kit_drivers: Optional[dict] = None
 
 
