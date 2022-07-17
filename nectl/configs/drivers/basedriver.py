@@ -23,6 +23,8 @@ from ...exceptions import DriverError, DriverNotConnectedError
 from ...datatree.hosts import Host
 
 COMMIT_COMMENT = getenv("NECTL_COMMIT_COMMENT", "Configured by Nectl.")
+COMMIT_WAIT_MULTIPLIER = 0.75
+CONNECT_TIMEOUT = 5
 logger = get_logger()
 
 
@@ -80,12 +82,13 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     @ensure_connected
-    def get_config(self, format: str = None) -> str:
+    def get_config(self, format: str = None, sanitized: bool = True) -> str:
         """
         Returns the active configuration from the host.
 
         Args:
             format (str): new config format.
+            sanitized (bool): remove secret data.
 
         Returns:
             str: active config.
@@ -93,12 +96,13 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     @ensure_connected
-    def compare_config(self, config_filepath: str) -> str:
+    def compare_config(self, config_filepath: str, format: str = None) -> str:
         """
         Returns the configuration diff between the active and supplied config.
 
         Args:
             config_filepath (str): new config file.
+            format (str): config format.
 
         Returns:
             str: active vs staged diff.
@@ -106,12 +110,16 @@ class BaseDriver(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     @ensure_connected
-    def apply_config(self, config_filepath: str) -> str:
+    def apply_config(
+        self, config_filepath: str, format: str = None, commit_timer: int = 1
+    ) -> str:
         """
         Apply staged config onto host.
 
         Args:
             config_filepath (str): new config file.
+            format (str): optional config format.
+            commit_timer (int): automatic rollback in minutes. Defaults to 1.
 
         Returns:
             str: active vs staged diff.

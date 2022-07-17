@@ -81,6 +81,15 @@ class Settings(BaseSettings):
     # Default configs file extension
     configs_file_extension: str = "txt"
 
+    # Config format variable passed to driver methods
+    configs_format: str = ""  # not in use
+
+    # Defines whether configs pulled from devices should be sanitized
+    configs_sanitized: bool = True
+
+    # Defines a default driver if one is not found. Test and use at own risk!
+    default_driver: str = ""
+
     @property
     def datatree_path(self) -> str:
         """

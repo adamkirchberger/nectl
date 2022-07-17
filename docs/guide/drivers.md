@@ -45,6 +45,8 @@ A driver can be a single file or a directory (with an `__init__.py`) which conta
 
 Nectl will look for custom drivers in `demo-kit/drivers` but this can overridden in your kit [settings file](guide/settings.md).
 
+A default driver can be specified in your kit [settings file](guide/settings.md) to be used by hosts which do not match a core or kit driver. This can be useful when you want to fallback to a library like Napalm.
+
 ### Driver example
 
 This is an example that can be used for building your own driver for an operating system named `nos`
@@ -99,12 +101,13 @@ class NosDriver(BaseDriver):
             return True
         return False
 
-    def get_config(self, format: str = None) -> str:
+    def get_config(self, format: str = None, sanitized: bool = True) -> str:
         """
         Returns the active configuration from the host.
 
         Args:
             format (str): new config format.
+            sanitized (bool): remove secret data.
 
         Returns:
             str: active config.
@@ -117,12 +120,13 @@ class NosDriver(BaseDriver):
         # Return config
         return config
 
-    def compare_config(self, config_filepath: str) -> str:
+    def compare_config(self, config_filepath: str, format: str = None) -> str:
         """
         Returns the configuration diff between the active and supplied config.
 
         Args:
             config_filepath (str): new config file.
+            format (str): config format.
 
         Returns:
             str: active vs staged diff.
@@ -135,12 +139,16 @@ class NosDriver(BaseDriver):
         # Return diff
         return diff
 
-    def apply_config(self, config_filepath: str) -> str:
+    def apply_config(
+        self, config_filepath: str, format: str = None, commit_timer: int = 1
+    ) -> str:
         """
         Apply staged config onto host.
 
         Args:
             config_filepath (str): new config file.
+            format (str): config format.
+            commit_timer (int): automatic rollback in minutes. Defaults to 1.
 
         Returns:
             str: active vs staged diff.

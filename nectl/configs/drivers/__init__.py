@@ -16,7 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from typing import List, Type, Optional
+from typing import List, Type, Dict, Optional, Any
 
 from ...logging import get_logger
 from ...settings import Settings
@@ -29,7 +29,7 @@ from ...exceptions import (
 from ..utils import write_configs_to_dir
 from .utils import load_drivers_from_kit
 from .basedriver import BaseDriver
-from .junosdriver import JunosDriver
+from .napalmdriver import NapalmDriver
 from ...datatree.hosts import Host
 
 logger = get_logger()
@@ -40,7 +40,7 @@ class Drivers:
     Map os_name to drivers.
     """
 
-    core_drivers = {"junos": JunosDriver}
+    core_drivers = {"junos": NapalmDriver, "eos": NapalmDriver}
     kit_drivers: Optional[dict] = None
 
 
@@ -71,6 +71,17 @@ def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
     for driver_os_name, driver in Drivers.core_drivers.items():
         if os_name == driver_os_name:
             return driver
+
+    # Use a default driver
+    logger.debug("checking if default driver is defined")
+    if settings.default_driver:
+        if settings.default_driver == "napalm":
+            return NapalmDriver
+
+        # Default driver does not exist
+        raise DriverNotFoundError(
+            f"no default driver found matching name: {settings.default_driver}"
+        )
 
     raise DriverNotFoundError(f"no driver found that matches os_name: {os_name}")
 
@@ -107,7 +118,9 @@ def run_driver_method_on_hosts(
     for host in hosts:
         # Skip hosts with no os_name or mgmt_ip
         if not host.os_name or not host.mgmt_ip:
-            logger.warning(f"[{host.id}] skipping due to missing 'os_name' or 'mgmt_ip'")
+            logger.warning(
+                f"[{host.id}] skipping due to missing 'os_name' or 'mgmt_ip'"
+            )
             continue
 
         # Create host driver
@@ -122,12 +135,16 @@ def run_driver_method_on_hosts(
             errors += 1
             continue  # skip host
 
-        kwargs = {}
+        # Prepare args
+        kwargs: Dict[str, Any] = {}
         if method_name in ["compare_config", "apply_config"]:
             kwargs["config_filepath"] = (
                 f"{settings.kit_path}/{settings.staged_configs_dir}/"
                 + f"{host.id}.{settings.configs_file_extension}"
             )
+        elif method_name == "get_config":
+            kwargs["format"] = settings.configs_format
+            kwargs["sanitized"] = settings.configs_sanitized
 
         # Open connection to host
         try:
