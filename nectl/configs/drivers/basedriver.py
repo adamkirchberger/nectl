@@ -23,6 +23,8 @@ from ...exceptions import DriverError, DriverNotConnectedError
 from ...datatree.hosts import Host
 
 COMMIT_COMMENT = getenv("NECTL_COMMIT_COMMENT", "Configured by Nectl.")
+COMMIT_WAIT_MULTIPLIER = 0.75
+CONNECT_TIMEOUT = 5
 logger = get_logger()
 
 

@@ -25,6 +25,7 @@ lxml = "^4.6.3"
 tabulate = "^0.8.9"
 dpath = "^2.0.5"
 junos-eznc = "^2.6.3"
+napalm = "^4.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
