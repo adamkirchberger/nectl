@@ -72,6 +72,17 @@ def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
         if os_name == driver_os_name:
             return driver
 
+    # Use a default driver
+    logger.debug("checking if default driver is defined")
+    if settings.default_driver:
+        if settings.default_driver == "napalm":
+            return NapalmDriver
+
+        # Default driver does not exist
+        raise DriverNotFoundError(
+            f"no default driver found matching name: {settings.default_driver}"
+        )
+
     raise DriverNotFoundError(f"no driver found that matches os_name: {os_name}")
 
 

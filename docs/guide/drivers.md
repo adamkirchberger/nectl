@@ -45,6 +45,8 @@ A driver can be a single file or a directory (with an `__init__.py`) which conta
 
 Nectl will look for custom drivers in `demo-kit/drivers` but this can overridden in your kit [settings file](guide/settings.md).
 
+A default driver can be specified in your kit [settings file](guide/settings.md) to be used by hosts which do not match a core or kit driver. This can be useful when you want to fallback to a library like Napalm.
+
 ### Driver example
 
 This is an example that can be used for building your own driver for an operating system named `nos`

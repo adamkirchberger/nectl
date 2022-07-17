@@ -54,3 +54,4 @@ For example settings files and values see [Quick start](quickstart.md)
 | configs_file_extension | Optional     | txt            | Default configs file extension.                                                                       |
 | configs_format         | Optional     |                | Config format variable passed to driver methods.                                                      |
 | configs_sanitized      | Optional     | True           | Defines whether configs pulled from devices should be sanitized.                                      |
+| default_driver         | Optional     | None           | Defines a default driver if one is not found. Test and use at own risk!                               |
