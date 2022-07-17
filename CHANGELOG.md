@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2022-07-17)
+### Feature
+* Add napalm driver integration ([#8](https://github.com/adamkirchberger/nectl/issues/8)) ([`792ca97`](https://github.com/adamkirchberger/nectl/commit/792ca978c99edd3077095551c32ecb3b3af6fd5f))
+
 ## v0.15.6 (2022-06-20)
 ### Fix
 * Custom types being ignored if not in list or dict ([#6](https://github.com/adamkirchberger/nectl/issues/6)) ([`9f72e9c`](https://github.com/adamkirchberger/nectl/commit/9f72e9cfa9b14de00afcc9a762fdc52b7af28359))
