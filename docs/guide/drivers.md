@@ -23,7 +23,7 @@
 
 Drivers are used to enable communication between nectl and the end host. These are operating system specific and will use SDKs or API's provided by the host vendor.
 
-The nectl core library includes some drivers but like all parts of nectl you are free to bring your own drivers (or override existing ones) in your network kit.
+The nectl core library includes a Napalm driver but like all parts of nectl you are free to bring your own drivers (or override existing ones) in your network kit.
 
 ## Methods
 
