@@ -27,7 +27,7 @@ Nectl will read the kit in the current working directory and perform actions bas
 
 ## What is in a kit
 
-- `nectl.yaml`: Settings for the kit.
+- `kit.py`: Settings for the kit.
 - `models`: Data models used in the datatree.
 - `data`: Holds the datatree which is used to define host facts.
 - `templates`: Configuration templates using datatree and models.
