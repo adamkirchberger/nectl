@@ -350,6 +350,9 @@ def test_should_return_config_when_writing_configs_to_files(mock_settings):
     # GIVEN output directory
     output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
 
+    # GIVEN custom configs file extension
+    settings.configs_file_extension = "footxt"
+
     # GIVEN mock rendered configs
     rendered_configs = {
         "host1": "config for host1",
@@ -358,12 +361,20 @@ def test_should_return_config_when_writing_configs_to_files(mock_settings):
     }
 
     # WHEN writing configs to staged output dir
-    write_configs_to_dir(configs=rendered_configs, output_dir=output_dir)
+    write_configs_to_dir(
+        configs=rendered_configs,
+        output_dir=output_dir,
+        extension=settings.configs_file_extension,
+    )
 
     # THEN expect there to be 3 files written
     assert len(os.listdir(output_dir))
 
     # THEN expect each host file to have content
     for host, conf in rendered_configs.items():
-        with open(f"{output_dir}/{host}.txt", "r") as fh:
+        with open(
+            f"{output_dir}/{host}.{settings.configs_file_extension}",
+            "r",
+            encoding="utf-8",
+        ) as fh:
             assert fh.read() == conf + "\n"

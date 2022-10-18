@@ -71,7 +71,11 @@ def render_cmd(
 
     output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
 
-    write_configs_to_dir(configs=renders, output_dir=output_dir)
+    write_configs_to_dir(
+        configs=renders,
+        output_dir=output_dir,
+        extension=settings.configs_file_extension,
+    )
 
     print(f"{len(renders)} configs created.")
 

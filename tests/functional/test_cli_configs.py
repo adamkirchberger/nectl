@@ -49,5 +49,9 @@ def test_should_return_config_when_running_cli_configs_render_command(
     assert result.output == "1 configs created.\n"
 
     # THEN expect config file to be created
-    with open(f"{staged_dir}/core0.london.acme.txt", "r") as fh:
+    with open(
+        f"{staged_dir}/core0.london.acme.{settings.configs_file_extension}",
+        "r",
+        encoding="utf-8",
+    ) as fh:
         assert fh.read() == rendered_config
