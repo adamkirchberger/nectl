@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.1 (2022-10-18)
+### Fix
+* Configs file extension setting not being used ([`3c83c0a`](https://github.com/adamkirchberger/nectl/commit/3c83c0a5ed2a1dbe942b318e247f89a20e4bd294))
+
+### Documentation
+* Fix broken link to example kit ([`7214df8`](https://github.com/adamkirchberger/nectl/commit/7214df8457e1756d83cdcf4b7566fbcd418ec932))
+
 ## v0.16.0 (2022-07-17)
 ### Feature
 * Add napalm driver integration ([#8](https://github.com/adamkirchberger/nectl/issues/8)) ([`792ca97`](https://github.com/adamkirchberger/nectl/commit/792ca978c99edd3077095551c32ecb3b3af6fd5f))
