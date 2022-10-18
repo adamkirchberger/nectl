@@ -12,11 +12,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: 3.9.14
       - name: Install Python Poetry
         uses: abatilo/actions-poetry@v2.1.0
         with:
-          poetry-version: 1.1.2
+          poetry-version: 1.2.2
       - name: Configure poetry
         shell: bash
         run: python -m poetry config virtualenvs.in-project true
