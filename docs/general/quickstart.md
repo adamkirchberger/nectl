@@ -27,4 +27,4 @@
 
 The repo contains examples which can be used to get started.
 
-### [Juniper 2 site kit](../examples/demo-kit1.md)
+### [Juniper 2 site kit](https://github.com/adamkirchberger/nectl/tree/main/examples/demo-kit1)
