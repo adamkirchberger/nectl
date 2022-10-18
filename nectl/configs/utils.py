@@ -27,7 +27,7 @@ logger = get_logger()
 
 
 def write_configs_to_dir(
-    configs: Dict[str, str], output_dir: str, extension: str = "txt", replace=True
+    configs: Dict[str, str], output_dir: str, extension: str, replace=True
 ) -> int:
     """
     Writes supplied configs dict to an output directory using the key as the
@@ -36,7 +36,7 @@ def write_configs_to_dir(
     Args:
         configs (Dict[str,str]): configs dict.
         output_dir (str): directory to write files to.
-        extension (str): optional file extension to use. Defaults to "txt".
+        extension (str): optional file extension to use.
         replace (bool): Delete any existing files when writing. Defaults to True.
 
     Returns:

@@ -173,14 +173,14 @@ def run_driver_method_on_hosts(
         total_files = write_configs_to_dir(
             configs=host_outputs,
             output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
-            extension="diff.txt",
+            extension="diff." + settings.configs_file_extension,
         )
         print(f"{total_files} config diffs created.")
     elif method_name == "get_config":
         total_files = write_configs_to_dir(
             configs=host_outputs,
             output_dir=f"{settings.kit_path}/{settings.active_configs_dir}",
-            extension="txt",
+            extension=settings.configs_file_extension,
         )
         print(f"{total_files} configs created.")
 
