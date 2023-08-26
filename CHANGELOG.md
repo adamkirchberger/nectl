@@ -2,6 +2,46 @@
 
 
 
+## v0.16.3 (2023-08-26)
+
+### Chore
+
+* chore(deps): bump requests from 2.28.1 to 2.31.0 (#16)
+
+Bumps [requests](https://github.com/psf/requests) from 2.28.1 to 2.31.0.
+- [Release notes](https://github.com/psf/requests/releases)
+- [Changelog](https://github.com/psf/requests/blob/main/HISTORY.md)
+- [Commits](https://github.com/psf/requests/compare/v2.28.1...v2.31.0)
+
+---
+updated-dependencies:
+- dependency-name: requests
+  dependency-type: indirect
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: Adam Kirchberger &lt;24639394+adamkirchberger@users.noreply.github.com&gt; ([`43a3f13`](https://github.com/adamkirchberger/nectl/commit/43a3f134945557f9bf45c12a943ad40b5b337c00))
+
+### Fix
+
+* fix(deps): bump cryptography from 37.0.2 to 41.0.3 (#17)
+
+Bumps [cryptography](https://github.com/pyca/cryptography) from 37.0.2 to 41.0.3.
+- [Changelog](https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst)
+- [Commits](https://github.com/pyca/cryptography/compare/37.0.2...41.0.3)
+
+---
+updated-dependencies:
+- dependency-name: cryptography
+  dependency-type: indirect
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: Adam Kirchberger &lt;24639394+adamkirchberger@users.noreply.github.com&gt; ([`e053c23`](https://github.com/adamkirchberger/nectl/commit/e053c231b16b207dbec1fe2d7ebf6a537d6fdf85))
+
+
 ## v0.16.2 (2023-08-26)
 
 ### Chore
