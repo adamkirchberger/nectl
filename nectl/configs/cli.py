@@ -213,7 +213,7 @@ def get_cmd(
             role=role,
             deployment_group=deployment_group,
         )
-        nectl.diff_configs(
+        nectl.get_configs(
             hosts=hosts,
             username=username,
             password=password,
