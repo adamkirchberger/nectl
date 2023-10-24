@@ -29,7 +29,7 @@ from dataclasses import is_dataclass
 from enum import Enum
 from ipaddress import IPv4Interface
 from pydantic import BaseModel  # pylint: disable=E0611
-from dpath import util as merge_utils
+from dpath import merge, MergeType
 
 from ..logging import get_logger
 from ..settings import Settings
@@ -39,7 +39,7 @@ if TYPE_CHECKING:
     from .hosts import Host
 
 VALID_DATA_TYPES = (list, dict, str, int, float)
-MERGE_TYPE = merge_utils.MERGE_ADDITIVE
+MERGE_TYPE = MergeType.ADDITIVE
 logger = get_logger()
 
 
@@ -139,7 +139,7 @@ def load_host_facts(settings: Settings, host: "Host") -> Dict:
 
             # Dict explicit merge
             elif var_type == dict and var_action == Actions.merge_with:
-                facts[var] = merge_utils.merge(
+                facts[var] = merge(
                     facts.get(var, {}), getattr(mod, var), flags=MERGE_TYPE
                 )
 
