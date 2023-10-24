@@ -2,6 +2,23 @@
 
 
 
+## v0.17.0 (2023-10-24)
+
+### Feature
+
+* feat: add external api and ssh key argument (#23)
+
+* feat: add nectl api to allow integration into other tools
+
+* fix: add ssh private key argument
+
+* refactor: types and docstrings
+
+* chore: remove eol python3.7 and update lock deps
+
+* fix: dpath and pydantic new version changes ([`1107ac4`](https://github.com/adamkirchberger/nectl/commit/1107ac4caf5e76fc584490da7943179ccaf05d4f))
+
+
 ## v0.16.3 (2023-08-26)
 
 ### Chore
