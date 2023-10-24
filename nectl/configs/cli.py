@@ -18,15 +18,13 @@
 import sys
 import click
 
+from .. import Nectl
 from ..logging import logging_opts, get_logger
 from ..exceptions import (
     DiscoveryError,
     RenderError,
+    DriverError,
 )
-from ..datatree.hosts import get_filtered_hosts
-from .render import render_hosts
-from .utils import write_configs_to_dir
-from .drivers import run_driver_method_on_hosts
 
 logger = get_logger()
 
@@ -53,31 +51,21 @@ def render_cmd(
     """
     Use this command to render configurations for hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-        renders = render_hosts(settings=settings, hosts=hosts)
+        nectl.render_configs(hosts=hosts)
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
-
-    write_configs_to_dir(
-        configs=renders,
-        output_dir=output_dir,
-        extension=settings.configs_file_extension,
-    )
-
-    print(f"{len(renders)} configs created.")
+    print(f"{len(hosts)} configs created.")
 
 
 @configs.command(name="diff", help="Compare active configs to rendered configs.")
@@ -103,31 +91,27 @@ def diff_cmd(
     """
     Use this command to compare staged and active configurations on hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
+        nectl.diff_configs(
             hosts=hosts,
-            method_name="compare_config",
-            description="comparing host configurations",
             username=username,
             password=password,
         )
     )
+        )
+    except (DiscoveryError, DriverError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    print(f"{len(hosts)} config diffs created.")
 
 
 @configs.command(name="apply", help="Apply staged config onto host.")
@@ -160,39 +144,37 @@ def apply_cmd(
     """
     Use this command to apply staged configurations onto hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
-        print(f"Error: {e}")
-        sys.exit(1)
 
-    print("Applying config to:")
-    print("\n".join([f"- {host.id}" for host in hosts]))
+        print("Applying config to:")
+        print("\n".join([f"- {host.id}" for host in hosts]))
 
-    if not assumeyes:
-        click.confirm(
-            f"\nAre you sure you want to modify {len(hosts)} live hosts?", abort=True
-        )
+        if not assumeyes:
+            click.confirm(
+                f"\nAre you sure you want to modify {len(hosts)} live hosts?",
+                abort=True,
+            )
 
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
+        nectl.apply_configs(
             hosts=hosts,
-            method_name="apply_config",
-            description="applying host configurations",
             username=username,
             password=password,
         )
     )
+        )
+    except (DiscoveryError, DriverError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    print(f"{len(hosts)} config diffs created.")
 
 
 @configs.command(name="get", help="Get active config from hosts.")
@@ -218,28 +200,24 @@ def get_cmd(
     """
     Use this command to get active configurations from hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
+        nectl.diff_configs(
             hosts=hosts,
-            method_name="get_config",
-            description="getting host configurations",
             username=username,
             password=password,
         )
     )
+        )
+    except (DiscoveryError, DriverError) as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+    print(f"{len(hosts)} config backups created.")

@@ -89,11 +89,11 @@ def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
 def run_driver_method_on_hosts(
     settings: Settings,
     hosts: List[Host],
-    method_name: str,
+    method_name: Literal["compare_config", "apply_config", "get_config"],
     description: str,
-    username: str = None,
-    password: str = None,
-) -> int:
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+) -> Tuple[int, Dict[str, Any]]:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
     one of "compare_config", "apply_config" or "get_config".
@@ -107,7 +107,7 @@ def run_driver_method_on_hosts(
         password (str): override host password.
 
     Returns:
-        int: 0 if successful 1 if had errors.
+        Tuple(int, Dict[str, Any]): total errors and dict with host.id and outputs.
     """
     host_outputs = {}
     errors = 0
@@ -168,24 +168,4 @@ def run_driver_method_on_hosts(
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished {description} ({dur}s)")
 
-    # Write files
-    if method_name in ["compare_config", "apply_config"]:
-        total_files = write_configs_to_dir(
-            configs=host_outputs,
-            output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
-            extension="diff." + settings.configs_file_extension,
-        )
-        print(f"{total_files} config diffs created.")
-    elif method_name == "get_config":
-        total_files = write_configs_to_dir(
-            configs=host_outputs,
-            output_dir=f"{settings.kit_path}/{settings.active_configs_dir}",
-            extension=settings.configs_file_extension,
-        )
-        print(f"{total_files} configs created.")
-
-    if errors > 0:
-        print(f"Error: {errors} errors encountered.")
-        return 1
-
-    return 0
+    return (errors, host_outputs)

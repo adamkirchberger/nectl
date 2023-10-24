@@ -20,9 +20,9 @@ import json
 import click
 from tabulate import tabulate
 
+from .. import Nectl
 from ..logging import logging_opts
 from ..exceptions import DiscoveryError
-from .hosts import get_filtered_hosts
 from .facts_utils import facts_to_json_string
 
 
@@ -62,8 +62,7 @@ def list_hosts_cmd(
     Use this command to list hosts discovered in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(
-            settings=ctx.obj["settings"],
+        hosts = Nectl(settings=ctx.obj["settings"]).get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
@@ -108,8 +107,7 @@ def get_facts_cmd(
     Use this command to get facts for hosts defined in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(
-            settings=ctx.obj["settings"],
+        hosts = Nectl(settings=ctx.obj["settings"]).get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
