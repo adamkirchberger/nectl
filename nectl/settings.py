@@ -108,7 +108,7 @@ def get_settings() -> Settings:
     return load_settings()
 
 
-def load_settings(filepath: str = KIT_FILEPATH) -> Settings:
+def load_settings(filepath: Optional[str] = KIT_FILEPATH) -> Settings:
     """
     Load kit settings file.
 

@@ -16,7 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from typing import List, Type, Dict, Optional, Any
+from typing import List, Tuple, Type, Dict, Optional, Any, Literal
 
 from ...logging import get_logger
 from ...settings import Settings
@@ -89,11 +89,12 @@ def get_driver(settings: Settings, os_name: str) -> Type[BaseDriver]:
 def run_driver_method_on_hosts(
     settings: Settings,
     hosts: List[Host],
-    method_name: str,
+    method_name: Literal["compare_config", "apply_config", "get_config"],
     description: str,
-    username: str = None,
-    password: str = None,
-) -> int:
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+    ssh_private_key_file: Optional[str] = None,
+) -> Tuple[int, Dict[str, Any]]:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
     one of "compare_config", "apply_config" or "get_config".
@@ -105,9 +106,10 @@ def run_driver_method_on_hosts(
         description (str): action description used in log outputs.
         username (str): override host username.
         password (str): override host password.
+        ssh_private_key_file (str): override ssh private key file.
 
     Returns:
-        int: 0 if successful 1 if had errors.
+        Tuple(int, Dict[str, Any]): total errors and dict with host.id and outputs.
     """
     host_outputs = {}
     errors = 0
@@ -129,6 +131,7 @@ def run_driver_method_on_hosts(
                 host=host,
                 username=username if username else host.username,
                 password=password if password else host.password,
+                ssh_private_key_file=ssh_private_key_file,
             )
         except (DriverNotFoundError, DriverError) as e:
             logger.error(f"[{host.id}] {e}")
@@ -168,24 +171,4 @@ def run_driver_method_on_hosts(
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished {description} ({dur}s)")
 
-    # Write files
-    if method_name in ["compare_config", "apply_config"]:
-        total_files = write_configs_to_dir(
-            configs=host_outputs,
-            output_dir=f"{settings.kit_path}/{settings.config_diffs_dir}",
-            extension="diff." + settings.configs_file_extension,
-        )
-        print(f"{total_files} config diffs created.")
-    elif method_name == "get_config":
-        total_files = write_configs_to_dir(
-            configs=host_outputs,
-            output_dir=f"{settings.kit_path}/{settings.active_configs_dir}",
-            extension=settings.configs_file_extension,
-        )
-        print(f"{total_files} configs created.")
-
-    if errors > 0:
-        print(f"Error: {errors} errors encountered.")
-        return 1
-
-    return 0
+    return (errors, host_outputs)

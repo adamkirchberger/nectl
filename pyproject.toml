@@ -16,7 +16,7 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 click = "8.0.4"
 coloredlogs = "^15.0.1"
 pydantic = "^1.8.2"

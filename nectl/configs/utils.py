@@ -56,6 +56,7 @@ def write_configs_to_dir(
 
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
+    logger.info(f"writing config files to: {output_dir}")
 
     # Loop through each host config
     for host, conf in configs.items():
