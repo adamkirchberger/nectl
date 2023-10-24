@@ -2,6 +2,13 @@
 
 
 
+## v0.17.1 (2023-10-24)
+
+### Fix
+
+* fix: configs get command not fetching backups (#24) ([`eee07fc`](https://github.com/adamkirchberger/nectl/commit/eee07fc8c80474fd8bc0d4a75e4f6d65013835d6))
+
+
 ## v0.17.0 (2023-10-24)
 
 ### Feature
