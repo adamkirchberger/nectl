@@ -93,6 +93,7 @@ def run_driver_method_on_hosts(
     description: str,
     username: Optional[str] = None,
     password: Optional[str] = None,
+    ssh_private_key_file: Optional[str] = None,
 ) -> Tuple[int, Dict[str, Any]]:
     """
     Runs specified driver method on all supplied hosts. Driver method should be
@@ -105,6 +106,7 @@ def run_driver_method_on_hosts(
         description (str): action description used in log outputs.
         username (str): override host username.
         password (str): override host password.
+        ssh_private_key_file (str): override ssh private key file.
 
     Returns:
         Tuple(int, Dict[str, Any]): total errors and dict with host.id and outputs.
@@ -129,6 +131,7 @@ def run_driver_method_on_hosts(
                 host=host,
                 username=username if username else host.username,
                 password=password if password else host.password,
+                ssh_private_key_file=ssh_private_key_file,
             )
         except (DriverNotFoundError, DriverError) as e:
             logger.error(f"[{host.id}] {e}")

@@ -76,6 +76,7 @@ def render_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.pass_context
 @logging_opts
 def diff_cmd(
@@ -87,6 +88,7 @@ def diff_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
 ):
     """
     Use this command to compare staged and active configurations on hosts.
@@ -104,8 +106,7 @@ def diff_cmd(
             hosts=hosts,
             username=username,
             password=password,
-        )
-    )
+            ssh_private_key_file=ssh_key,
         )
     except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
@@ -122,6 +123,7 @@ def diff_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.option(
     "-y",
     "--assumeyes",
@@ -139,6 +141,7 @@ def apply_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
     assumeyes: bool = False,
 ):
     """
@@ -167,8 +170,7 @@ def apply_cmd(
             hosts=hosts,
             username=username,
             password=password,
-        )
-    )
+            ssh_private_key_file=ssh_key,
         )
     except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
@@ -185,6 +187,7 @@ def apply_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.pass_context
 @logging_opts
 def get_cmd(
@@ -196,6 +199,7 @@ def get_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
 ):
     """
     Use this command to get active configurations from hosts.
@@ -213,8 +217,7 @@ def get_cmd(
             hosts=hosts,
             username=username,
             password=password,
-        )
-    )
+            ssh_private_key_file=ssh_key,
         )
     except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
