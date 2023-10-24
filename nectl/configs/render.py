@@ -19,7 +19,7 @@
 Render functions used to convert templates and facts into configs.
 """
 import time
-from typing import Sequence, Dict, Any
+from typing import List, Dict, Any
 import inspect
 from contextlib import redirect_stdout
 from contextvars import ContextVar
@@ -50,7 +50,7 @@ def get_render_context() -> dict:
     return _render_context.get()
 
 
-def render_hosts(settings: Settings, hosts: Sequence[Host]) -> Dict[str, Any]:
+def render_hosts(settings: Settings, hosts: List[Host]) -> Dict[str, str]:
     """
     Returns rendered configs for hosts using templates which are matched based
     on the 'os_name' value.
@@ -60,7 +60,7 @@ def render_hosts(settings: Settings, hosts: Sequence[Host]) -> Dict[str, Any]:
         hosts (List[Host]): hosts to render templates for.
 
     Returns:
-        Dict[str,Any]: dict with item per host with rendered template.
+        Dict[str,str]: dict with item per host with rendered template.
 
     Raises:
         RenderError: if there are issues with templates.

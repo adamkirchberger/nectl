@@ -16,7 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
-from typing import List, Type, Dict, Optional, Any
+from typing import List, Tuple, Type, Dict, Optional, Any, Literal
 
 from ...logging import get_logger
 from ...settings import Settings
