@@ -2,6 +2,15 @@
 
 
 
+## v0.18.0 (2023-10-30)
+
+### Feature
+
+* feat: discovered hosts returned as dict (#25)
+
+* feat: discovered hosts returned as dict ([`62ef067`](https://github.com/adamkirchberger/nectl/commit/62ef067ae25f23a41a34eb0556572dcd8caed6b3))
+
+
 ## v0.17.1 (2023-10-24)
 
 ### Fix
