@@ -2,6 +2,13 @@
 
 
 
+## v0.18.2 (2023-10-30)
+
+### Fix
+
+* fix: use pydantic v1 settings when v2 installed (#26) ([`7c16bc1`](https://github.com/adamkirchberger/nectl/commit/7c16bc125d8dbe121b4407d763dee1080fdebd69))
+
+
 ## v0.18.1 (2023-10-30)
 
 ### Fix
