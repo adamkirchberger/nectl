@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from .logging import get_logger
 from .settings import load_settings, Settings
@@ -38,7 +38,6 @@ class Nectl:
         """
         self.settings = settings if settings else load_settings(filepath=kit_filepath)
 
-    # TODO: return dict of hosts instead
     def get_hosts(
         self,
         hostname: Optional[str] = None,
@@ -46,7 +45,7 @@ class Nectl:
         site: Optional[str] = None,
         role: Optional[str] = None,
         deployment_group: Optional[str] = None,
-    ) -> List[Host]:
+    ) -> Dict[str, Host]:
         """
         Get hosts from datatree that match supplied filter parameters.
 
@@ -56,6 +55,9 @@ class Nectl:
             site (str): optional site to filter by.
             role (str): optional role to filter by.
             deployment_group (str): optional deployment_group to filter by.
+
+        Returns:
+            Dict[str, Host]: discovered host instances mapped by host ID.
 
         Raises:
             DiscoveryError: when an error has been encountered during data tree discovery.

@@ -60,7 +60,7 @@ def render_cmd(
             role=role,
             deployment_group=deployment_group,
         )
-        nectl.render_configs(hosts=hosts)
+        nectl.render_configs(hosts=hosts.values())
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
@@ -103,7 +103,7 @@ def diff_cmd(
             deployment_group=deployment_group,
         )
         nectl.diff_configs(
-            hosts=hosts,
+            hosts=hosts.values(),
             username=username,
             password=password,
             ssh_private_key_file=ssh_key,
@@ -158,7 +158,7 @@ def apply_cmd(
         )
 
         print("Applying config to:")
-        print("\n".join([f"- {host.id}" for host in hosts]))
+        print("\n".join([f"- {host}" for host in hosts.keys()]))
 
         if not assumeyes:
             click.confirm(
@@ -167,7 +167,7 @@ def apply_cmd(
             )
 
         nectl.apply_configs(
-            hosts=hosts,
+            hosts=hosts.values(),
             username=username,
             password=password,
             ssh_private_key_file=ssh_key,
@@ -214,7 +214,7 @@ def get_cmd(
             deployment_group=deployment_group,
         )
         nectl.get_configs(
-            hosts=hosts,
+            hosts=hosts.values(),
             username=username,
             password=password,
             ssh_private_key_file=ssh_key,

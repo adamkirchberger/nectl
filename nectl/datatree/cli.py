@@ -74,11 +74,13 @@ def list_hosts_cmd(
         sys.exit(1)
 
     if output == "json":
-        print(json.dumps({h.id: h.dict() for h in hosts}, indent=4, default=str))
+        print(
+            json.dumps({h.id: h.dict() for h in hosts.values()}, indent=4, default=str)
+        )
     else:
         print(
             tabulate(
-                [h.dict() for h in hosts],
+                [h.dict() for h in hosts.values()],
                 headers="keys",
                 tablefmt="psql",
             )
@@ -118,7 +120,7 @@ def get_facts_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
-    host_facts = {host.id: host.facts for host in hosts}
+    host_facts = {host.id: host.facts for host in hosts.values()}
 
     if not check:
         print(facts_to_json_string(host_facts))
