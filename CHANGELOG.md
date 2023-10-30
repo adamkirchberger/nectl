@@ -2,6 +2,27 @@
 
 
 
+## v0.18.1 (2023-10-30)
+
+### Fix
+
+* fix(deps): bump cryptography from 41.0.3 to 41.0.4 (#20)
+
+Bumps [cryptography](https://github.com/pyca/cryptography) from 41.0.3 to 41.0.4.
+- [Changelog](https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst)
+- [Commits](https://github.com/pyca/cryptography/compare/41.0.3...41.0.4)
+
+---
+updated-dependencies:
+- dependency-name: cryptography
+  dependency-type: indirect
+...
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: Adam Kirchberger &lt;24639394+adamkirchberger@users.noreply.github.com&gt; ([`8c6d0b6`](https://github.com/adamkirchberger/nectl/commit/8c6d0b6231bfaf19a41807627c1e0537a2d540ab))
+
+
 ## v0.18.0 (2023-10-30)
 
 ### Feature
