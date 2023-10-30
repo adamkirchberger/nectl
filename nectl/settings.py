@@ -19,7 +19,11 @@ import os
 import sys
 from typing import List, Optional
 from importlib import import_module
-from pydantic import BaseSettings, ValidationError
+
+try:
+    from pydantic import BaseSettings, ValidationError
+except:
+    from pydantic.v1 import BaseSettings, ValidationError
 
 from .exceptions import SettingsFileError
 
