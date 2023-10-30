@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nectl"
-version = "0.16.3"
+version = "0.18.0"
 description = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
 authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
 readme = "README.md"
@@ -16,7 +16,7 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 click = "8.0.4"
 coloredlogs = "^15.0.1"
 pydantic = "^1.8.2"

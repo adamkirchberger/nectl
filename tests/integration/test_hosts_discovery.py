@@ -30,9 +30,12 @@ def test_should_return_8_hosts_when_getting_all_hosts(mock_settings):
     # WHEN fetching all hosts
     hosts = get_all_hosts(settings=settings)
 
-    # THEN expect each host to be of Host type
-    for host in hosts:
+    for host_id, host in hosts.items():
+        # THEN expect each host to be of Host type
         assert isinstance(host, Host), host
+
+        # THEN expect host ID key
+        assert host_id == host.id
 
     # THEN expect to have 8 hosts
     assert len(hosts) == 8
@@ -99,7 +102,7 @@ def test_should_return_no_customer_when_when_getting_all_hosts_and_no_customer_r
     settings.hosts_customer_regex = None
 
     # WHEN fetching all hosts
-    hosts = get_all_hosts(settings=settings)
+    hosts = list(get_all_hosts(settings=settings).values())
 
     # THEN expect site to be set
     assert hosts[0].site is not None
@@ -119,7 +122,7 @@ def test_should_return_no_customer_and_site_when_when_getting_all_hosts_and_no_c
     settings.hosts_site_regex = None
 
     # WHEN fetching all hosts
-    hosts = get_all_hosts(settings=settings)
+    hosts = list(get_all_hosts(settings=settings).values())
 
     # THEN expect customer to be none
     assert hosts[0].customer is None
@@ -128,7 +131,7 @@ def test_should_return_no_customer_and_site_when_when_getting_all_hosts_and_no_c
     assert hosts[0].customer is None
 
 
-def test_should_return_empty_list_when_getting_filtered_hosts_that_dont_exist(
+def test_should_return_empty_dict_when_getting_filtered_hosts_that_dont_exist(
     mock_settings,
 ):
     # GIVEN settings using mock kit
@@ -143,8 +146,8 @@ def test_should_return_empty_list_when_getting_filtered_hosts_that_dont_exist(
     # WHEN fetching hosts and using filters
     hosts = get_filtered_hosts(settings=settings, site=site, customer=customer)
 
-    # THEN expect result to be empty list
-    assert hosts == []
+    # THEN expect result to be empty dict
+    assert hosts == {}
 
 
 def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_customer(
@@ -165,9 +168,12 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_customer(
     # THEN expect to have 2 hosts
     assert len(hosts) == 2
 
-    for host in hosts:
+    for host_id, host in hosts.items():
         # THEN expect each result to be of Host type
         assert isinstance(host, Host), host
+
+        # THEN expect host ID key
+        assert host_id == host.id
 
         # THEN expect host customer
         assert host.customer == customer
@@ -194,9 +200,12 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_site_and_role(
     # THEN expect to have 2 hosts
     assert len(hosts) == 2
 
-    for host in hosts:
+    for host_id, host in hosts.items():
         # THEN expect each result to be of Host type
         assert isinstance(host, Host), host
+
+        # THEN expect host ID key
+        assert host_id == host.id
 
         # THEN expect host role
         assert host.role == role
@@ -225,9 +234,12 @@ def test_should_return_2_hosts_when_getting_filtered_hosts_by_customer_and_deplo
     # THEN expect to have 2 hosts
     assert len(hosts) == 2
 
-    for host in hosts:
+    for host_id, host in hosts.items():
         # THEN expect each result to be of Host type
         assert isinstance(host, Host), host
+
+        # THEN expect host ID key
+        assert host_id == host.id
 
         # THEN expect host customer
         assert host.customer == customer
@@ -252,8 +264,10 @@ def test_should_return_host_properties_when_getting_filtered_hosts_by_site_and_c
     hostname = "core0"
 
     # WHEN fetching hosts and using filters
-    hosts = get_filtered_hosts(
-        settings=settings, site=site, customer=customer, hostname=hostname
+    hosts = list(
+        get_filtered_hosts(
+            settings=settings, site=site, customer=customer, hostname=hostname
+        ).values()
     )
 
     # THEN expect one host
@@ -299,7 +313,7 @@ def test_should_return_hosts_when_getting_all_hosts_that_are_not_directories(tmp
     )
 
     # WHEN fetching all hosts
-    hosts = get_all_hosts(settings=settings)
+    hosts = list(get_all_hosts(settings=settings).values())
 
     # THEN expect total hosts
     assert len(hosts) == 1

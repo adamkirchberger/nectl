@@ -18,15 +18,13 @@
 import sys
 import click
 
+from .. import Nectl
 from ..logging import logging_opts, get_logger
 from ..exceptions import (
     DiscoveryError,
     RenderError,
+    DriverError,
 )
-from ..datatree.hosts import get_filtered_hosts
-from .render import render_hosts
-from .utils import write_configs_to_dir
-from .drivers import run_driver_method_on_hosts
 
 logger = get_logger()
 
@@ -53,31 +51,21 @@ def render_cmd(
     """
     Use this command to render configurations for hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-        renders = render_hosts(settings=settings, hosts=hosts)
+        nectl.render_configs(hosts=hosts.values())
     except (DiscoveryError, RenderError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    output_dir = f"{settings.kit_path}/{settings.staged_configs_dir}"
-
-    write_configs_to_dir(
-        configs=renders,
-        output_dir=output_dir,
-        extension=settings.configs_file_extension,
-    )
-
-    print(f"{len(renders)} configs created.")
+    print(f"{len(hosts)} configs created.")
 
 
 @configs.command(name="diff", help="Compare active configs to rendered configs.")
@@ -88,6 +76,7 @@ def render_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.pass_context
 @logging_opts
 def diff_cmd(
@@ -99,35 +88,31 @@ def diff_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
 ):
     """
     Use this command to compare staged and active configurations on hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
+        nectl.diff_configs(
+            hosts=hosts.values(),
+            username=username,
+            password=password,
+            ssh_private_key_file=ssh_key,
+        )
+    except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
-            hosts=hosts,
-            method_name="compare_config",
-            description="comparing host configurations",
-            username=username,
-            password=password,
-        )
-    )
+    print(f"{len(hosts)} config diffs created.")
 
 
 @configs.command(name="apply", help="Apply staged config onto host.")
@@ -138,6 +123,7 @@ def diff_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.option(
     "-y",
     "--assumeyes",
@@ -155,44 +141,42 @@ def apply_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
     assumeyes: bool = False,
 ):
     """
     Use this command to apply staged configurations onto hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
+
+        print("Applying config to:")
+        print("\n".join([f"- {host}" for host in hosts.keys()]))
+
+        if not assumeyes:
+            click.confirm(
+                f"\nAre you sure you want to modify {len(hosts)} live hosts?",
+                abort=True,
+            )
+
+        nectl.apply_configs(
+            hosts=hosts.values(),
+            username=username,
+            password=password,
+            ssh_private_key_file=ssh_key,
+        )
+    except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    print("Applying config to:")
-    print("\n".join([f"- {host.id}" for host in hosts]))
-
-    if not assumeyes:
-        click.confirm(
-            f"\nAre you sure you want to modify {len(hosts)} live hosts?", abort=True
-        )
-
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
-            hosts=hosts,
-            method_name="apply_config",
-            description="applying host configurations",
-            username=username,
-            password=password,
-        )
-    )
+    print(f"{len(hosts)} config diffs created.")
 
 
 @configs.command(name="get", help="Get active config from hosts.")
@@ -203,6 +187,7 @@ def apply_cmd(
 @click.option("-d", "--deployment-group", help="Filter by deployment group.")
 @click.option("-u", "--username", help="Host driver username.")
 @click.option("-p", "--password", help="Host driver password.")
+@click.option("-i", "--ssh-key", help="Host driver SSH private key file.")
 @click.pass_context
 @logging_opts
 def get_cmd(
@@ -214,32 +199,28 @@ def get_cmd(
     deployment_group: str,
     username: str,
     password: str,
+    ssh_key: str,
 ):
     """
     Use this command to get active configurations from hosts.
     """
-    settings = ctx.obj["settings"]
-
     try:
-        hosts = get_filtered_hosts(
-            settings=settings,
+        nectl = Nectl(settings=ctx.obj["settings"])
+        hosts = nectl.get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
             role=role,
             deployment_group=deployment_group,
         )
-    except (DiscoveryError, RenderError) as e:
+        nectl.get_configs(
+            hosts=hosts.values(),
+            username=username,
+            password=password,
+            ssh_private_key_file=ssh_key,
+        )
+    except (DiscoveryError, DriverError) as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-    sys.exit(
-        run_driver_method_on_hosts(
-            settings=settings,
-            hosts=hosts,
-            method_name="get_config",
-            description="getting host configurations",
-            username=username,
-            password=password,
-        )
-    )
+    print(f"{len(hosts)} config backups created.")

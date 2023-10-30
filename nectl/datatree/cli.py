@@ -20,9 +20,9 @@ import json
 import click
 from tabulate import tabulate
 
+from .. import Nectl
 from ..logging import logging_opts
 from ..exceptions import DiscoveryError
-from .hosts import get_filtered_hosts
 from .facts_utils import facts_to_json_string
 
 
@@ -62,8 +62,7 @@ def list_hosts_cmd(
     Use this command to list hosts discovered in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(
-            settings=ctx.obj["settings"],
+        hosts = Nectl(settings=ctx.obj["settings"]).get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
@@ -75,11 +74,13 @@ def list_hosts_cmd(
         sys.exit(1)
 
     if output == "json":
-        print(json.dumps({h.id: h.dict() for h in hosts}, indent=4, default=str))
+        print(
+            json.dumps({h.id: h.dict() for h in hosts.values()}, indent=4, default=str)
+        )
     else:
         print(
             tabulate(
-                [h.dict() for h in hosts],
+                [h.dict() for h in hosts.values()],
                 headers="keys",
                 tablefmt="psql",
             )
@@ -108,8 +109,7 @@ def get_facts_cmd(
     Use this command to get facts for hosts defined in the datatree.
     """
     try:
-        hosts = get_filtered_hosts(
-            settings=ctx.obj["settings"],
+        hosts = Nectl(settings=ctx.obj["settings"]).get_hosts(
             hostname=hostname,
             customer=customer,
             site=site,
@@ -120,7 +120,7 @@ def get_facts_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
-    host_facts = {host.id: host.facts for host in hosts}
+    host_facts = {host.id: host.facts for host in hosts.values()}
 
     if not check:
         print(facts_to_json_string(host_facts))

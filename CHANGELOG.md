@@ -2,6 +2,39 @@
 
 
 
+## v0.18.0 (2023-10-30)
+
+### Feature
+
+* feat: discovered hosts returned as dict (#25)
+
+* feat: discovered hosts returned as dict ([`62ef067`](https://github.com/adamkirchberger/nectl/commit/62ef067ae25f23a41a34eb0556572dcd8caed6b3))
+
+
+## v0.17.1 (2023-10-24)
+
+### Fix
+
+* fix: configs get command not fetching backups (#24) ([`eee07fc`](https://github.com/adamkirchberger/nectl/commit/eee07fc8c80474fd8bc0d4a75e4f6d65013835d6))
+
+
+## v0.17.0 (2023-10-24)
+
+### Feature
+
+* feat: add external api and ssh key argument (#23)
+
+* feat: add nectl api to allow integration into other tools
+
+* fix: add ssh private key argument
+
+* refactor: types and docstrings
+
+* chore: remove eol python3.7 and update lock deps
+
+* fix: dpath and pydantic new version changes ([`1107ac4`](https://github.com/adamkirchberger/nectl/commit/1107ac4caf5e76fc584490da7943179ccaf05d4f))
+
+
 ## v0.16.3 (2023-08-26)
 
 ### Chore
