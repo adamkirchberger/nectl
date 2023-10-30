@@ -165,7 +165,7 @@ def get_filtered_hosts(
     site: str = None,
     role: str = None,
     deployment_group: str = None,
-) -> List[Host]:
+) -> Dict[str, Host]:
     """
     Returns a list of filtered hosts
 
@@ -178,7 +178,7 @@ def get_filtered_hosts(
         deployment_group (str): filter by deployment group.
 
     Returns:
-        List[Host]: list of discovered hosts.
+        Dict[str, Host]: discovered host instances mapped by host ID.
 
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
@@ -205,18 +205,18 @@ def get_filtered_hosts(
                     return False
         return True
 
-    hosts = []
+    hosts = {}
 
     # Loop hosts
-    for host in get_all_hosts(settings=settings):
+    for host in get_all_hosts(settings=settings).values():
         # Check for match against filters
         if is_match(host):
             # Add host
-            hosts.append(host)
+            hosts[host.id] = host
 
     logger.info(
         f"filter matched {len(hosts)} hosts: "
-        f"{','.join([host.id for host in hosts])}"
+        f"{','.join([host for host in hosts.keys()])}"
     )
 
     if len(hosts) == 0:
@@ -251,7 +251,7 @@ def _get_host_datatree_path_vars(host_path: str, datatree_dirname: str) -> dict:
     ]
 
     # Extract host module import path
-    m = re.match(re.compile(fr".*({datatree_dirname}\/.*?)(\.py)?$"), host_path)
+    m = re.match(re.compile(rf".*({datatree_dirname}\/.*?)(\.py)?$"), host_path)
     if m:
         try:
             # Import host module
@@ -269,7 +269,7 @@ def _get_host_datatree_path_vars(host_path: str, datatree_dirname: str) -> dict:
     return {}
 
 
-def get_all_hosts(settings: Settings) -> List[Host]:
+def get_all_hosts(settings: Settings) -> Dict[str, Host]:
     """
     Returns list of all discovered hosts from datatree.
 
@@ -277,12 +277,12 @@ def get_all_hosts(settings: Settings) -> List[Host]:
         settings (Settings): config settings.
 
     Returns:
-        List[Host]: list of discovered hosts.
+        Dict[str, Host]: discovered host instances mapped by host ID.
 
     Raises:
         DiscoveryError: if hosts cannot be successfully discovered.
     """
-    hosts: List[Host] = []
+    hosts: Dict[str, Host] = {}
     hostname: str = ""
     site: Optional[str] = None
     customer: Optional[str] = None
@@ -359,7 +359,7 @@ def get_all_hosts(settings: Settings) -> List[Host]:
             **host_vars,
         )
         logger.debug(f"found host '{new_host.id}' in: {host_dir}")
-        hosts.append(new_host)
+        hosts[new_host.id] = new_host
 
     dur = f"{time.perf_counter()-ts_start:0.4f}"
     logger.info(f"finished discovery of {len(hosts)} hosts ({dur}s)")
