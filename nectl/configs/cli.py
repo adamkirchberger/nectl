@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 import click
 
@@ -102,7 +103,7 @@ def diff_cmd(
             role=role,
             deployment_group=deployment_group,
         )
-        nectl.diff_configs(
+        diff_dir = nectl.diff_configs(
             hosts=hosts.values(),
             username=username,
             password=password,
@@ -112,7 +113,7 @@ def diff_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
-    print(f"{len(hosts)} config diffs created.")
+    print(f"{len(next(os.walk(diff_dir))[2])} config diffs created.")
 
 
 @configs.command(name="apply", help="Apply staged config onto host.")
@@ -166,7 +167,7 @@ def apply_cmd(
                 abort=True,
             )
 
-        nectl.apply_configs(
+        diff_dir = nectl.apply_configs(
             hosts=hosts.values(),
             username=username,
             password=password,
@@ -176,7 +177,7 @@ def apply_cmd(
         print(f"Error: {e}")
         sys.exit(1)
 
-    print(f"{len(hosts)} config diffs created.")
+    print(f"{len(next(os.walk(diff_dir))[2])} config diffs created.")
 
 
 @configs.command(name="get", help="Get active config from hosts.")

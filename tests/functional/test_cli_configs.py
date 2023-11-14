@@ -80,10 +80,13 @@ def test_should_run_get_when_running_cli_configs_get_command(
 
 @patch("nectl.configs.cli.Nectl")
 def test_should_run_diff_when_running_cli_configs_diff_command(
-    mock_nectl, cli_runner, mock_settings
+    mock_nectl, cli_runner, mock_settings, tmp_path
 ):
     # GIVEN mock settings
     settings = mock_settings
+
+    # GIVEN diff method returns diff path with no files
+    mock_nectl.return_value.diff_configs.return_value = tmp_path
 
     # GIVEN args
     args = ["configs", "diff"]
@@ -97,13 +100,23 @@ def test_should_run_diff_when_running_cli_configs_diff_command(
     # THEN expect to be successful
     assert result.exit_code == 0
 
+    # THEN expect output to mention 0 diff was created
+    assert "0 config diffs created." in result.output
+
 
 @patch("nectl.configs.cli.Nectl")
 def test_should_run_apply_when_running_cli_configs_apply_command(
-    mock_nectl, cli_runner, mock_settings
+    mock_nectl, cli_runner, mock_settings, tmp_path
 ):
     # GIVEN mock settings
     settings = mock_settings
+
+    # GIVEN diff directory with diff file
+    diff_dir = tmp_path
+    (diff_dir / "foonode.txt").write_text("foobar\n")
+
+    # GIVEN apply method returns diff path
+    mock_nectl.return_value.apply_configs.return_value = diff_dir
 
     # GIVEN args
     args = ["configs", "apply", "-y"]
@@ -116,3 +129,6 @@ def test_should_run_apply_when_running_cli_configs_apply_command(
 
     # THEN expect to be successful
     assert result.exit_code == 0
+
+    # THEN expect output to mention 1 diff was created
+    assert "1 config diffs created." in result.output
