@@ -4,7 +4,6 @@ version = "0.18.2"
 description = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
 authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
 readme = "README.md"
-homepage = ""
 repository = "https://github.com/adamkirchberger/nectl"
 documentation = "https://nectl.netlify.app"
 keywords = [
