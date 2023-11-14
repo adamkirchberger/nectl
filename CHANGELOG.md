@@ -2,6 +2,17 @@
 
 
 
+## v0.18.3 (2023-11-14)
+
+### Fix
+
+* fix: cli total diff to count created diff files (#27)
+
+* fix: cli total diff to count created diff files
+
+* fix: remove blank homepage ([`af82f86`](https://github.com/adamkirchberger/nectl/commit/af82f866d624431c175e50463c62aca1b44c2e99))
+
+
 ## v0.18.2 (2023-10-30)
 
 ### Fix
