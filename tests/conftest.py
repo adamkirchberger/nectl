@@ -140,3 +140,57 @@ def mock_settings(mock_datatree) -> Settings:
     nectl.settings.load_settings = lambda: settings
 
     return settings
+
+
+@pytest.fixture(scope="function")
+def mock_checks_generator():
+    """
+    Returns function which can be used to generate checks using provided
+    config object that contains kit path.
+
+    Returns:
+        Callable: checks generating function.
+    """
+
+    def checks_generator(settings: Settings):
+        checks = pathlib.Path(settings.kit_path) / settings.checks_dirname
+        checks.mkdir()
+
+        # Create check file using functions
+        (checks / "check_one.py").write_text(
+            "# match all hosts\n"
+            "__hosts_filter__ = lambda host: host\n"
+            "\n"
+            "def check_os_version(host):\n"
+            "  assert host.os_version == '1.2.3'\n"
+        )
+
+        # Create check file using functions with filter
+        (checks / "check_two.py").write_text(
+            "# match newyork hosts\n"
+            "__hosts_filter__ = lambda host: host.site == 'newyork'\n"
+            "\n"
+            "def check_site(host):\n"
+            "    assert host.site == 'newyork'\n"
+        )
+
+        # Create check file using classes
+        (checks / "check_three.py").write_text(
+            "class CheckOsVersion:\n"
+            "    # match all hosts\n"
+            "    \n"
+            "    def check_os_version(self, host):\n"
+            "        assert host.os_version == '1.2.3'\n"
+        )
+
+        # Create check file using classes with filter
+        (checks / "check_four.py").write_text(
+            "class CheckLondon:\n"
+            "    # match london hosts\n"
+            "    __hosts_filter__ = lambda host: host.site == 'london'\n"
+            "    \n"
+            "    def check_site(self, host):\n"
+            "        assert host.site == 'london'\n"
+        )
+
+    return checks_generator

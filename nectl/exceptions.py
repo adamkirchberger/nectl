@@ -89,3 +89,9 @@ class DriverCommitDisconnectError(Exception):
     def __init__(self, *args: object, diff: Optional[str] = None) -> None:
         super().__init__(*args)
         self.diff = diff
+
+
+class ChecksError(Exception):
+    """
+    Indicates that an error has been encountered during checks execution.
+    """
