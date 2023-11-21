@@ -261,7 +261,8 @@ class Nectl:
             "-c=''",
             "-vv",
             "--tb=short",
-            "--disable-warnings",
+            "-p",
+            "no:warnings",
             f"-o=python_files={self.settings.checks_prefix}_*.py",
             f"-o=python_classes={self.settings.checks_prefix.capitalize()}",
             f"-o=python_functions={self.settings.checks_prefix}_*",
@@ -328,7 +329,8 @@ class Nectl:
 
         pytest_args = [
             "-c=''",
-            "--disable-warnings",
+            "-p",
+            "no:warnings",
             "--collect-only",
             f"-o=python_files={self.settings.checks_prefix}_*.py",
             f"-o=python_classes={self.settings.checks_prefix.capitalize()}",
