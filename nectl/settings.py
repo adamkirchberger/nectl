@@ -66,6 +66,9 @@ class Settings(BaseSettings):
     # Templates default directory name
     templates_dirname: str = "templates"
 
+    # Checks default directory name
+    checks_dirname: str = "checks"
+
     # Custom drivers directory name
     # Note that these will override library drivers if same name is used
     drivers_dirname: str = "drivers"
@@ -93,6 +96,13 @@ class Settings(BaseSettings):
 
     # Defines a default driver if one is not found. Test and use at own risk!
     default_driver: str = ""
+
+    # Check files/functions/classes must start with this value.
+    # Classes use capitalized() value.
+    checks_prefix: str = "check"
+
+    # Default filename used for checks junit xml report.
+    checks_report_filename: str = "nectl_checks.xml"
 
     @property
     def datatree_path(self) -> str:

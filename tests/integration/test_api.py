@@ -16,6 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
+import pathlib
 from unittest.mock import patch, ANY
 
 from nectl import Nectl
@@ -247,3 +248,75 @@ def test_should_raise_error_and_create_file_when_running_nectl_apply_with_driver
             encoding="utf-8",
         ) as fh:
             assert fh.read() == "foodiff\n"
+
+
+def test_should_return_checks_when_running_nectl_list_checks(
+    mock_settings, mock_checks_generator
+):
+    # GIVEN mock settings
+    settings = mock_settings
+
+    # GIVEN checks exist in kit directory
+    mock_checks_generator(settings)
+
+    # GIVEN host
+    host = Host(
+        hostname="core0",
+        site="london",
+        customer="acme",
+        mgmt_ip="10.0.0.1",
+        os_name="fakeos",
+        _facts={},
+        _settings=None,
+    )
+
+    # WHEN listing checks
+    checks = Nectl(settings=mock_settings).list_checks(hosts=[host])
+
+    # THEN expect result to be list
+    assert isinstance(checks, list)
+
+    # THEN expect total checks
+    assert len(checks) == 3
+
+    # THEN expect checks
+    assert checks == [
+        "check_four.py::CheckLondon::check_site[core0.london.acme]",
+        "check_one.py::check_os_version[core0.london.acme]",
+        "check_three.py::CheckOsVersion::check_os_version[core0.london.acme]",
+    ]
+
+
+# @patch("nectl.nectl.run_driver_method_on_hosts")
+def test_should_return_check_results_when_running_nectl_run_checks(
+    mock_settings, mock_checks_generator
+):
+    # GIVEN mock settings
+    settings = mock_settings
+
+    # GIVEN checks exist in kit directory
+    mock_checks_generator(settings)
+
+    # GIVEN host
+    host = Host(
+        hostname="core0",
+        site="london",
+        customer="acme",
+        mgmt_ip="10.0.0.1",
+        os_name="fakeos",
+        _facts={},
+        _settings=None,
+    )
+
+    # WHEN running checks
+    result = Nectl(settings=mock_settings).run_checks(hosts=[host])
+
+    # THEN expect result to be dict
+    assert isinstance(result, dict)
+
+    # THEN expect result
+    assert result == {
+        "passed": 1,
+        "failed": 2,
+        "report": f"{settings.kit_path}/{settings.checks_report_filename}",
+    }

@@ -15,16 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import time
 from typing import Optional, List, Dict
+import pytest
 
 from .logging import get_logger
 from .settings import load_settings, Settings
-from .exceptions import DriverError
+from .exceptions import DriverError, ChecksError
 from .datatree.hosts import Host
 from .datatree.hosts import get_filtered_hosts
 from .configs.render import render_hosts
 from .configs.utils import write_configs_to_dir
 from .configs.drivers import run_driver_method_on_hosts
+from .checks.plugins import ChecksPlugin
 
 logger = get_logger()
 
@@ -224,3 +228,140 @@ class Nectl:
             raise DriverError(f"{total_errors} errors encountered, see logs above.")
 
         return output_dir
+
+    def run_checks(
+        self,
+        hosts: List[Host],
+        pytest_expression: str = "",
+    ) -> dict:
+        """
+        Run checks on hosts.
+
+        Args:
+            hosts (List[Hosts]): hosts to generate diff for.
+            pytest_expression (str): optional pytest match expression.
+
+        Returns:
+            dict: {"passed": int, "failed": int, "report": str}
+
+        Raises:
+            ChecksError: when an error has been encountered during pytest run.
+        """
+        ts_start = time.perf_counter()
+        logger.debug("starting checks run")
+
+        # Register plugin with hosts
+        checks_plugin = ChecksPlugin(hosts=hosts)
+
+        report_filepath = os.path.join(
+            self.settings.kit_path, self.settings.checks_report_filename
+        )
+
+        pytest_args = [
+            "-c=''",
+            "-vv",
+            "--tb=short",
+            "--disable-warnings",
+            f"-o=python_files={self.settings.checks_prefix}_*.py",
+            f"-o=python_classes={self.settings.checks_prefix.capitalize()}",
+            f"-o=python_functions={self.settings.checks_prefix}_*",
+            f"--junitxml={report_filepath}",
+        ]
+
+        if pytest_expression:
+            pytest_args.extend(
+                [
+                    "-k",
+                    pytest_expression,
+                ]
+            )
+
+        # Run pytest using checks plugin
+        rc = pytest.main(
+            (
+                pytest_args
+                + [os.path.join(self.settings.kit_path, self.settings.checks_dirname)]
+            ),
+            plugins=[checks_plugin],
+        )
+
+        dur = f"{time.perf_counter()-ts_start:0.4f}"
+        logger.info(
+            "finished checks run "
+            f"pass={checks_plugin.passed} fail={checks_plugin.failed} rc={rc} ({dur}s)"
+        )
+
+        if rc not in [0, 1]:
+            raise ChecksError(
+                "pytest encountered an error, ensure check files are valid!"
+            )
+
+        return {
+            "passed": checks_plugin.passed,
+            "failed": checks_plugin.failed,
+            "report": report_filepath,
+        }
+
+    def list_checks(
+        self,
+        hosts: List[Host],
+        pytest_expression: str = "",
+    ) -> List[str]:
+        """
+        List checks that will run on hosts.
+
+        Args:
+            hosts (List[Hosts]): hosts to generate diff for.
+            pytest_expression (str): optional pytest match expression.
+
+        Returns:
+            List[str]: list of check names that would run.
+
+        Raises:
+            ChecksError: when an error has been encountered during pytest run.
+        """
+        ts_start = time.perf_counter()
+        logger.debug("starting checks list")
+
+        # Register plugin with hosts
+        checks_plugin = ChecksPlugin(hosts=hosts)
+
+        pytest_args = [
+            "-c=''",
+            "--disable-warnings",
+            "--collect-only",
+            f"-o=python_files={self.settings.checks_prefix}_*.py",
+            f"-o=python_classes={self.settings.checks_prefix.capitalize()}",
+            f"-o=python_functions={self.settings.checks_prefix}_*",
+        ]
+
+        if pytest_expression:
+            pytest_args.extend(
+                [
+                    "-k",
+                    pytest_expression,
+                ]
+            )
+
+        # Run pytest using checks plugin
+        rc = pytest.main(
+            (
+                pytest_args
+                + [os.path.join(self.settings.kit_path, self.settings.checks_dirname)]
+            ),
+            plugins=[checks_plugin],
+        )
+
+        dur = f"{time.perf_counter()-ts_start:0.4f}"
+        logger.info(
+            "finished checks list "
+            f"selected={len(checks_plugin.tests_selected)} "
+            f"total={len(checks_plugin.tests)} rc={rc} ({dur}s)"
+        )
+
+        if rc not in [0, 1]:
+            raise ChecksError(
+                "pytest encountered an error, ensure check files are valid!"
+            )
+
+        return checks_plugin.tests_selected
