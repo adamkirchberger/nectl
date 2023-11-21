@@ -2,6 +2,31 @@
 
 
 
+## v0.19.0 (2023-11-21)
+
+### Feature
+
+* feat: add checks feature (#28)
+
+* fix: semantic release variable bumping
+
+* chore: update dependencies
+
+* feat: run validation checks on hosts using pytest
+
+* test: add test for api get hosts
+
+* fix: disable pytest warnings on checks
+
+* test: show test output when assert fails
+
+* fix: checks list order
+
+---------
+
+Co-authored-by: Adam Kirchberger &lt;adamkirchberger@users.noreply.github.com&gt; ([`3389c6c`](https://github.com/adamkirchberger/nectl/commit/3389c6c018e5348f91ea5bee863df03963fd057c))
+
+
 ## v0.18.3 (2023-11-14)
 
 ### Fix
