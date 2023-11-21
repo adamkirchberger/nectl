@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nectl"
-version = "0.19.0"
+version = "0.19.1"
 description = "An end-to-end Python-based Infrastructure as Code framework for network automation and orchestration."
 authors = ["Adam Kirchberger <adamkirchberger@users.noreply.github.com>"]
 readme = "README.md"

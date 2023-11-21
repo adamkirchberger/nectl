@@ -2,6 +2,33 @@
 
 
 
+## v0.19.1 (2023-11-21)
+
+### Fix
+
+* fix: broken release due to missing dependency (#29)
+
+* fix: semantic release variable bumping
+
+* chore: update dependencies
+
+* feat: run validation checks on hosts using pytest
+
+* test: add test for api get hosts
+
+* fix: disable pytest warnings on checks
+
+* test: show test output when assert fails
+
+* fix: checks list order
+
+* fix: broken release due to missing dependency
+
+---------
+
+Co-authored-by: Adam Kirchberger &lt;adamkirchberger@users.noreply.github.com&gt; ([`45f381f`](https://github.com/adamkirchberger/nectl/commit/45f381fdc2876134c4a7e61eba7cd0e4c046bb2d))
+
+
 ## v0.19.0 (2023-11-21)
 
 ### Feature
