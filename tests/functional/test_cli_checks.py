@@ -71,7 +71,7 @@ def test_should_return_checks_when_running_cli_checks_list_command(
   <Function check_site[core0.newyork.hooli]>
   <Function check_site[core1.newyork.hooli]>"""
         in result.output
-    )
+    ), result.output
 
 
 def test_should_return_checks_when_running_cli_checks_list_command_with_filter(
@@ -112,7 +112,7 @@ def test_should_return_checks_when_running_cli_checks_list_command_with_filter(
       <Function check_os_version[core0.london.hooli]>
       <Function check_os_version[core1.london.hooli]>"""
         in result.output
-    )
+    ), result.output
 
 
 def test_should_return_checks_when_running_cli_checks_list_command_with_expression(
@@ -148,7 +148,7 @@ def test_should_return_checks_when_running_cli_checks_list_command_with_expressi
       <Function check_os_version[core0.london.hooli]>
       <Function check_os_version[core1.london.hooli]>"""
         in result.output
-    )
+    ), result.output
 
 
 def test_should_return_error_when_running_cli_checks_list_command_with_invalid_checks(
