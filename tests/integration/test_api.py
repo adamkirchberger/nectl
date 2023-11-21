@@ -28,6 +28,55 @@ from nectl.exceptions import (
 )
 
 
+def test_should_return_hosts_when_running_nectl_get_hosts_method(mock_settings):
+    # GIVEN mock settings
+    mock_settings = mock_settings
+
+    # WHEN running get hosts method
+    hosts = Nectl(settings=mock_settings).get_hosts()
+
+    # THEN expect each result to be a dict
+    assert isinstance(hosts, dict)
+
+    # THEN expect host instances in results
+    for host in hosts.values():
+        assert isinstance(host, Host)
+
+    # THEN expect total hosts
+    assert len(hosts) == 8
+
+
+def test_should_return_hosts_when_running_nectl_get_hosts_method_with_filter(
+    mock_settings,
+):
+    # GIVEN mock settings
+    mock_settings = mock_settings
+
+    # GIVEN host has custom fact
+    (
+        pathlib.Path(mock_settings.kit_path)
+        / "datatree/customers/acme/sites/london/hosts/core0/fact.py"
+    ).write_text(f'custom_fact = "foobar"\n')
+
+    # WHEN running get hosts method with filter
+    hosts = Nectl(settings=mock_settings).get_hosts(
+        customer="acme", site="london", hostname="core0"
+    )
+
+    # THEN expect each result to be a dict
+    assert isinstance(hosts, dict)
+
+    # THEN expect one host
+    assert len(hosts) == 1
+    host = list(hosts.values())[0]
+
+    # THEN expect host instance
+    assert isinstance(host, Host)
+
+    # THEN expect custom fact to be set
+    assert host.custom_fact == "foobar"
+
+
 @patch("nectl.nectl.run_driver_method_on_hosts")
 def test_should_create_file_when_running_nectl_get_configs_method(
     mock_driver_method, mock_settings
