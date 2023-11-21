@@ -47,24 +47,24 @@ def test_should_return_checks_when_running_cli_checks_list_command(
       <Function check_site[core0.london.hooli]>
       <Function check_site[core1.london.hooli]>
 <Module check_one.py>
-  <Function check_os_version[core0.newyork.acme]>
-  <Function check_os_version[core1.newyork.acme]>
   <Function check_os_version[core0.london.acme]>
   <Function check_os_version[core1.london.acme]>
-  <Function check_os_version[core0.newyork.hooli]>
-  <Function check_os_version[core1.newyork.hooli]>
+  <Function check_os_version[core0.newyork.acme]>
+  <Function check_os_version[core1.newyork.acme]>
   <Function check_os_version[core0.london.hooli]>
   <Function check_os_version[core1.london.hooli]>
+  <Function check_os_version[core0.newyork.hooli]>
+  <Function check_os_version[core1.newyork.hooli]>
 <Module check_three.py>
   <Class CheckOsVersion>
-      <Function check_os_version[core0.newyork.acme]>
-      <Function check_os_version[core1.newyork.acme]>
       <Function check_os_version[core0.london.acme]>
       <Function check_os_version[core1.london.acme]>
-      <Function check_os_version[core0.newyork.hooli]>
-      <Function check_os_version[core1.newyork.hooli]>
+      <Function check_os_version[core0.newyork.acme]>
+      <Function check_os_version[core1.newyork.acme]>
       <Function check_os_version[core0.london.hooli]>
       <Function check_os_version[core1.london.hooli]>
+      <Function check_os_version[core0.newyork.hooli]>
+      <Function check_os_version[core1.newyork.hooli]>
 <Module check_two.py>
   <Function check_site[core0.newyork.acme]>
   <Function check_site[core1.newyork.acme]>
@@ -130,7 +130,6 @@ def test_should_return_checks_when_running_cli_checks_list_command_with_expressi
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)
 
-    print(result.output)
     # THEN expect to be successful
     assert result.exit_code == 0
 

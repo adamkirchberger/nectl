@@ -61,7 +61,11 @@ def list_cmd(
             deployment_group=deployment_group,
         )
         results = nectl.list_checks(
-            hosts=hosts.values(), pytest_expression=pytest_expression
+            hosts=sorted(
+                hosts.values(),
+                key=lambda host: (host.customer, host.site, host.id),
+            ),
+            pytest_expression=pytest_expression,
         )
 
         print(f"{len(results)} checks found.")
@@ -102,7 +106,11 @@ def run_cmd(
             deployment_group=deployment_group,
         )
         results = nectl.run_checks(
-            hosts=hosts.values(), pytest_expression=pytest_expression
+            hosts=sorted(
+                hosts.values(),
+                key=lambda host: (host.customer, host.site, host.id),
+            ),
+            pytest_expression=pytest_expression,
         )
 
         print(f"report written to: {results['report']}")
