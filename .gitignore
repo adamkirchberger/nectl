@@ -3,6 +3,8 @@ output
 testing
 examples
 .coverage
+nectl.log
+nectl_checks.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

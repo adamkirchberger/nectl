@@ -25,11 +25,12 @@ try:
 except:
     from pydantic.v1 import BaseSettings, ValidationError
 
+from . import __version__
 from .exceptions import SettingsFileError
 
 KIT_FILEPATH = os.getenv("NECTL_KIT", "./kit.py")
 
-APP_VERSION = "dev"
+APP_VERSION = __version__
 APP_DESCRIPTION = "Network control framework for network automation and orchestration."
 
 

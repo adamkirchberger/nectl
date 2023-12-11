@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
+__version__ = "0.19.1"
+__all__ = ["Nectl", "actions", "get_render_facts", "BaseDriver", "Host"]
+
 from .nectl import Nectl
 from .datatree.actions import Actions as actions
 from .configs.template_utils import get_render_facts
 from .configs.drivers.basedriver import BaseDriver
 from .datatree.hosts import Host
-
-
-__all__ = ["Nectl", "actions", "get_render_facts", "BaseDriver", "Host"]
