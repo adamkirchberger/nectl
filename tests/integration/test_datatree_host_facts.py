@@ -282,7 +282,6 @@ def test_should_return_pydantic_dataclass_fact_from_host_when_loading_facts(
     assert vars(facts.get("custom_type")) == {
         "name": "foobar",
         "enabled": True,
-        "__pydantic_initialised__": True,
     }
 
 
