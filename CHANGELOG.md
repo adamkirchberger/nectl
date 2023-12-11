@@ -2,6 +2,21 @@
 
 
 
+## v0.19.3 (2023-12-11)
+
+### Ci
+
+* ci: fix docker image p3.12 issue (#32)
+
+* ci: pin docker py version due to napalm py3.12 issue
+
+* ci: remove unnecessary dependency ([`737be8a`](https://github.com/adamkirchberger/nectl/commit/737be8a205eca6b0ea047a60d69cbb63e7312da1))
+
+### Fix
+
+* fix: update poetry (#33) ([`ac53ded`](https://github.com/adamkirchberger/nectl/commit/ac53dedbddc9166e35c2e56e108e28853345464d))
+
+
 ## v0.19.2 (2023-12-11)
 
 ### Fix
