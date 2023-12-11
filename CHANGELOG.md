@@ -2,6 +2,19 @@
 
 
 
+## v0.19.2 (2023-12-11)
+
+### Fix
+
+* fix: Allow pydantic2 versions and version fix (#31)
+
+* fix: allow newer pydantic versions
+
+* chore: update gitignore
+
+* ci: version bump fix ([`dfb2fd4`](https://github.com/adamkirchberger/nectl/commit/dfb2fd4d9e70681f535f74ac5ab66823b71dd568))
+
+
 ## v0.19.1 (2023-11-21)
 
 ### Fix

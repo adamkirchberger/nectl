@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "0.19.1"
+__version__ = "0.19.2"
 __all__ = ["Nectl", "actions", "get_render_facts", "BaseDriver", "Host"]
 
 from .nectl import Nectl
