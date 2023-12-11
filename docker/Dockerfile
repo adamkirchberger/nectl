@@ -1,4 +1,4 @@
-FROM python:3-slim as build
+FROM python:3.11-slim as build
 
 # Create venv
 RUN python -m venv /venv
@@ -8,7 +8,7 @@ ENV PATH="/venv/bin:$PATH"
 COPY dist/*.whl /tmp
 RUN pip install /tmp/*.whl
 
-FROM python:3-slim
+FROM python:3.11-slim
 
 # Copy venv from build step
 COPY --from=build /venv /venv
