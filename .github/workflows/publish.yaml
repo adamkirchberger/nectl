@@ -1,0 +1,102 @@
+name: publish
+
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  build-wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install poetry
+        run: pip install poetry
+      - name: Configure poetry
+        run: python -m poetry config virtualenvs.in-project true
+      - name: Show poetry version
+        run: poetry --version
+      - name: Build wheel
+        run: poetry build --format wheel
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}.wheel
+          path: dist/
+
+  docker-build-push:
+    needs: [build-wheel]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: nectl.wheel
+          path: docker/dist/
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v4
+        with:
+          context: ./docker
+          tags: |
+            nectl/nectl:latest
+            nectl/nectl:${{ github.event.release.tag_name }}
+          push: true
+
+  upload-github:
+    needs: [build-wheel]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}.wheel
+          path: dist/
+      - name: Generate app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Process module name and version number
+        id: process_names
+        # Replace hyphens with underscores for module name
+        # Remove v from version number as poetry builds wheel without 'v'
+        run: |
+          module_name=$(echo "${GITHUB_REPOSITORY##*/}" | sed 's/-/_/g')
+          version_number=$(echo "${GITHUB_REF##*/}" | sed 's/^v//')
+          echo "module_name=$module_name" >> $GITHUB_ENV
+          echo "version_number=$version_number" >> $GITHUB_ENV
+      - name: Upload package to Github
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/${{ env.module_name }}-${{ env.version_number }}-py3-none-any.whl
+          asset_name: ${{ env.module_name }}-${{ env.version_number }}-py3-none-any.whl
+          asset_content_type: application/zip
+
+  upload-pypi:
+    needs: [build-wheel]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}.wheel
+          path: dist/
+      - name: Publish to PyPI
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
