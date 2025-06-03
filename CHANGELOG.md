@@ -2,6 +2,13 @@
 
 
 
+## [0.19.4](https://github.com/adamkirchberger/nectl/compare/0.19.3...v0.19.4) (2025-06-03)
+
+
+### Bug Fixes
+
+* update dependencies ([f6ea55d](https://github.com/adamkirchberger/nectl/commit/f6ea55d55e6f64f321acfb03f84d53f6825e790b))
+
 ## v0.19.3 (2023-12-11)
 
 ### Ci
