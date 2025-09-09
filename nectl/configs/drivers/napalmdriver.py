@@ -16,6 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import os
 import json
 import time
 from napalm import get_network_driver
@@ -41,6 +42,7 @@ from ...datatree.hosts import Host
 from . import BaseDriver
 from .basedriver import COMMIT_COMMENT, COMMIT_WAIT_MULTIPLIER, CONNECT_TIMEOUT
 
+NAPALM_TIMEOUT = os.getenv("NAPALM_TIMEOUT", "90")
 
 logger = get_logger()
 
@@ -268,7 +270,7 @@ class NapalmDriver(BaseDriver):
                 hostname=self.host.mgmt_ip,
                 username=self.username,
                 password=self.password,
-                timeout=5,
+                timeout=NAPALM_TIMEOUT,
                 optional_args=self._optional_args,
             )
             self._driver.open()
