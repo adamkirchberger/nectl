@@ -33,6 +33,7 @@
   - [Hosts](guide/hosts.md)
   - [Templates](guide/templates.md)
   - [Drivers](guide/drivers.md)
+  - [Checks](guide/checks.md)
   - [Deployment Groups](guide/deployment-groups.md)
   - [External integration](guide/external-integration.md)
 
