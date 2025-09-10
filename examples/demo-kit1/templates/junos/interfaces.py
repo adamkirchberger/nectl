@@ -19,10 +19,8 @@ from typing import Dict
 from models.network import RoutedInterface
 
 
-def mgmt_interface(mgmt_ip, mgmt_netmask_length=24):
-    print(
-        f"set interfaces fxp0 unit 0 family inet address {mgmt_ip}/{mgmt_netmask_length}"
-    )
+def chassis_interfaces():
+    print("set chassis fpc 0 pic 0 number-of-ports 12")
 
 
 def routed_interfaces(interfaces: Dict[str, RoutedInterface] = []):

@@ -16,6 +16,7 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 # Include sub-templates
+from .mgmt import *
 from .system import *
 from .dns import *
 from .interfaces import *
