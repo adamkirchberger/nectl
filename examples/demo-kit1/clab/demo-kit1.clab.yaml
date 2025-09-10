@@ -1,0 +1,32 @@
+name: nectl-demo-kit1
+
+mgmt:
+  network: mgmt
+  ipv4-subnet: 10.255.0.0/24
+
+topology:
+  kinds:
+    juniper_vjunosrouter:
+      image: vrnetlab/juniper_vjunos-router:24.2R1-S2.5
+
+  nodes:
+    router1.ldn:
+      kind: juniper_vjunosrouter
+      mgmt-ipv4: 10.255.0.11
+
+    firewall1.ldn:
+      kind: juniper_vjunosrouter
+      mgmt-ipv4: 10.255.0.12
+
+    router1.nyc:
+      kind: juniper_vjunosrouter
+      mgmt-ipv4: 10.255.0.21
+
+    firewall1.nyc:
+      kind: juniper_vjunosrouter
+      mgmt-ipv4: 10.255.0.22
+
+  links:
+    - endpoints: [ router1.ldn:ge-0/0/0, router1.nyc:ge-0/0/0 ]
+    - endpoints: [ router1.ldn:ge-0/0/1, firewall1.ldn:ge-0/0/1 ]
+    - endpoints: [ router1.nyc:ge-0/0/1, firewall1.nyc:ge-0/0/1 ]

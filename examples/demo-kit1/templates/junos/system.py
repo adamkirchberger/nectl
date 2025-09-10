@@ -16,6 +16,10 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 
+def version(os_version):
+    print(f'set version "{os_version}"')
+
+
 def hostname(id):
     # Use 'id' fact which generates a unique name for host
     # Returns: {hostname}.{site}
@@ -24,6 +28,15 @@ def hostname(id):
 
 def root_user_config(root_password):
     print(f'set system root-authentication encrypted-password "{root_password}"')
+
+
+def admin_user_config():
+    print("set system login user admin uid 2000")
+    print("set system login user admin class super-user")
+    # admin@123
+    print(
+        'set system login user admin authentication encrypted-password "$6$Y5lVRa.c$8IgiORgdqDvyTNyE1K6PJtwr5UfVu5zOQuVS.mPA4fWBJlPfONCRBgJzrU7IAm0LoGYeFmhquQujDus.uM0C01"'
+    )
 
 
 def default_syslog():
