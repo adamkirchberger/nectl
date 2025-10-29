@@ -2,6 +2,20 @@
 
 
 
+## [0.19.5](https://github.com/adamkirchberger/nectl/compare/v0.19.4...v0.19.5) (2025-10-29)
+
+
+### Bug Fixes
+
+* set napalm timeout to use env var and increase default ([4781ced](https://github.com/adamkirchberger/nectl/commit/4781ced4b8c5fd62ae84da21dd38cdac476b0ba2))
+* update dependencies ([b989f41](https://github.com/adamkirchberger/nectl/commit/b989f416c65c8471115895cb75c5f8d57c024b85))
+* update dependencies ([1c7d89c](https://github.com/adamkirchberger/nectl/commit/1c7d89c36ae6386d09181cbf7e8d93930b63a014))
+
+
+### Documentation
+
+* add checks section ([f194429](https://github.com/adamkirchberger/nectl/commit/f194429646463f2ff42285612d26521e36636c4e))
+
 ## [0.19.4](https://github.com/adamkirchberger/nectl/compare/0.19.3...v0.19.4) (2025-06-03)
 
 
