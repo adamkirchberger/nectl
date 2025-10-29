@@ -8,6 +8,8 @@ on:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - name: Generate app token
         uses: actions/create-github-app-token@v1
@@ -19,3 +21,69 @@ jobs:
         id: release
         with:
           token: ${{ steps.app-token.outputs.token }}
+
+  # https://github.com/googleapis/release-please/issues/1870
+  check-conflicting-prs:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    outputs:
+      need_rebase: ${{ steps.check-pending-prs.outputs.need_rebase }}
+    steps:
+      - name: Generate app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - name: Get pending PRs
+        id: check-pending-prs
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          pending_prs=$(gh pr list --repo "$REPO" --label "autorelease: pending" --state open --json number --jq '.[].number')
+          need_rebase=""
+
+          if [[ -n "$pending_prs" ]]; then
+              for pr_num in $pending_prs; do
+                  echo "Checking pr: $pr_num"
+                  mergeable=$(gh pr view --repo "$REPO" "$pr_num" --json mergeable --jq '.mergeable')
+                  echo "mergeable status: $mergeable"
+                  if [[ "$mergeable" != "MERGEABLE" ]]; then
+                      echo "pr: $pr_num is not MERGEABLE."
+                      echo "removing 'autorelease: pending' label from pr: $pr_num"
+                      gh pr edit --repo "$REPO" "$pr_num" --remove-label "autorelease: pending"
+                      need_rebase=true
+                  fi
+              done
+          else
+              echo "No pending PRs found."
+              exit 0
+          fi
+
+          if [[ -n "$need_rebase" ]]; then
+              echo "not MERGEABLE status PRs found."
+              echo "need_rebase=$need_rebase"
+              echo "need_rebase=$need_rebase" >> "$GITHUB_OUTPUT"
+          else
+              echo "All pending PRs are MERGEABLE."
+          fi
+
+  release-please-rebase:
+    needs: check-conflicting-prs
+    runs-on: ubuntu-latest
+    if: needs.check-conflicting-prs.outputs.need_rebase == 'true'
+    steps:
+      - name: Generate app token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          command: manifest
