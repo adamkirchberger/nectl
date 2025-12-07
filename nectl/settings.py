@@ -20,10 +20,8 @@ import sys
 from typing import List, Optional
 from importlib import import_module
 
-try:
-    from pydantic import BaseSettings, ValidationError
-except:
-    from pydantic.v1 import BaseSettings, ValidationError
+from pydantic import Field, ValidationError
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from . import __version__
 from .exceptions import SettingsFileError
@@ -39,71 +37,86 @@ class Settings(BaseSettings):
     Defines kit configuration settings.
     """
 
-    class Config:
-        extra = "allow"
+    model_config = SettingsConfigDict(extra="allow")
 
     # pylint: disable=R0902
 
-    # Path to settings file
-    settings_path: str
+    settings_path: str = Field(description="Path to settings file")
 
-    # List of data inheritance lookup paths
-    datatree_lookup_paths: List[str]
+    datatree_lookup_paths: List[str] = Field(
+        description="List of data inheritance lookup paths"
+    )
 
-    # Glob pattern to find all hosts
-    hosts_glob_pattern: str
+    hosts_glob_pattern: str = Field(description="Glob pattern to find all hosts")
 
-    # Regex to determine host properties
-    hosts_hostname_regex: str
-    hosts_site_regex: Optional[str] = None
-    hosts_customer_regex: Optional[str] = None
+    hosts_hostname_regex: str = Field(description="Regex to determine host hostname")
+    hosts_site_regex: Optional[str] = Field(
+        default=None, description="Regex to determine host site"
+    )
+    hosts_customer_regex: Optional[str] = Field(
+        default=None, description="Regex to determine host customer"
+    )
 
-    # Path to kit with datatree, models and templates
-    kit_path: str
+    kit_path: str = Field(description="Path to kit with datatree, models and templates")
 
-    # Datatree default directory name
-    datatree_dirname: str = "datatree"
+    datatree_dirname: str = Field(
+        default="datatree", description="Datatree default directory name"
+    )
 
-    # Templates default directory name
-    templates_dirname: str = "templates"
+    templates_dirname: str = Field(
+        default="templates", description="Templates default directory name"
+    )
 
-    # Checks default directory name
-    checks_dirname: str = "checks"
+    checks_dirname: str = Field(
+        default="checks", description="Checks default directory name"
+    )
 
-    # Custom drivers directory name
-    # Note that these will override library drivers if same name is used
-    drivers_dirname: str = "drivers"
+    drivers_dirname: str = Field(
+        default="drivers",
+        description="Custom drivers directory name (will override library drivers if same name is used)",
+    )
 
-    # Default data action
-    default_action: str = "replace_with"
+    default_action: str = Field(default="replace_with", description="Default data action")
 
-    # Default rendered configs output directory
-    staged_configs_dir: str = "configs/staged"
+    staged_configs_dir: str = Field(
+        default="configs/staged", description="Default rendered configs output directory"
+    )
 
-    # Default configs diffs directory
-    config_diffs_dir: str = "configs/diffs"
+    config_diffs_dir: str = Field(
+        default="configs/diffs", description="Default configs diffs directory"
+    )
 
-    # Default active configs directory
-    active_configs_dir: str = "configs/active"
+    active_configs_dir: str = Field(
+        default="configs/active", description="Default active configs directory"
+    )
 
-    # Default configs file extension
-    configs_file_extension: str = "txt"
+    configs_file_extension: str = Field(
+        default="txt", description="Default configs file extension"
+    )
 
-    # Config format variable passed to driver methods
-    configs_format: str = ""  # not in use
+    configs_format: str = Field(
+        default="", description="Config format variable passed to driver methods"
+    )
 
-    # Defines whether configs pulled from devices should be sanitized
-    configs_sanitized: bool = True
+    configs_sanitized: bool = Field(
+        default=True,
+        description="Defines whether configs pulled from devices should be sanitized",
+    )
 
-    # Defines a default driver if one is not found. Test and use at own risk!
-    default_driver: str = ""
+    default_driver: str = Field(
+        default="",
+        description="Defines a default driver if one is not found (test and use at own risk)",
+    )
 
-    # Check files/functions/classes must start with this value.
-    # Classes use capitalized() value.
-    checks_prefix: str = "check"
+    checks_prefix: str = Field(
+        default="check",
+        description="Check files/functions/classes must start with this value (classes use capitalized value)",
+    )
 
-    # Default filename used for checks junit xml report.
-    checks_report_filename: str = "nectl_checks.xml"
+    checks_report_filename: str = Field(
+        default="nectl_checks.xml",
+        description="Default filename used for checks junit xml report",
+    )
 
     @property
     def datatree_path(self) -> str:
