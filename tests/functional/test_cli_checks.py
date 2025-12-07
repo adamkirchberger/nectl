@@ -40,38 +40,38 @@ def test_should_return_checks_when_running_cli_checks_list_command(
 
     # THEN expect checks to be listed
     assert (
-        """<Module check_four.py>
-  <Class CheckLondon>
-      <Function check_site[core0.london.acme]>
-      <Function check_site[core1.london.acme]>
-      <Function check_site[core0.london.hooli]>
-      <Function check_site[core1.london.hooli]>
-<Module check_one.py>
-  <Function check_os_version[core0.london.acme]>
-  <Function check_os_version[core1.london.acme]>
-  <Function check_os_version[core0.newyork.acme]>
-  <Function check_os_version[core1.newyork.acme]>
-  <Function check_os_version[core0.london.hooli]>
-  <Function check_os_version[core1.london.hooli]>
-  <Function check_os_version[core0.newyork.hooli]>
-  <Function check_os_version[core1.newyork.hooli]>
-<Module check_three.py>
-  <Class CheckOsVersion>
-      <Function check_os_version[core0.london.acme]>
-      <Function check_os_version[core1.london.acme]>
-      <Function check_os_version[core0.newyork.acme]>
-      <Function check_os_version[core1.newyork.acme]>
-      <Function check_os_version[core0.london.hooli]>
-      <Function check_os_version[core1.london.hooli]>
-      <Function check_os_version[core0.newyork.hooli]>
-      <Function check_os_version[core1.newyork.hooli]>
-<Module check_two.py>
-  <Function check_site[core0.newyork.acme]>
-  <Function check_site[core1.newyork.acme]>
-  <Function check_site[core0.newyork.hooli]>
-  <Function check_site[core1.newyork.hooli]>"""
-        in result.output
-    ), result.output
+        "<Dir checks>\n"
+        "  <Module check_four.py>\n"
+        "    <Class CheckLondon>\n"
+        "      <Function check_site[core0.london.acme]>\n"
+        "      <Function check_site[core1.london.acme]>\n"
+        "      <Function check_site[core0.london.hooli]>\n"
+        "      <Function check_site[core1.london.hooli]>\n"
+        "  <Module check_one.py>\n"
+        "    <Function check_os_version[core0.london.acme]>\n"
+        "    <Function check_os_version[core1.london.acme]>\n"
+        "    <Function check_os_version[core0.newyork.acme]>\n"
+        "    <Function check_os_version[core1.newyork.acme]>\n"
+        "    <Function check_os_version[core0.london.hooli]>\n"
+        "    <Function check_os_version[core1.london.hooli]>\n"
+        "    <Function check_os_version[core0.newyork.hooli]>\n"
+        "    <Function check_os_version[core1.newyork.hooli]>\n"
+        "  <Module check_three.py>\n"
+        "    <Class CheckOsVersion>\n"
+        "      <Function check_os_version[core0.london.acme]>\n"
+        "      <Function check_os_version[core1.london.acme]>\n"
+        "      <Function check_os_version[core0.newyork.acme]>\n"
+        "      <Function check_os_version[core1.newyork.acme]>\n"
+        "      <Function check_os_version[core0.london.hooli]>\n"
+        "      <Function check_os_version[core1.london.hooli]>\n"
+        "      <Function check_os_version[core0.newyork.hooli]>\n"
+        "      <Function check_os_version[core1.newyork.hooli]>\n"
+        "  <Module check_two.py>\n"
+        "    <Function check_site[core0.newyork.acme]>\n"
+        "    <Function check_site[core1.newyork.acme]>\n"
+        "    <Function check_site[core0.newyork.hooli]>\n"
+        "    <Function check_site[core1.newyork.hooli]>\n"
+    ) in result.output, result.output
 
 
 def test_should_return_checks_when_running_cli_checks_list_command_with_filter(
@@ -94,25 +94,25 @@ def test_should_return_checks_when_running_cli_checks_list_command_with_filter(
 
     # THEN expect checks to be listed
     assert (
-        """<Module check_four.py>
-  <Class CheckLondon>
-      <Function check_site[core0.london.acme]>
-      <Function check_site[core1.london.acme]>
-      <Function check_site[core0.london.hooli]>
-      <Function check_site[core1.london.hooli]>
-<Module check_one.py>
-  <Function check_os_version[core0.london.acme]>
-  <Function check_os_version[core1.london.acme]>
-  <Function check_os_version[core0.london.hooli]>
-  <Function check_os_version[core1.london.hooli]>
-<Module check_three.py>
-  <Class CheckOsVersion>
-      <Function check_os_version[core0.london.acme]>
-      <Function check_os_version[core1.london.acme]>
-      <Function check_os_version[core0.london.hooli]>
-      <Function check_os_version[core1.london.hooli]>"""
-        in result.output
-    ), result.output
+        "<Dir checks>\n"
+        "  <Module check_four.py>\n"
+        "    <Class CheckLondon>\n"
+        "      <Function check_site[core0.london.acme]>\n"
+        "      <Function check_site[core1.london.acme]>\n"
+        "      <Function check_site[core0.london.hooli]>\n"
+        "      <Function check_site[core1.london.hooli]>\n"
+        "  <Module check_one.py>\n"
+        "    <Function check_os_version[core0.london.acme]>\n"
+        "    <Function check_os_version[core1.london.acme]>\n"
+        "    <Function check_os_version[core0.london.hooli]>\n"
+        "    <Function check_os_version[core1.london.hooli]>\n"
+        "  <Module check_three.py>\n"
+        "    <Class CheckOsVersion>\n"
+        "      <Function check_os_version[core0.london.acme]>\n"
+        "      <Function check_os_version[core1.london.acme]>\n"
+        "      <Function check_os_version[core0.london.hooli]>\n"
+        "      <Function check_os_version[core1.london.hooli]>\n"
+    ) in result.output, result.output
 
 
 def test_should_return_checks_when_running_cli_checks_list_command_with_expression(
@@ -135,19 +135,19 @@ def test_should_return_checks_when_running_cli_checks_list_command_with_expressi
 
     # THEN expect checks to be listed
     assert (
-        """<Module check_one.py>
-  <Function check_os_version[core0.london.acme]>
-  <Function check_os_version[core1.london.acme]>
-  <Function check_os_version[core0.london.hooli]>
-  <Function check_os_version[core1.london.hooli]>
-<Module check_three.py>
-  <Class CheckOsVersion>
-      <Function check_os_version[core0.london.acme]>
-      <Function check_os_version[core1.london.acme]>
-      <Function check_os_version[core0.london.hooli]>
-      <Function check_os_version[core1.london.hooli]>"""
-        in result.output
-    ), result.output
+        "<Dir checks>\n"
+        "  <Module check_one.py>\n"
+        "    <Function check_os_version[core0.london.acme]>\n"
+        "    <Function check_os_version[core1.london.acme]>\n"
+        "    <Function check_os_version[core0.london.hooli]>\n"
+        "    <Function check_os_version[core1.london.hooli]>\n"
+        "  <Module check_three.py>\n"
+        "    <Class CheckOsVersion>\n"
+        "      <Function check_os_version[core0.london.acme]>\n"
+        "      <Function check_os_version[core1.london.acme]>\n"
+        "      <Function check_os_version[core0.london.hooli]>\n"
+        "      <Function check_os_version[core1.london.hooli]>\n"
+    ) in result.output, result.output
 
 
 def test_should_return_error_when_running_cli_checks_list_command_with_invalid_checks(

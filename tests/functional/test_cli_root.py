@@ -16,7 +16,6 @@
 # along with Nectl.  If not, see <http://www.gnu.org/licenses/>.
 
 import click
-import pkg_resources
 
 from nectl.cli import cli_root
 from nectl.settings import APP_VERSION
@@ -25,6 +24,20 @@ from nectl.settings import APP_VERSION
 def test_should_return_usage_when_running_cli_with_no_args(cli_runner):
     # GIVEN args
     args = []
+
+    # WHEN cli command is run
+    result = cli_runner.invoke(cli_root, args)
+
+    # THEN expect to be successful
+    assert result.exit_code == 2
+
+    # THEN expect usage commands
+    assert "Commands:" in result.output
+
+
+def test_should_return_usage_when_running_cli_with_help_arg(cli_runner):
+    # GIVEN args
+    args = ["--help"]
 
     # WHEN cli command is run
     result = cli_runner.invoke(cli_root, args)

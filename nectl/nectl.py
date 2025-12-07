@@ -328,7 +328,6 @@ class Nectl:
         checks_plugin = ChecksPlugin(hosts=hosts)
 
         pytest_args = [
-            "-c=''",
             "-p",
             "no:warnings",
             "--collect-only",
