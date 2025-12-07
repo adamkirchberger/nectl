@@ -2,6 +2,15 @@
 
 
 
+## [0.19.6](https://github.com/adamkirchberger/nectl/compare/v0.19.5...v0.19.6) (2025-12-07)
+
+
+### Bug Fixes
+
+* remove support for eol python versions ([39927b9](https://github.com/adamkirchberger/nectl/commit/39927b95d4e1b98682641ca3beb284be106c59d7))
+* update dependencies ([cbce6c2](https://github.com/adamkirchberger/nectl/commit/cbce6c2d54f820b8ca57098fdf2aba11da1de196))
+* update dependencies ([f0ad723](https://github.com/adamkirchberger/nectl/commit/f0ad7230642e0f1e70170f6e066295ef97b5cda9))
+
 ## [0.19.5](https://github.com/adamkirchberger/nectl/compare/v0.19.4...v0.19.5) (2025-10-29)
 
 
