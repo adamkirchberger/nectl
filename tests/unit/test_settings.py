@@ -137,7 +137,7 @@ def test_should_fail_when_loading_settings_and_lookup_paths_is_string(tmp_path):
         load_settings(str(conf_file))
 
     # THEN expect error message
-    assert "value is not a valid list" in str(error.value)
+    assert "Input should be a valid list" in str(error.value)
 
 
 def test_should_fail_when_loading_settings_and_lookup_paths_not_defined(tmp_path):
@@ -161,7 +161,7 @@ def test_should_fail_when_loading_settings_and_lookup_paths_not_defined(tmp_path
         load_settings(str(conf_file))
 
     # THEN expect field required error
-    assert "field required" in str(error.value)
+    assert "Field required" in str(error.value)
 
     # THEN expect missing variable name in error
     assert "datatree_lookup_paths\n" in str(error.value)
