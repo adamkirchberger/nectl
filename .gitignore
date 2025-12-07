@@ -3,6 +3,7 @@ output
 testing
 examples
 .coverage
+.coverage.*
 nectl.log
 nectl_checks.xml
 
